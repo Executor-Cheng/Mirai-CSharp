@@ -34,8 +34,21 @@ namespace Mirai_CSharp
                 QQNumber = qqNumber,
                 Canceller = new CancellationTokenSource()
             };
-            ReceiveMessageLoop(session);
-            SessionInfo = session;
+            try
+            {
+                IMiraiSessionConfig config = await this.GetConfigAsync(session);
+                if (!config.EnableWebSocket.GetValueOrDefault())
+                {
+                    await this.SetConfigAsync(session, new MiraiSessionConfig { CacheSize = config.CacheSize, EnableWebSocket = true });
+                }
+                ReceiveMessageLoop(session);
+                SessionInfo = session;
+            }
+            catch // 如果这都报错那真是见了鬼了
+            {
+                _ = InternalReleaseAsync(session);
+                throw;
+            }
         }
 
         private static async Task<string> AuthorizeAsync(MiraiHttpSessionOptions options)
