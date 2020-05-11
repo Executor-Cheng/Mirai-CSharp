@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mirai-CSharp", "Mirai-CSharp\Mirai-CSharp.csproj", "{6CF13C7A-EC13-4DFD-8A0C-E0B4B157DA67}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6CF13C7A-EC13-4DFD-8A0C-E0B4B157DA67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CF13C7A-EC13-4DFD-8A0C-E0B4B157DA67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CF13C7A-EC13-4DFD-8A0C-E0B4B157DA67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CF13C7A-EC13-4DFD-8A0C-E0B4B157DA67}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4C32B1C2-365E-4A22-A0A7-7C461257C3BB}
+	EndGlobalSection
+EndGlobal
