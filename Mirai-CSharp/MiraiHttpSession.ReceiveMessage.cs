@@ -187,6 +187,11 @@ namespace Mirai_CSharp
                                 GroupApplyEvt?.InvokeAsync(this, Utils.Deserialize<GroupApplyEventArgs>(in root));
                                 break;
                             }
+                        default:
+                            {
+                                UnknownMessageEvt?.InvokeAsync(this, root.Clone());
+                                break;
+                            }
                     }
                 }
             }

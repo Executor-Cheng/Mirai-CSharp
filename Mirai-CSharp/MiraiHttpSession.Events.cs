@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Mirai_CSharp.Models;
+using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Mirai_CSharp
@@ -16,5 +18,9 @@ namespace Mirai_CSharp
         /// 与mirai-api-http的ws连接被异常断开
         /// </summary>
         public event CommonEventHandler<Exception> Disconnected;
+        /// <summary>
+        /// 收到未知消息。如有需要, 请自行解析
+        /// </summary>
+        public event CommonEventHandler<JsonElement> UnknownMessageEvt; 
     }
 }

@@ -18,7 +18,7 @@ namespace Mirai_CSharp.Models
 
         }
 
-        public GroupApplyEventArgs(string fromGroupName, int eventId, long fromGroup, long fromQQ, string nickName) : base(eventId, fromGroup, fromQQ, nickName)
+        public GroupApplyEventArgs(string fromGroupName, long eventId, long fromGroup, long fromQQ, string nickName) : base(eventId, fromGroup, fromQQ, nickName)
         {
             FromGroupName = fromGroupName;
         }
