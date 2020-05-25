@@ -1,8 +1,10 @@
-﻿using Mirai_CSharp.Utility.JsonConverters;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Mirai_CSharp.Models
 {
+    /// <summary>
+    /// 提供基本信息(Id和名称)的接口
+    /// </summary>
     public interface IBaseInfo
     {
         /// <summary>
@@ -42,6 +44,9 @@ namespace Mirai_CSharp.Models
         }
     }
     
+    /// <summary>
+    /// 提供群内权限和基本信息的接口。继承自 <see cref="IBaseInfo"/>
+    /// </summary>
     public interface IGroupInfo : IBaseInfo
     {
         /// <summary>

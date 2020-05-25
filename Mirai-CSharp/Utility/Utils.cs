@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Mirai_CSharp.Plugin;
+using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -18,17 +20,6 @@ namespace Mirai_CSharp.Utility
 
         public static long DateTime2UnixTimeStamp_Ms(DateTime time)
             => (time.ToUniversalTime().Ticks - 621355968000000000) / 10000;
-
-        public static async Task InvokeAsync<TEventArgs>(this MiraiHttpSession.CommonEventHandler<TEventArgs> handlers, MiraiHttpSession sender, TEventArgs e)
-        {
-            foreach (MiraiHttpSession.CommonEventHandler<TEventArgs> handler in handlers.GetInvocationList())
-            {
-                if (await handler.Invoke(sender, e))
-                {
-                    break;
-                }
-            }
-        }
 
         public static T Deserialize<T>(this in JsonElement element, JsonSerializerOptions options = null)
         {

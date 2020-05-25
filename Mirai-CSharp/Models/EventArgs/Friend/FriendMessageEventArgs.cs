@@ -4,6 +4,9 @@ using System.Text.Json.Serialization;
 
 namespace Mirai_CSharp.Models
 {
+    /// <summary>
+    /// 提供好友消息的相关信息接口。继承自 <see cref="ICommonMessageEventArgs"/>
+    /// </summary>
     public interface IFriendMessageEventArgs : ICommonMessageEventArgs
     {
         [JsonConverter(typeof(ChangeTypeJsonConverter<FriendInfo, IFriendInfo>))]

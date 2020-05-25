@@ -4,6 +4,10 @@ using System.Text.Json.Serialization;
 
 namespace Mirai_CSharp.Models
 {
+    /// <summary>
+    /// 提供修改前和修改后的 <typeparamref name="TProperty"/> 信息接口
+    /// </summary>
+    /// <typeparam name="TProperty">属性类型</typeparam>
     public interface IPropertyChangedEventArgs<TProperty>
     {
         /// <summary>
@@ -40,6 +44,13 @@ namespace Mirai_CSharp.Models
         }
     }
 
+    /// <summary>
+    /// 提供修改前和修改后的 <typeparamref name="TProperty"/> 信息接口
+    /// <para>
+    /// 本接口是对于 <see langword="enum"/> 的特定实现
+    /// </para>
+    /// </summary>
+    /// <typeparam name="TProperty">属性类型, 必须为枚举类型</typeparam>
     public interface IEnumPropertyChangedEventArgs<TProperty> : IPropertyChangedEventArgs<TProperty> where TProperty : Enum
     {
         /// <inheritdoc/>
@@ -73,6 +84,10 @@ namespace Mirai_CSharp.Models
         }
     }
 
+    /// <summary>
+    /// 提供Bot在群中属性改变的信息接口。继承自 <see cref="IPropertyChangedEventArgs{TProperty}"/> 和 <see cref="IGroupEventArgs"/>
+    /// </summary>
+    /// <typeparam name="TProperty">属性类型</typeparam>
     public interface IBotGroupPropertyChangedEventArgs<TProperty> : IPropertyChangedEventArgs<TProperty>, IGroupEventArgs
     {
         
@@ -95,6 +110,13 @@ namespace Mirai_CSharp.Models
         }
     }
 
+    /// <summary>
+    /// 提供Bot在群中属性改变的信息接口。继承自 <see cref="IEnumPropertyChangedEventArgs{TProperty}"/> 和 <see cref="IGroupEventArgs"/>
+    /// <para>
+    /// 本接口是对于 <see langword="enum"/> 的特定实现
+    /// </para>
+    /// </summary>
+    /// <typeparam name="TProperty">属性类型, 必须为枚举类型</typeparam>
     public interface IBotGroupEnumPropertyChangedEventArgs<TProperty> : IEnumPropertyChangedEventArgs<TProperty>, IGroupEventArgs where TProperty : Enum
     {
 
@@ -121,7 +143,11 @@ namespace Mirai_CSharp.Models
         }
     }
 
-    public interface IGroupPropertyChangedEventArgs<TProperty> : IBotGroupPropertyChangedEventArgs<TProperty>, IGroupOperatingEventArgs
+    /// <summary>
+    /// 提供群属性改变的信息接口。继承自 <see cref="IPropertyChangedEventArgs{TProperty}"/> 和 <see cref="IGroupOperatingEventArgs"/>
+    /// </summary>
+    /// <typeparam name="TProperty">属性类型</typeparam>
+    public interface IGroupPropertyChangedEventArgs<TProperty> : IPropertyChangedEventArgs<TProperty>, IGroupOperatingEventArgs
     {
 
     }
@@ -230,6 +256,10 @@ namespace Mirai_CSharp.Models
 
     //}
 
+    /// <summary>
+    /// 提供群成员属性改变的信息接口。继承自 <see cref="IPropertyChangedEventArgs{TProperty}"/> 和 <see cref="IMemberEventArgs"/>
+    /// </summary>
+    /// <typeparam name="TProperty">属性类型</typeparam>
     public interface IGroupMemberPropertyChangedEventArgs<TProperty> : IPropertyChangedEventArgs<TProperty>, IMemberEventArgs
     {
 
@@ -267,17 +297,16 @@ namespace Mirai_CSharp.Models
     //    }
     //}
 
-    public interface IGroupMemberEnumPropertyChangedEventArgs<TProperty> : IGroupMemberPropertyChangedEventArgs<TProperty> where TProperty : Enum
+    /// <summary>
+    /// 提供群成员属性改变的信息接口。继承自 <see cref="IEnumPropertyChangedEventArgs{TProperty}"/> 和 <see cref="IMemberEventArgs"/>
+    /// <para>
+    /// 本接口是对于 <see langword="enum"/> 的特定实现
+    /// </para>
+    /// </summary>
+    /// <typeparam name="TProperty">属性类型, 必须为枚举类型</typeparam>
+    public interface IGroupMemberEnumPropertyChangedEventArgs<TProperty> : IEnumPropertyChangedEventArgs<TProperty>, IMemberEventArgs where TProperty : Enum
     {
-        /// <inheritdoc/>
-        [JsonConverter(typeof(JsonStringEnumConverter))]
-        [JsonPropertyName("origin")]
-        abstract TProperty IPropertyChangedEventArgs<TProperty>.Origin { get; }
-
-        /// <inheritdoc/>
-        [JsonConverter(typeof(JsonStringEnumConverter))]
-        [JsonPropertyName("current")]
-        abstract TProperty IPropertyChangedEventArgs<TProperty>.Current { get; }
+        
     }
 
     public class GroupMemberEnumPropertyChangedEventArgs<TProperty> : GroupMemberPropertyChangedEventArgs<TProperty>, IGroupMemberEnumPropertyChangedEventArgs<TProperty> where TProperty : Enum

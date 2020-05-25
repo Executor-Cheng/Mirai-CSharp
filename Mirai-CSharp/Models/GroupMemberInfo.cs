@@ -3,6 +3,9 @@ using System.Text.Json.Serialization;
 
 namespace Mirai_CSharp.Models
 {
+    /// <summary>
+    /// 提供群成员信息的接口。继承自 <see cref="IGroupInfo"/>
+    /// </summary>
     public interface IGroupMemberInfo : IGroupInfo
     {
         /// <summary>

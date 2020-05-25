@@ -11,7 +11,7 @@ namespace Mirai_CSharp
         /// <summary>
         /// 好友消息被撤回
         /// </summary>
-        public event CommonEventHandler<IFriendMessageRevokeEventArgs> FriendMessageRevokedEvt;
+        public event CommonEventHandler<IFriendMessageRevokedEventArgs> FriendMessageRevokedEvt;
         /// <summary>
         /// 收到添加好友申请
         /// </summary>

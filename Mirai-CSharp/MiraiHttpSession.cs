@@ -1,5 +1,7 @@
 ﻿using Mirai_CSharp.Models;
+using Mirai_CSharp.Plugin;
 using System;
+using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,7 +18,11 @@ namespace Mirai_CSharp
         /// </summary>
         public long? QQNumber => SessionInfo?.QQNumber;
 
+        private Version ApiVersion;
+
         private InternalSessionInfo SessionInfo;
+
+        private ImmutableList<IPlugin> Plugins = Array.Empty<IPlugin>().ToImmutableList();
 
         private volatile bool _disposed;
 
@@ -30,6 +36,25 @@ namespace Mirai_CSharp
 
             public volatile CancellationTokenSource Canceller;
         }
+
+        /// <summary>
+        /// 添加一个用于处理消息的 <see cref="IPlugin"/>
+        /// </summary>
+        public void AddPlugin(IPlugin plugin)
+        {
+            CheckDisposed();
+            Plugins = Plugins.Add(plugin);
+        }
+
+        /// <summary>
+        /// 移除一个用于处理消息的 <see cref="IPlugin"/>。 <paramref name="plugin"/> 必须在之前通过 <see cref="AddPlugin(IPlugin)"/> 添加过
+        /// </summary>
+        public void RemovePlugin(IPlugin plugin)
+        {
+            CheckDisposed();
+            Plugins = Plugins.Remove(plugin);
+        }
+
         /// <summary>
         /// 异步释放当前Session, 并清理相关资源。
         /// <para>

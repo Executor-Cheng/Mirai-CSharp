@@ -10,6 +10,19 @@ namespace Mirai_CSharp
 {
     public partial class MiraiHttpSession
     {
+        /// <summary>
+        /// 通过状态码抛出相应的异常
+        /// </summary>
+        /// <exception cref="InvalidAuthKeyException"/>
+        /// <exception cref="BotNotFoundException"/>
+        /// <exception cref="InvalidSessionException"/>
+        /// <exception cref="TargetNotFoundException"/>
+        /// <exception cref="FileNotFoundException"/>
+        /// <exception cref="PermissionDeniedException"/>
+        /// <exception cref="BotMutedException"/>
+        /// <exception cref="MessageTooLongException"/>
+        /// <exception cref="ArgumentException"/>
+        /// <exception cref="UnknownResponseException"/>
         [DoesNotReturn]
         private static T ThrowCommonException<T>(int code, in JsonElement root)
         {
@@ -17,23 +30,23 @@ namespace Mirai_CSharp
             {
                 case 1:
                     {
-                        throw new ArgumentException("错误的auth key。", nameof(MiraiHttpSessionOptions.AccessKey));
+                        throw new InvalidAuthKeyException();
                     }
                 case 2:
                     {
-                        throw new ArgumentException("指定的Bot不存在。", nameof(QQNumber));
+                        throw new BotNotFoundException();
                     }
                 case 3:
                     {
-                        throw new ArgumentException("Session失效或不存在。", nameof(InternalSessionInfo.SessionKey));
+                        throw new InvalidSessionException();
                     }
                 case 4:
                     {
-                        throw new InvalidOperationException("Session未认证(未激活)。");
+                        throw new InvalidSessionException();
                     }
                 case 5:
                     {
-                        throw new ArgumentException("发送消息目标不存在(指定对象不存在)。", "targetQQ");
+                        throw new TargetNotFoundException();
                     }
                 case 6:
                     {
@@ -41,32 +54,24 @@ namespace Mirai_CSharp
                     }
                 case 10:
                     {
-                        throw new InvalidOperationException("Bot没有对应操作的权限。");
+                        throw new PermissionDeniedException();
                     }
                 case 20:
                     {
-                        throw new InvalidOperationException("Bot被禁言。");
+                        throw new BotMutedException();
                     }
                 case 30:
                     {
-                        throw new ArgumentException("消息过长。", nameof(PlainMessage.Message));
+                        throw new MessageTooLongException();
                     }
                 case 400:
                     {
-                        throw new ArgumentException("调用http-api失败, 参数错误。");
+                        throw new ArgumentException("调用http-api失败, 参数错误, 请到 https://github.com/Executor-Cheng/Mirai-CSharp/issues 下提交issue。");
                     }
                 default:
                     {
                         throw new UnknownResponseException(root.GetRawText());
                     }
-            }
-        }
-
-        private static void CheckArray(IList chain)
-        {
-            if (chain == null || chain.Count == 0)
-            {
-                throw new ArgumentException("消息链必须为非空且至少有1条消息。");
             }
         }
 

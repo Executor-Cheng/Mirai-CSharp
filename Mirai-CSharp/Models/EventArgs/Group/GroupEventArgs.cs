@@ -3,6 +3,9 @@ using System.Text.Json.Serialization;
 
 namespace Mirai_CSharp.Models
 {
+    /// <summary>
+    /// 提供群事件的信息接口
+    /// </summary>
     public interface IGroupEventArgs
     {
         [JsonConverter(typeof(ChangeTypeJsonConverter<GroupInfo, IGroupInfo>))]
@@ -10,7 +13,10 @@ namespace Mirai_CSharp.Models
         IGroupInfo Group { get; }
     }
 
-    public class GroupEventArgs : IGroupEventArgs
+    public class GroupEventArgs : IGroupEventArgs,
+                                  IBotJoinedGroupEventArgs,
+                                  IBotPositiveLeaveGroupEventArgs,
+                                  IBotKickedOutEventArgs
     {
         [JsonConverter(typeof(ChangeTypeJsonConverter<GroupInfo, IGroupInfo>))]
         [JsonPropertyName("group")]
@@ -24,6 +30,9 @@ namespace Mirai_CSharp.Models
         }
     }
 
+    /// <summary>
+    /// 提供群成员信息的接口
+    /// </summary>
     public interface IMemberEventArgs
     {
         [JsonConverter(typeof(ChangeTypeJsonConverter<GroupMemberInfo, IGroupMemberInfo>))]
@@ -31,7 +40,9 @@ namespace Mirai_CSharp.Models
         IGroupMemberInfo Member { get; }
     }
 
-    public class MemberEventArgs : IMemberEventArgs
+    public class MemberEventArgs : IMemberEventArgs,
+                                   IGroupMemberJoinedEventArgs,
+                                   IGroupMemberPositiveLeaveEventArgs
     {
         [JsonConverter(typeof(ChangeTypeJsonConverter<GroupMemberInfo, IGroupMemberInfo>))]
         [JsonPropertyName("member")]
@@ -45,6 +56,9 @@ namespace Mirai_CSharp.Models
         }
     }
 
+    /// <summary>
+    /// 提供群内操作者信息的接口
+    /// </summary>
     public interface IOperatorEventArgs
     {
         [JsonConverter(typeof(ChangeTypeJsonConverter<GroupMemberInfo, IGroupMemberInfo>))]
@@ -66,12 +80,15 @@ namespace Mirai_CSharp.Models
         }
     }
 
+    /// <summary>
+    /// 提供群内管理事件相关信息的接口。继承自 <see cref="IGroupEventArgs"/> 和 <see cref="IOperatorEventArgs"/>
+    /// </summary>
     public interface IGroupOperatingEventArgs : IGroupEventArgs, IOperatorEventArgs
     {
         
     }
 
-    public class GroupOperatingEventArgs : OperatorEventArgs, IGroupOperatingEventArgs
+    public class GroupOperatingEventArgs : OperatorEventArgs, IGroupOperatingEventArgs // 没法继承多个类, 强转接口吧
     {
         [JsonConverter(typeof(ChangeTypeJsonConverter<GroupInfo, IGroupInfo>))]
         [JsonPropertyName("group")]
@@ -83,14 +100,18 @@ namespace Mirai_CSharp.Models
         {
             Group = group;
         }
-    } // 没法继承多个类, 强转接口吧
+    }
 
+    /// <summary>
+    /// 提供群内成员被管理操作事件相关信息的接口。继承自 <see cref="IMemberEventArgs"/> 和 <see cref="IOperatorEventArgs"/>
+    /// </summary>
     public interface IMemberOperatingEventArgs : IMemberEventArgs, IOperatorEventArgs
     {
 
     }
 
-    public class MemberOperatingEventArgs : OperatorEventArgs, IMemberOperatingEventArgs
+    public class MemberOperatingEventArgs : OperatorEventArgs, IMemberOperatingEventArgs,
+                                            IGroupMemberKickedEventArgs // 没法继承多个类, 强转接口吧
     {
         [JsonConverter(typeof(ChangeTypeJsonConverter<GroupMemberInfo, IGroupMemberInfo>))]
         [JsonPropertyName("member")]
@@ -102,5 +123,5 @@ namespace Mirai_CSharp.Models
         {
             Member = member;
         }
-    } // 没法继承多个类, 强转接口吧
+    }
 }

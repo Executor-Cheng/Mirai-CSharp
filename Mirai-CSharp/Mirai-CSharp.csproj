@@ -5,9 +5,9 @@
     <RootNamespace>Mirai_CSharp</RootNamespace>
     <OutputType>Library</OutputType>
     <NoWin32Manifest>true</NoWin32Manifest>
-    <Version>1.0.0.3</Version>
-    <AssemblyVersion>1.0.0.3</AssemblyVersion>
-    <FileVersion>1.0.0.3</FileVersion>
+    <Version>1.0.1.0</Version>
+    <AssemblyVersion>1.0.1.0</AssemblyVersion>
+    <FileVersion>1.0.1.0</FileVersion>
     <Authors>Executor</Authors>
     <Company>Executor</Company>
     <Copyright>Copyright © Executor 2020</Copyright>
@@ -35,6 +35,10 @@
 
   <ItemGroup>
     <None Remove="Mirai-CSharp.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
   </ItemGroup>
 
 </Project>

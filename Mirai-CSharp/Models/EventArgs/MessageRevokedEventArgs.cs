@@ -4,6 +4,9 @@ using System.Text.Json.Serialization;
 
 namespace Mirai_CSharp.Models
 {
+    /// <summary>
+    /// 提供撤回消息的通用信息接口
+    /// </summary>
     public interface IMessageRevokedEventArgs
     {
         /// <summary>

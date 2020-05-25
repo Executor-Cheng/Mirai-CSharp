@@ -1,27 +1,25 @@
-﻿using Mirai_CSharp.Utility.JsonConverters;
-using System.Collections.Generic;
-using System.Text.Json.Serialization;
+﻿using System.Collections.Generic;
 
 namespace Mirai_CSharp.Models
 {
-    public interface IGroupMessageEventArgs : ICommonMessageEventArgs
+    /// <summary>
+    /// 提供群消息的相关信息接口。继承自 <see cref="IGroupMessageBaseEventArgs"/>
+    /// </summary>
+    public interface IGroupMessageEventArgs : IGroupMessageBaseEventArgs
     {
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupMemberInfo, IGroupMemberInfo>))]
-        [JsonPropertyName("sender")]
-        IGroupMemberInfo Sender { get; }
+
     }
 
-    public class GroupMessageEventArgs : CommonMessageEventArgs, IGroupMessageEventArgs
+    public class GroupMessageEventArgs : GroupMessageBaseEventArgs, IGroupMessageEventArgs
     {
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupMemberInfo, IGroupMemberInfo>))]
-        [JsonPropertyName("sender")]
-        public IGroupMemberInfo Sender { get; set; }
-
-        public GroupMessageEventArgs() { }
-
-        public GroupMessageEventArgs(IMessageBase[] chain, IGroupMemberInfo sender) : base(chain)
+        public GroupMessageEventArgs()
         {
-            Sender = sender;
+
+        }
+
+        public GroupMessageEventArgs(IMessageBase[] chain, IGroupMemberInfo sender) : base(chain, sender)
+        {
+
         }
 
         public override string ToString()

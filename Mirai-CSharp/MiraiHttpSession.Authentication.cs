@@ -1,6 +1,9 @@
-﻿using Mirai_CSharp.Helpers;
+﻿using Mirai_CSharp.Exceptions;
+using Mirai_CSharp.Helpers;
 using Mirai_CSharp.Models;
 using System;
+using System.Linq;
+using System.Reflection;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,9 +18,10 @@ namespace Mirai_CSharp
         /// 此方法不是线程安全的。
         /// </para>
         /// </summary>
+        /// <exception cref="BotNotFoundException"/>
+        /// <exception cref="InvalidAuthKeyException"/>
         /// <param name="options">连接信息</param>
         /// <param name="qqNumber">Session将要绑定的Bot的qq号</param>
-        /// <returns></returns>
         public async Task ConnectAsync(MiraiHttpSessionOptions options, long qqNumber)
         {
             CheckDisposed();
@@ -27,6 +31,7 @@ namespace Mirai_CSharp
             }
             string sessionKey = await AuthorizeAsync(options);
             await VerifyAsync(options, sessionKey, qqNumber);
+            ApiVersion = await GetVersionAsync(options);
             InternalSessionInfo session = new InternalSessionInfo
             {
                 Options = options,
@@ -53,7 +58,7 @@ namespace Mirai_CSharp
 
         private static async Task<string> AuthorizeAsync(MiraiHttpSessionOptions options)
         {
-            byte[] payload = JsonSerializer.SerializeToUtf8Bytes(new { authKey = options.AccessKey });
+            byte[] payload = JsonSerializer.SerializeToUtf8Bytes(new { authKey = options.AuthKey });
             using JsonDocument j = await HttpHelper.HttpPostAsync($"{options.BaseUrl}/auth", payload);
             JsonElement root = j.RootElement;
             int code = root.GetProperty("code").GetInt32();
@@ -107,6 +112,11 @@ namespace Mirai_CSharp
 
         private Task InternalReleaseAsync(InternalSessionInfo session, CancellationToken token = default)
         {
+            Plugins = null;
+            foreach (FieldInfo eventField in typeof(MiraiHttpSession).GetEvents().Select(p => typeof(MiraiHttpSession).GetField(p.Name, BindingFlags.NonPublic | BindingFlags.Instance)))
+            {
+                eventField.SetValue(this, null); // 用反射解决掉所有事件的Handler
+            }
             session.Canceller.Cancel();
             session.Canceller.Dispose();
             byte[] payload = JsonSerializer.SerializeToUtf8Bytes(new

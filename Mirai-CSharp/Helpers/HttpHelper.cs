@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
+using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,17 +29,19 @@ namespace Mirai_CSharp.Helpers
             return request.GetJsonDocumentAsync(token);
         }
 
-        public static async Task<JsonDocument> HttpPostAsync(string url, byte[] payload, double timeout = 10, string userAgent = null, CancellationToken token = default)
+        public static Task<JsonDocument> HttpPostAsync(string url, byte[] payload, double timeout = 10, string userAgent = null, CancellationToken token = default)
         {
             HttpWebRequest request = WebRequest.CreateHttp(url);
             request.Method = "POST";
             request.Timeout = (int)(timeout * 1000);
             request.UserAgent = userAgent ?? UserAgent;
-            using (Stream stream = await request.GetRequestStreamAsync())
+            using (Stream stream = request.GetRequestStream()) // 没必要用Async, 这个Stream实际上是MemoryStream实现的,
+                                                               // MemoryStream类下的异步方法都是调用对应的同步方法, 然后返回
+                                                               // default(ValueTask) / Task.CompletedTask
             {
-                await stream.WriteAsync(payload, token);
+                stream.Write(payload);
             }
-            return await request.GetJsonDocumentAsync();
+            return request.GetJsonDocumentAsync(token);
         }
 
         public static async Task<JsonDocument> HttpPostAsync(string url, HttpContent[] contents, double timeout = 10, string userAgent = null, CancellationToken token = default)
@@ -54,7 +57,7 @@ namespace Mirai_CSharp.Helpers
                 {
                     multipart.Add(content);
                 }
-                using Stream stream = await request.GetRequestStreamAsync();
+                using Stream stream = request.GetRequestStream();
                 using Stream multipartStream = await multipart.ReadAsStreamAsync();
                 await multipartStream.CopyToAsync(stream);
             }

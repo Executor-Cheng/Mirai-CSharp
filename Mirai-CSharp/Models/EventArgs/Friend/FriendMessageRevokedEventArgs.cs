@@ -3,8 +3,10 @@ using System.Text.Json.Serialization;
 
 namespace Mirai_CSharp.Models
 {
-
-    public interface IFriendMessageRevokeEventArgs : IMessageRevokedEventArgs
+    /// <summary>
+    /// 提供好友撤回消息的相关信息接口。继承自 <see cref="IMessageRevokedEventArgs"/>
+    /// </summary>
+    public interface IFriendMessageRevokedEventArgs : IMessageRevokedEventArgs
     {
         /// <summary>
         /// 进行撤回操作的QQ号
@@ -13,7 +15,7 @@ namespace Mirai_CSharp.Models
         long Operator { get; }
     }
 
-    public class FriendMessageRevokedEventArgs : MessageRevokedEventArgs, IFriendMessageRevokeEventArgs
+    public class FriendMessageRevokedEventArgs : MessageRevokedEventArgs, IFriendMessageRevokedEventArgs
     {
         /// <summary>
         /// 进行撤回操作的QQ号

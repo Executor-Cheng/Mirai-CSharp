@@ -5,6 +5,9 @@ using System.Text.Json.Serialization;
 #nullable enable
 namespace Mirai_CSharp.Models
 {
+    /// <summary>
+    /// 提供禁言信息的接口
+    /// </summary>
     public interface IMutedEventArgs
     {
         [JsonConverter(typeof(TimeSpanSecondsConverter))]
@@ -12,6 +15,9 @@ namespace Mirai_CSharp.Models
         TimeSpan Duration { get; }
     }
 
+    /// <summary>
+    /// 提供Bot被解除禁言事件相关信息的接口。继承自 <see cref="IOperatorEventArgs"/>
+    /// </summary>
     public interface IBotUnmutedEventArgs : IOperatorEventArgs
     {
 
@@ -30,6 +36,9 @@ namespace Mirai_CSharp.Models
         }
     }
 
+    /// <summary>
+    /// 提供Bot被禁言事件相关信息的接口。继承自 <see cref="IOperatorEventArgs"/> 和 <see cref="IMutedEventArgs"/>
+    /// </summary>
     public interface IBotMutedEventArgs : IOperatorEventArgs, IMutedEventArgs
     {
 
@@ -49,41 +58,47 @@ namespace Mirai_CSharp.Models
         }
     }
 
-    public interface IMemberUnmutedEventArgs : IMemberOperatingEventArgs
+    /// <summary>
+    /// 提供其它群成员被解除禁言事件相关信息的接口。继承自 <see cref="IMemberOperatingEventArgs"/>
+    /// </summary>
+    public interface IGroupMemberUnmutedEventArgs : IMemberOperatingEventArgs
     {
 
     }
 
-    public class MemberUnmutedEventArgs : MemberOperatingEventArgs, IMemberUnmutedEventArgs
+    public class GroupMemberUnmutedEventArgs : MemberOperatingEventArgs, IGroupMemberUnmutedEventArgs
     {
-        public MemberUnmutedEventArgs()
+        public GroupMemberUnmutedEventArgs()
         {
 
         }
 
-        public MemberUnmutedEventArgs(IGroupMemberInfo member, IGroupMemberInfo @operator) : base(member, @operator)
+        public GroupMemberUnmutedEventArgs(IGroupMemberInfo member, IGroupMemberInfo @operator) : base(member, @operator)
         {
 
         }
     }
 
-    public interface IMemberMutedEventArgs : IMemberOperatingEventArgs, IMutedEventArgs 
+    /// <summary>
+    /// 提供其它群成员被禁言事件相关信息的接口。继承自 <see cref="IMemberOperatingEventArgs"/> 和 <see cref="IMutedEventArgs"/>
+    /// </summary>
+    public interface IGroupMemberMutedEventArgs : IMemberOperatingEventArgs, IMutedEventArgs 
     {
     
     }
 
-    public class MemberMutedEventArgs : MemberOperatingEventArgs, IMemberMutedEventArgs
+    public class GroupMemberMutedEventArgs : MemberOperatingEventArgs, IGroupMemberMutedEventArgs
     {
         [JsonConverter(typeof(TimeSpanSecondsConverter))]
         [JsonPropertyName("durationSeconds")]
         public TimeSpan Duration { get; set; }
 
-        public MemberMutedEventArgs()
+        public GroupMemberMutedEventArgs()
         {
 
         }
 
-        public MemberMutedEventArgs(TimeSpan duration, IGroupMemberInfo member, IGroupMemberInfo @operator) : base(member, @operator)
+        public GroupMemberMutedEventArgs(TimeSpan duration, IGroupMemberInfo member, IGroupMemberInfo @operator) : base(member, @operator)
         {
             Duration = duration;
         }

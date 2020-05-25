@@ -2,6 +2,9 @@
 
 namespace Mirai_CSharp.Models
 {
+    /// <summary>
+    /// 提供群信息的接口
+    /// </summary>
     public interface IGroupConfig
     {
         /// <summary>

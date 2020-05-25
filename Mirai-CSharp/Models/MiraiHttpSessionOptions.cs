@@ -11,19 +11,19 @@
         /// </summary>
         public int Port { get; }
         /// <summary>
-        /// 配置mirai-api-http时的AccessKey
+        /// 配置mirai-api-http时的AuthKey
         /// </summary>
-        public string AccessKey { get; }
+        public string AuthKey { get; }
         /// <summary>
         /// 内部使用。
         /// </summary>
         internal string BaseUrl { get; }
 
-        public MiraiHttpSessionOptions(string host, int port, string accessKey)
+        public MiraiHttpSessionOptions(string host, int port, string authKey)
         {
             Host = host;
             Port = port;
-            AccessKey = accessKey;
+            AuthKey = authKey;
             BaseUrl = $"http://{host}:{port}";
         }
     }

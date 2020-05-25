@@ -1,4 +1,5 @@
 ﻿using Mirai_CSharp.Models;
+using Mirai_CSharp.Plugin.Interfaces;
 using Mirai_CSharp.Utility;
 using System;
 using System.IO;
@@ -30,166 +31,167 @@ namespace Mirai_CSharp
                     {
                         case "BotOnlineEvent":
                             {
-                                BotOnlineEvt?.InvokeAsync(this, root.GetProperty("qq").GetInt64());
+                                _ = InvokeAsync<IBotOnline, IBotOnlineEventArgs>(Plugins, BotOnlineEvt, this, root.Deserialize<BotEventArgs>());
                                 break;
                             }
                         case "BotOfflineEventActive":
                             {
-                                BotPositiveOfflineEvt?.InvokeAsync(this, root.GetProperty("qq").GetInt64());
+                                _ = InvokeAsync<IBotPositiveOffline, IBotPositiveOfflineEventArgs>(Plugins, BotPositiveOfflineEvt, this, root.Deserialize<BotEventArgs>());
                                 break;
                             }
                         case "BotOfflineEventForce":
                             {
-                                BotKickedOfflineEvt?.InvokeAsync(this, root.GetProperty("qq").GetInt64());
+                                _ = InvokeAsync<IBotKickedOffline, IBotKickedOfflineEventArgs>(Plugins, BotKickedOfflineEvt, this, root.Deserialize<BotEventArgs>());
                                 break;
                             }
                         case "BotOfflineEventDropped":
                             {
-                                BotDroppedEvt?.InvokeAsync(this, root.GetProperty("qq").GetInt64());
+                                _ = InvokeAsync<IBotDropped, IBotDroppedEventArgs>(Plugins, BotDroppedEvt, this, root.Deserialize<BotEventArgs>());
                                 break;
                             }
                         case "BotReloginEvent":
                             {
-                                BotReloginEvt?.InvokeAsync(this, root.GetProperty("qq").GetInt64());
+                                _ = InvokeAsync<IBotRelogin, IBotReloginEventArgs>(Plugins, BotReloginEvt, this, root.Deserialize<BotEventArgs>());
                                 break;
                             }
                         case "FriendMessage":
                             {
-                                FriendMessageEvt?.InvokeAsync(this, Utils.Deserialize<FriendMessageEventArgs>(in root));
+                                _ = InvokeAsync<IFriendMessage, IFriendMessageEventArgs>(Plugins, FriendMessageEvt, this, root.Deserialize<FriendMessageEventArgs>());
                                 break;
                             }
                         case "GroupMessage":
                             {
-                                GroupMessageEvt?.InvokeAsync(this, Utils.Deserialize<GroupMessageEventArgs>(in root));
+                                _ = InvokeAsync<IGroupMessage, IGroupMessageEventArgs>(Plugins, GroupMessageEvt, this, root.Deserialize<GroupMessageEventArgs>());
                                 break;
                             }
                         case "TempMessage":
                             {
+                                _ = InvokeAsync<ITempMessage, ITempMessageEventArgs>(Plugins, TempMessageEvt, this, root.Deserialize<TempMessageEventArgs>());
                                 break;
                             }
                         case "GroupRecallEvent":
                             {
-                                GroupMessageRevokedEvt?.InvokeAsync(this, Utils.Deserialize<GroupMessageRevokedEventArgs>(in root));
+                                _ = InvokeAsync<IGroupMessageRevoked, IGroupMessageRevokedEventArgs>(Plugins, GroupMessageRevokedEvt, this, root.Deserialize<GroupMessageRevokedEventArgs>());
                                 break;
                             }
                         case "FriendRecallEvent":
                             {
-                                FriendMessageRevokedEvt?.InvokeAsync(this, Utils.Deserialize<FriendMessageRevokedEventArgs>(in root));
+                                _ = InvokeAsync<IFriendMessageRevoked, IFriendMessageRevokedEventArgs>(Plugins, FriendMessageRevokedEvt, this, root.Deserialize<FriendMessageRevokedEventArgs>());
                                 break;
                             }
                         case "BotGroupPermissionChangeEvent":
                             {
-                                BotGroupPermissionChangedEvt?.InvokeAsync(this, Utils.Deserialize<BotGroupEnumPropertyChangedEventArgs<GroupPermission>>(in root));
+                                _ = InvokeAsync<IBotGroupPermissionChanged, IBotGroupPermissionChangedEventArgs>(Plugins, BotGroupPermissionChangedEvt, this, root.Deserialize<BotGroupPermissionChangedEventArgs>());
                                 break;
                             }
                         case "BotMuteEvent":
                             {
-                                BotMutedEvt?.InvokeAsync(this, Utils.Deserialize<BotMutedEventArgs>(in root));
+                                _ = InvokeAsync<IBotMuted, IBotMutedEventArgs>(Plugins, BotMutedEvt, this, root.Deserialize<BotMutedEventArgs>());
                                 break;
                             }
                         case "BotUnmuteEvent":
                             {
-                                BotUnmutedEvt?.InvokeAsync(this, Utils.Deserialize<BotUnmutedEventArgs>(in root));
+                                _ = InvokeAsync<IBotUnmuted, IBotUnmutedEventArgs>(Plugins, BotUnmutedEvt, this, root.Deserialize<BotUnmutedEventArgs>());
                                 break;
                             }
                         case "BotJoinGroupEvent":
                             {
-                                BotJoinedGroupEvt?.InvokeAsync(this, Utils.Deserialize<GroupEventArgs>(in root));
+                                _ = InvokeAsync<IBotJoinedGroup, IBotJoinedGroupEventArgs>(Plugins, BotJoinedGroupEvt, this, root.Deserialize<GroupEventArgs>());
                                 break;
                             }
                         case "BotLeaveEventActive":
                             {
-                                BotPositiveLeaveGroupEvt?.InvokeAsync(this, Utils.Deserialize<GroupEventArgs>(in root));
+                                _ = InvokeAsync<IBotPositiveLeaveGroup, IBotPositiveLeaveGroupEventArgs>(Plugins, BotPositiveLeaveGroupEvt, this, root.Deserialize<GroupEventArgs>());
                                 break;
                             }
                         case "BotLeaveEventKick":
                             {
-                                BotKickedOutEvt?.InvokeAsync(this, Utils.Deserialize<GroupEventArgs>(in root));
+                                _ = InvokeAsync<IBotKickedOut, IBotKickedOutEventArgs>(Plugins, BotKickedOutEvt, this, root.Deserialize<GroupEventArgs>());
                                 break;
                             }
                         case "GroupNameChangeEvent":
                             {
-                                GroupNameChangedEvt?.InvokeAsync(this, Utils.Deserialize<GroupPropertyChangedEventArgs<string>>(in root));
+                                _ = InvokeAsync<IGroupNameChanged, IGroupNameChangedEventArgs>(Plugins, GroupNameChangedEvt, this, root.Deserialize<GroupStringPropertyChangedEventArgs>());
                                 break;
                             }
                         case "GroupEntranceAnnouncementChangeEvent":
                             {
-                                GroupEntranceAnnouncementChangedEvt?.InvokeAsync(this, Utils.Deserialize<GroupPropertyChangedEventArgs<string>>(in root));
+                                _ = InvokeAsync<IGroupEntranceAnnouncementChanged, IGroupEntranceAnnouncementChangedEventArgs>(Plugins, GroupEntranceAnnouncementChangedEvt, this, root.Deserialize<GroupStringPropertyChangedEventArgs>());
                                 break;
                             }
                         case "GroupMuteAllEvent":
                             {
-                                GroupMuteAllChangedEvt?.InvokeAsync(this, Utils.Deserialize<GroupPropertyChangedEventArgs<bool>>(in root));
+                                _ = InvokeAsync<IGroupMuteAllChanged, IGroupMuteAllChangedEventArgs>(Plugins, GroupMuteAllChangedEvt, this, root.Deserialize<GroupBoolPropertyChangedEventArgs>());
                                 break;
                             }
                         case "GroupAllowAnonymousChatEvent":
                             {
-                                GroupAnonymousChatChangedEvt?.InvokeAsync(this, Utils.Deserialize<GroupPropertyChangedEventArgs<bool>>(in root));
+                                _ = InvokeAsync<IGroupAnonymousChatChanged, IGroupAnonymousChatChangedEventArgs>(Plugins, GroupAnonymousChatChangedEvt, this, root.Deserialize<GroupBoolPropertyChangedEventArgs>());
                                 break;
                             }
                         case "GroupAllowConfessTalkEvent":
                             {
-                                GroupConfessTalkChangedEvt?.InvokeAsync(this, Utils.Deserialize<GroupPropertyChangedEventArgs<bool>>(in root));
+                                _ = InvokeAsync<IGroupConfessTalkChanged, IGroupConfessTalkChangedEventArgs>(Plugins, GroupConfessTalkChangedEvt, this, root.Deserialize<GroupBoolPropertyChangedEventArgs>());
                                 break;
                             }
                         case "GroupAllowMemberInviteEvent":
                             {
-                                GroupMemberInviteChangedEvt?.InvokeAsync(this, Utils.Deserialize<GroupPropertyChangedEventArgs<bool>>(in root));
+                                _ = InvokeAsync<IGroupMemberInviteChanged, IGroupMemberInviteChangedEventArgs>(Plugins, GroupMemberInviteChangedEvt, this, root.Deserialize<GroupBoolPropertyChangedEventArgs>());
                                 break;
                             }
                         case "MemberJoinEvent":
                             {
-                                GroupMemberJoinedEvt?.Invoke(this, Utils.Deserialize<MemberEventArgs>(in root));
+                                _ = InvokeAsync<IGroupMemberJoined, IGroupMemberJoinedEventArgs>(Plugins, GroupMemberJoinedEvt, this, root.Deserialize<MemberEventArgs>());
                                 break;
                             }
                         case "MemberLeaveEventKick":
                             {
-                                GroupMemberKickedEvt?.InvokeAsync(this, Utils.Deserialize<MemberOperatingEventArgs>(in root));
+                                _ = InvokeAsync<IGroupMemberKicked, IGroupMemberKickedEventArgs>(Plugins, GroupMemberKickedEvt, this, root.Deserialize<MemberOperatingEventArgs>());
                                 break;
                             }
                         case "MemberLeaveEventQuit":
                             {
-                                GroupMemberPositiveLeaveEvt?.InvokeAsync(this, Utils.Deserialize<MemberEventArgs>(in root));
+                                _ = InvokeAsync<IGroupMemberPositiveLeave, IGroupMemberPositiveLeaveEventArgs>(Plugins, GroupMemberPositiveLeaveEvt, this, root.Deserialize<MemberEventArgs>());
                                 break;
                             }
                         case "MemberCardChangeEvent":
                             {
-                                GroupMemberCardChangedEvt?.InvokeAsync(this, Utils.Deserialize<GroupMemberPropertyChangedEventArgs<string>>(in root));
+                                _ = InvokeAsync<IGroupMemberCardChanged, IGroupMemberCardChangedEventArgs>(Plugins, GroupMemberCardChangedEvt, this, root.Deserialize<GroupMemberStringPropertyChangedEventArgs>());
                                 break;
                             }
                         case "MemberSpecialTitleChangeEvent":
                             {
-                                GroupMemberSpecialTitleChangedEvt?.InvokeAsync(this, Utils.Deserialize<GroupMemberPropertyChangedEventArgs<string>>(in root));
+                                _ = InvokeAsync<IGroupMemberSpecialTitleChanged, IGroupMemberSpecialTitleChangedEventArgs>(Plugins, GroupMemberSpecialTitleChangedEvt, this, root.Deserialize<GroupMemberStringPropertyChangedEventArgs>());
                                 break;
                             }
                         case "MemberPermissionChangeEvent":
                             {
-                                GroupMemberPermissionChangedEvt?.InvokeAsync(this, Utils.Deserialize<GroupMemberEnumPropertyChangedEventArgs<GroupPermission>>(in root));
+                                _ = InvokeAsync<IGroupMemberPermissionChanged, IGroupMemberPermissionChangedEventArgs>(Plugins, GroupMemberPermissionChangedEvt, this, root.Deserialize<GroupMemberPermissionChangedEventArgs>());
                                 break;
                             }
                         case "MemberMuteEvent":
                             {
-                                GroupMemberMutedEvt?.InvokeAsync(this, Utils.Deserialize<MemberMutedEventArgs>(in root));
+                                _ = InvokeAsync<IGroupMemberMuted, IGroupMemberMutedEventArgs>(Plugins, GroupMemberMutedEvt, this, root.Deserialize<GroupMemberMutedEventArgs>());
                                 break;
                             }
                         case "MemberUnmuteEvent":
                             {
-                                GroupMemberUnmutedEvt?.InvokeAsync(this, Utils.Deserialize<MemberUnmutedEventArgs>(in root));
+                                _ = InvokeAsync<IGroupMemberUnmuted, IGroupMemberUnmutedEventArgs>(Plugins, GroupMemberUnmutedEvt, this, root.Deserialize<GroupMemberUnmutedEventArgs>());
                                 break;
                             }
                         case "NewFriendRequestEvent":
                             {
-                                NewFriendApplyEvt?.InvokeAsync(this, Utils.Deserialize<NewFriendApplyEventArgs>(in root));
+                                _ = InvokeAsync<INewFriendApply, INewFriendApplyEventArgs>(Plugins, NewFriendApplyEvt, this, root.Deserialize<NewFriendApplyEventArgs>());
                                 break;
                             }
                         case "MemberJoinRequestEvent":
                             {
-                                GroupApplyEvt?.InvokeAsync(this, Utils.Deserialize<GroupApplyEventArgs>(in root));
+                                _ = InvokeAsync<IGroupApply, IGroupApplyEventArgs>(Plugins, GroupApplyEvt, this, root.Deserialize<GroupApplyEventArgs>());
                                 break;
                             }
                         default:
                             {
-                                UnknownMessageEvt?.InvokeAsync(this, root.Clone());
+                                _ = InvokeAsync<IUnknownMessage, IUnknownMessageEventArgs>(Plugins, UnknownMessageEvt, this, new UnknownMessageEventArgs(root.Clone()));
                                 break;
                             }
                     }
@@ -204,7 +206,7 @@ namespace Mirai_CSharp
                 if (Interlocked.CompareExchange(ref SessionInfo, null, session) != null)
                 {
                     _ = InternalReleaseAsync(session); // 不异步等待, 省的抛错没地捕获
-                    try { Disconnected?.Invoke(this, e); } catch { } // 扔掉所有异常
+                    try { DisconnectedEvt?.Invoke(this, e); } catch { } // 扔掉所有异常
                 }
             }
         }
