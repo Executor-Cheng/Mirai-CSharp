@@ -5,9 +5,9 @@
     <RootNamespace>Mirai_CSharp</RootNamespace>
     <OutputType>Library</OutputType>
     <NoWin32Manifest>true</NoWin32Manifest>
-    <Version>1.0.1.1</Version>
-    <AssemblyVersion>1.0.1.1</AssemblyVersion>
-    <FileVersion>1.0.1.1</FileVersion>
+    <Version>1.0.1.2</Version>
+    <AssemblyVersion>1.0.1.2</AssemblyVersion>
+    <FileVersion>1.0.1.2</FileVersion>
     <Authors>Executor</Authors>
     <Company>Executor</Company>
     <Copyright>Copyright © Executor 2020</Copyright>

@@ -5,7 +5,7 @@ using System.Net;
 
 #pragma warning disable CA1031 // Do not catch general exception types
 #pragma warning disable CA1810 // Initialize reference type static fields inline
-namespace Mirai_CSharp
+namespace Mirai_CSharp.Utility
 {
     internal static class ImageHttpListener // 对于 mirai-api-http v1.7.0及以下版本无法发图的临时解决方案
     {

@@ -11,7 +11,7 @@ namespace Mirai_CSharp
     {
         private async Task<IMiraiSessionConfig> GetConfigAsync(InternalSessionInfo session)
         {
-            using JsonDocument j = await HttpHelper.HttpGetAsync($"{session.Options.BaseUrl}/config?sessionKey={WebUtility.UrlEncode(session.SessionKey)}", token: session.Canceller.Token);
+            using JsonDocument j = await HttpHelper.HttpGetAsync($"{session.Options.BaseUrl}/config?sessionKey={WebUtility.UrlEncode(session.SessionKey)}").GetJsonAsync(token: session.Canceller.Token);
             JsonElement root = j.RootElement;
             return Utils.Deserialize<MiraiSessionConfig>(in root);
         }
@@ -26,7 +26,6 @@ namespace Mirai_CSharp
             }, JsonSerializeOptionsFactory.IgnoreNulls);
             return InternalHttpPostAsync($"{session.Options.BaseUrl}/config", payload, session.Canceller.Token);
         }
-
         /// <summary>
         /// 异步获取当前Session的Config
         /// </summary>

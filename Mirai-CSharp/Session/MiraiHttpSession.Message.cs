@@ -33,7 +33,7 @@ namespace Mirai_CSharp
                 quote = quoteMsgId,
                 messageChain = chain
             }, opts);
-            using JsonDocument j = await HttpHelper.HttpPostAsync($"{SessionInfo.Options.BaseUrl}/{action}", payload);
+            using JsonDocument j = await HttpHelper.HttpPostAsync($"{SessionInfo.Options.BaseUrl}/{action}", payload).GetJsonAsync(token: SessionInfo.Canceller.Token);
             JsonElement root = j.RootElement;
             int code = root.GetProperty("code").GetInt32();
             if (code == 0)
@@ -87,7 +87,7 @@ namespace Mirai_CSharp
             return CommonSendMessageAsync("sendGroupMessage", null, groupNumber, chain, quoteMsgId);
         }
 
-        private Task<string[]> CommonSendImageAsync(long? qqNumber, long? groupNumber, string[] urls)
+        private async Task<string[]> CommonSendImageAsync(long? qqNumber, long? groupNumber, string[] urls)
         {
             CheckConnected();
             if (urls == null || urls.Length == 0)
@@ -101,7 +101,13 @@ namespace Mirai_CSharp
                 group = groupNumber,
                 urls
             }, JsonSerializeOptionsFactory.IgnoreNulls);
-            return InternalHttpPostAsync<string[], string[]>($"{SessionInfo.Options.BaseUrl}/sendImageMessage", payload, SessionInfo.Canceller.Token);
+            using JsonDocument j = await HttpHelper.HttpPostAsync($"{SessionInfo.Options.BaseUrl}/sendImageMessage", payload).GetJsonAsync(token: SessionInfo.Canceller.Token);
+            JsonElement root = j.RootElement;
+            if (root.ValueKind == JsonValueKind.Object && root.TryGetProperty("code", out JsonElement code)) // 正常返回是没有code的
+            {
+                return ThrowCommonException<string[]>(code.GetInt32(), in root);
+            }
+            return Utils.Deserialize<string[]>(in root);
         }
         /// <summary>
         /// 异步发送给定Url数组中的图片到给定好友
@@ -160,24 +166,17 @@ namespace Mirai_CSharp
             {
                 Name = "type"
             };
-            MediaTypeHeaderValue imgContentType;
+            string format;
             using (Image img = Image.FromStream(imgStream))
             {
-                switch (img.RawFormat.ToString())
+                format = img.RawFormat.ToString();
+                switch (format)
                 {
                     case nameof(ImageFormat.Jpeg):
-                        {
-                            imgContentType = new MediaTypeHeaderValue("image/jpeg");
-                            break;
-                        }
                     case nameof(ImageFormat.Png):
-                        {
-                            imgContentType = new MediaTypeHeaderValue("image/png");
-                            break;
-                        }
                     case nameof(ImageFormat.Gif):
                         {
-                            imgContentType = new MediaTypeHeaderValue("image/gif");
+                            format = format.ToLower();
                             break;
                         }
                     default: // 不是以上三种类型的图片就强转为Png
@@ -194,9 +193,10 @@ namespace Mirai_CSharp
             HttpContent imageContent = new StreamContent(imgStream);
             imageContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
             {
-                Name = "img"
+                Name = "img",
+                FileName = $"{Guid.NewGuid():n}.{format}"
             };
-            imageContent.Headers.ContentType = imgContentType;
+            imageContent.Headers.ContentType = new MediaTypeHeaderValue("image/" + format);
             HttpContent[] contents = new HttpContent[]
             {
                 sessionKeyContent,
@@ -205,14 +205,14 @@ namespace Mirai_CSharp
             };
             try
             {
-                using JsonDocument j = await HttpHelper.HttpPostAsync($"{SessionInfo.Options.BaseUrl}/uploadImage", contents);
+                using JsonDocument j = await HttpHelper.HttpPostAsync($"{SessionInfo.Options.BaseUrl}/uploadImage", contents).GetJsonAsync(token: SessionInfo.Canceller.Token);
                 JsonElement root = j.RootElement;
-                int code = root.GetProperty("code").GetInt32();
-                if (code == 0)
+                if (root.TryGetProperty("code", out JsonElement code)) // 正常返回是没有code的
                 {
-                    return Utils.Deserialize<ImageMessage>(in root);
+                    return ThrowCommonException<ImageMessage>(code.GetInt32(), in root);
                 }
-                return ThrowCommonException<ImageMessage>(code, in root);
+                return Utils.Deserialize<ImageMessage>(in root);
+
             }
             catch (JsonException) // https://github.com/mamoe/mirai-api-http/issues/85
             {

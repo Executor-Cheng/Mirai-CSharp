@@ -7,6 +7,9 @@ namespace Mirai_CSharp.Exceptions
     /// </summary>
     public sealed class TargetNotFoundException : Exception
     {
+        internal string _message; // 允许更改异常消息, 并且避免重新抛出异常时丢失StackTrace
+
+        public override string Message => _message ?? base.Message;
         /// <summary>
         /// 目标QQ/群号
         /// </summary>
@@ -19,7 +22,7 @@ namespace Mirai_CSharp.Exceptions
 
         public TargetNotFoundException(string message) : base(message)
         {
-
+            _message = message;
         }
 
         public TargetNotFoundException(long target) : this(target, "给定的目标QQ/群号不存在。", null)
@@ -29,17 +32,18 @@ namespace Mirai_CSharp.Exceptions
 
         public TargetNotFoundException(long target, string message) : this(target, message, null)
         {
-
+            _message = message;
         }
 
         public TargetNotFoundException(string message, Exception innerException) : base(message, innerException)
         {
-
+            _message = message;
         }
 
         public TargetNotFoundException(long target, string message, Exception innerException) : base(message, innerException)
         {
             Target = target;
+            _message = message;
         }
     }
 }

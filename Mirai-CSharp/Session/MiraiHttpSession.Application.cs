@@ -26,7 +26,7 @@ namespace Mirai_CSharp
                 operate = (int)action,
                 message
             });
-            return InternalHttpPostAsync($"{SessionInfo.Options.BaseUrl}/resp/newFriendRequestEvent", payload);
+            return InternalHttpPostAsync($"{SessionInfo.Options.BaseUrl}/resp/newFriendRequestEvent", payload, SessionInfo.Canceller.Token);
         }
         /// <summary>
         /// 异步处理加群请求
@@ -47,7 +47,7 @@ namespace Mirai_CSharp
                 operate = (int)action,
                 message
             });
-            return InternalHttpPostAsync($"{SessionInfo.Options.BaseUrl}/resp/memberJoinRequestEvent", payload);
+            return InternalHttpPostAsync($"{SessionInfo.Options.BaseUrl}/resp/memberJoinRequestEvent", payload, SessionInfo.Canceller.Token);
         }
     }
 }

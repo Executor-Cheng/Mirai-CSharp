@@ -21,15 +21,15 @@ namespace Mirai_CSharp.Helpers
             UserAgent = $"Mirai-CSharp/{version.ToString(version.MinorRevision > 0 ? 4 : 3)} CoreCLR/{coreclr.GetCustomAttribute<AssemblyFileVersionAttribute>().Version}";
         }
 
-        public static Task<JsonDocument> HttpGetAsync(string url, double timeout = 10, string userAgent = null, CancellationToken token = default)
+        public static Task<WebResponse> HttpGetAsync(string url, double timeout = 10, string userAgent = null)
         {
             HttpWebRequest request = WebRequest.CreateHttp(url);
             request.Timeout = (int)(timeout * 1000);
             request.UserAgent = userAgent ?? UserAgent;
-            return request.GetJsonDocumentAsync(token);
+            return request.GetResponseAsync();
         }
 
-        public static Task<JsonDocument> HttpPostAsync(string url, byte[] payload, double timeout = 10, string userAgent = null, CancellationToken token = default)
+        public static Task<WebResponse> HttpPostAsync(string url, byte[] payload, double timeout = 10, string userAgent = null)
         {
             HttpWebRequest request = WebRequest.CreateHttp(url);
             request.Method = "POST";
@@ -41,10 +41,10 @@ namespace Mirai_CSharp.Helpers
             {
                 stream.Write(payload);
             }
-            return request.GetJsonDocumentAsync(token);
+            return request.GetResponseAsync();
         }
 
-        public static async Task<JsonDocument> HttpPostAsync(string url, HttpContent[] contents, double timeout = 10, string userAgent = null, CancellationToken token = default)
+        public static async Task<WebResponse> HttpPostAsync(string url, HttpContent[] contents, double timeout = 10, string userAgent = null)
         {
             HttpWebRequest request = WebRequest.CreateHttp(url);
             request.Method = "POST";
@@ -61,14 +61,53 @@ namespace Mirai_CSharp.Helpers
                 using Stream multipartStream = await multipart.ReadAsStreamAsync();
                 await multipartStream.CopyToAsync(stream);
             }
-            return await request.GetJsonDocumentAsync(token);
+            return await request.GetResponseAsync();
         }
 
-        private static async Task<JsonDocument> GetJsonDocumentAsync(this HttpWebRequest request, CancellationToken token = default)
+        public static async Task<string> GetStringAsync(this WebResponse response, Encoding encoding = null, bool disposeResponse = true)
         {
-            using WebResponse response = await request.GetResponseAsync().IgnoreNonSuccess();
-            using Stream responseStream = response.GetResponseStream();
-            return await JsonDocument.ParseAsync(responseStream, default, token);
+            try
+            {
+                using Stream stream = response.GetResponseStream();
+                using StreamReader reader = new StreamReader(stream, encoding ?? Encoding.UTF8);
+                return await reader.ReadToEndAsync(); // 没有 CancellationToken 的重载
+            }
+            finally
+            {
+                if (disposeResponse)
+                {
+                    response.Dispose();
+                }
+            }
+        }
+        public static async Task<string> GetStringAsync(this Task<WebResponse> responseTask, Encoding encoding = null)
+        {
+            using WebResponse response = await responseTask.ConfigureAwait(false);
+            using Stream stream = response.GetResponseStream();
+            using StreamReader reader = new StreamReader(stream, encoding ?? Encoding.UTF8);
+            return await reader.ReadToEndAsync(); // 没有 CancellationToken 的重载, 禁止去掉async/await, 会导致Stream被释放, 创建状态机无法避免
+        }
+
+        public static async Task<JsonDocument> GetJsonAsync(this WebResponse response, JsonDocumentOptions options = default, bool disposeResponse = true, CancellationToken token = default)
+        {
+            try
+            {
+                using Stream stream = response.GetResponseStream();
+                return await JsonDocument.ParseAsync(stream, options, token);
+            }
+            finally
+            {
+                if (disposeResponse)
+                {
+                    response.Dispose();
+                }
+            }
+        }
+        public static async Task<JsonDocument> GetJsonAsync(this Task<WebResponse> responseTask, JsonDocumentOptions options = default, CancellationToken token = default)
+        {
+            using WebResponse response = await responseTask.ConfigureAwait(false);
+            using Stream stream = response.GetResponseStream();
+            return await JsonDocument.ParseAsync(stream, options, token);
         }
 
         public static Task<WebResponse> IgnoreNonSuccess(this Task<WebResponse> task)

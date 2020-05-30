@@ -4,7 +4,6 @@ using Mirai_CSharp.Utility;
 using System;
 using System.IO;
 using System.Net.WebSockets;
-using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading;
 
@@ -13,10 +12,8 @@ namespace Mirai_CSharp
 {
     public partial class MiraiHttpSession
     {
-        private async void ReceiveMessageLoop(InternalSessionInfo session)
+        private async void ReceiveMessageLoop(InternalSessionInfo session, CancellationToken token)
         {
-            JsonSerializerOptions opt = new JsonSerializerOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
-            CancellationToken token = session.Canceller.Token;
             using ClientWebSocket ws = new ClientWebSocket();
             try
             {
@@ -195,6 +192,35 @@ namespace Mirai_CSharp
                                 break;
                             }
                     }
+                }
+            }
+            catch (OperationCanceledException)
+            {
+
+            }
+            catch (Exception e)
+            {
+                if (Interlocked.CompareExchange(ref SessionInfo, null, session) != null)
+                {
+                    _ = InternalReleaseAsync(session); // 不异步等待, 省的抛错没地捕获
+                    try { DisconnectedEvt?.Invoke(this, e); } catch { } // 扔掉所有异常
+                }
+            }
+        }
+
+        private async void ReceiveCommandLoop(InternalSessionInfo session, CancellationToken token)
+        {
+            using ClientWebSocket ws = new ClientWebSocket();
+            try
+            {
+                await ws.ConnectAsync(new Uri($"ws://{session.Options.Host}:{session.Options.Port}/command?authKey={session.Options.AuthKey}"), token);
+                while (true)
+                {
+                    using MemoryStream ms = await ws.ReceiveFullyAsync(token);
+                    ms.Seek(0, SeekOrigin.Begin);
+                    using JsonDocument j = await JsonDocument.ParseAsync(ms, default, token);
+                    JsonElement root = j.RootElement;
+                    _ = InvokeAsync<ICommandExecuted, ICommandExecutedEventArgs>(Plugins, CommandExecuted, this, root.Deserialize<CommandExecutedEventArgs>());
                 }
             }
             catch (OperationCanceledException)

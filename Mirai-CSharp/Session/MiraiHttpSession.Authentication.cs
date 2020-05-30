@@ -14,6 +14,20 @@ namespace Mirai_CSharp
     {
         /// <summary>
         /// 异步连接到mirai-api-http。
+        /// </summary>
+        /// <remarks>
+        /// 不会连接到指令监控的ws服务。此方法不是线程安全的。
+        /// </remarks>
+        /// <exception cref="BotNotFoundException"/>
+        /// <exception cref="InvalidAuthKeyException"/>
+        /// <param name="options">连接信息</param>
+        /// <param name="qqNumber">Session将要绑定的Bot的qq号</param>
+        public Task ConnectAsync(MiraiHttpSessionOptions options, long qqNumber)
+        {
+            return ConnectAsync(options, qqNumber, false);
+        }
+        /// <summary>
+        /// 异步连接到mirai-api-http。
         /// <para>
         /// 此方法不是线程安全的。
         /// </para>
@@ -22,7 +36,8 @@ namespace Mirai_CSharp
         /// <exception cref="InvalidAuthKeyException"/>
         /// <param name="options">连接信息</param>
         /// <param name="qqNumber">Session将要绑定的Bot的qq号</param>
-        public async Task ConnectAsync(MiraiHttpSessionOptions options, long qqNumber)
+        /// <param name="listenCommand">是否监听指令相关的消息</param>
+        public async Task ConnectAsync(MiraiHttpSessionOptions options, long qqNumber, bool listenCommand)
         {
             CheckDisposed();
             if (this.Connected)
@@ -46,7 +61,12 @@ namespace Mirai_CSharp
                 {
                     await this.SetConfigAsync(session, new MiraiSessionConfig { CacheSize = config.CacheSize, EnableWebSocket = true });
                 }
-                ReceiveMessageLoop(session);
+                CancellationToken token = session.Canceller.Token;
+                ReceiveMessageLoop(session, token);
+                if (listenCommand)
+                {
+                    ReceiveCommandLoop(session, token);
+                }
                 SessionInfo = session;
             }
             catch // 如果这都报错那真是见了鬼了
@@ -59,7 +79,7 @@ namespace Mirai_CSharp
         private static async Task<string> AuthorizeAsync(MiraiHttpSessionOptions options)
         {
             byte[] payload = JsonSerializer.SerializeToUtf8Bytes(new { authKey = options.AuthKey });
-            using JsonDocument j = await HttpHelper.HttpPostAsync($"{options.BaseUrl}/auth", payload);
+            using JsonDocument j = await HttpHelper.HttpPostAsync($"{options.BaseUrl}/auth", payload).GetJsonAsync();
             JsonElement root = j.RootElement;
             int code = root.GetProperty("code").GetInt32();
             return code switch
@@ -85,7 +105,7 @@ namespace Mirai_CSharp
         /// <returns></returns>
         public static async Task<Version> GetVersionAsync(MiraiHttpSessionOptions options)
         {
-            using JsonDocument j = await HttpHelper.HttpGetAsync($"{options.BaseUrl}/about");
+            using JsonDocument j = await HttpHelper.HttpGetAsync($"{options.BaseUrl}/about").GetJsonAsync();
             JsonElement root = j.RootElement;
             int code = root.GetProperty("code").GetInt32();
             if (code == 0)

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
+#pragma warning disable IDE0038 // 使用模式匹配
 namespace Mirai_CSharp
 {
     public partial class MiraiHttpSession
