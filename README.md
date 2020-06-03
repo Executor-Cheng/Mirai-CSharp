@@ -1,5 +1,5 @@
-[![NuGet version (Mirai-CSharp)](https://img.shields.io/nuget/v/Mirai-CSharp.svg?style=flat)](https://www.nuget.org/packages/Mirai-CSharp/)  
 ## Mirai-CSharp  
+[![NuGet version (Mirai-CSharp)](https://img.shields.io/nuget/v/Mirai-CSharp.svg?style=flat)](https://www.nuget.org/packages/Mirai-CSharp/)  
 
 ### 关于本项目  
 #### 这是一个帮助C#开发者与[mirai](https://github.com/mamoe/mirai)交互的项目  
