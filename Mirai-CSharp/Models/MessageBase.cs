@@ -238,10 +238,10 @@ namespace Mirai_CSharp.Models
         public const string MsgType = "Face";
         /// <summary>
         /// QQ表情编号，可选，优先高于name
-        /// <para>
-        /// 编号详见 <a href="https://github.com/mamoe/mirai/blob/master/mirai-core/src/commonMain/kotlin/net.mamoe.mirai/message/data/Face.kt#L41"/>
-        /// </para>
         /// </summary>
+        /// <remarks>
+        /// 编号详见 <a href="https://github.com/mamoe/mirai/blob/master/mirai-core/src/commonMain/kotlin/net.mamoe.mirai/message/data/Face.kt#L41"/>
+        /// </remarks>
         [JsonPropertyName("faceId")]
         public int Id { get; set; }
         /// <summary>
@@ -331,11 +331,11 @@ namespace Mirai_CSharp.Models
         public const string MsgType = "Poke";
         /// <summary>
         /// 戳一戳的类型。
-        /// <para>
-        /// SVIP的Poke带Id, enum无法表示两个值, 不写。
-        /// 详见 <a href="https://github.com/mamoe/mirai/blob/8ca4357eb834f3c284deb68a6dd25d5c59957a82/mirai-core/src/commonMain/kotlin/net.mamoe.mirai/message/data/HummerMessage.kt#L56"/>
-        /// </para>
         /// </summary>
+        /// <remarks>
+        /// SVIP的Poke带Id, <see langword="enum"/> 无法表示两个值, 不写。
+        /// 详见 <a href="https://github.com/mamoe/mirai/blob/8ca4357eb834f3c284deb68a6dd25d5c59957a82/mirai-core/src/commonMain/kotlin/net.mamoe.mirai/message/data/HummerMessage.kt#L56"/>
+        /// </remarks>
         public enum PokeType
         {
             /// <summary>
@@ -383,22 +383,25 @@ namespace Mirai_CSharp.Models
 
     /// <summary>
     /// 表示语音消息。
-    /// <para>
-    /// 提前实现。目前mirai-api-http暂不支持。
-    /// </para>
     /// </summary>
+    /// <remarks>
+    /// 提前实现。目前mirai-api-http v1.7.1暂不支持。
+    /// </remarks>
     public class VoiceMessage : MessageBase
     {
         public const string MsgType = "Voice";
         /// <summary>
         /// 语音文件名
         /// </summary>
+        [JsonPropertyName("fileName")]
         public string FileName { get; set; }
         
+        [JsonPropertyName("md5")]
         public string Md5 { get; set; }
         /// <summary>
         /// 用于下载语音的Url
         /// </summary>
+        [JsonPropertyName("url")]
         public string Url { get; set; }
 
         public VoiceMessage() : base(MsgType) { }

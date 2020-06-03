@@ -57,10 +57,10 @@ namespace Mirai_CSharp
 
         /// <summary>
         /// 异步释放当前Session, 并清理相关资源。
-        /// <para>
-        /// 本方法线程安全。
-        /// </para>
         /// </summary>
+        /// <remarks>
+        /// 本方法线程安全。
+        /// </remarks>
         /// <returns></returns>
         public ValueTask DisposeAsync()
         {

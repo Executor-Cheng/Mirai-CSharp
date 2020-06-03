@@ -46,10 +46,10 @@ namespace Mirai_CSharp.Models
 
     /// <summary>
     /// 提供修改前和修改后的 <typeparamref name="TProperty"/> 信息接口
-    /// <para>
-    /// 本接口是对于 <see langword="enum"/> 的特定实现
-    /// </para>
     /// </summary>
+    /// <remarks>
+    /// 本接口是对于 <see langword="enum"/> 的特定实现
+    /// </remarks>
     /// <typeparam name="TProperty">属性类型, 必须为枚举类型</typeparam>
     public interface IEnumPropertyChangedEventArgs<TProperty> : IPropertyChangedEventArgs<TProperty> where TProperty : Enum
     {
@@ -112,10 +112,10 @@ namespace Mirai_CSharp.Models
 
     /// <summary>
     /// 提供Bot在群中属性改变的信息接口。继承自 <see cref="IEnumPropertyChangedEventArgs{TProperty}"/> 和 <see cref="IGroupEventArgs"/>
-    /// <para>
-    /// 本接口是对于 <see langword="enum"/> 的特定实现
-    /// </para>
     /// </summary>
+    /// <remarks>
+    /// 本接口是对于 <see langword="enum"/> 的特定实现
+    /// </remarks>
     /// <typeparam name="TProperty">属性类型, 必须为枚举类型</typeparam>
     public interface IBotGroupEnumPropertyChangedEventArgs<TProperty> : IEnumPropertyChangedEventArgs<TProperty>, IGroupEventArgs where TProperty : Enum
     {
@@ -299,10 +299,10 @@ namespace Mirai_CSharp.Models
 
     /// <summary>
     /// 提供群成员属性改变的信息接口。继承自 <see cref="IEnumPropertyChangedEventArgs{TProperty}"/> 和 <see cref="IMemberEventArgs"/>
-    /// <para>
-    /// 本接口是对于 <see langword="enum"/> 的特定实现
-    /// </para>
     /// </summary>
+    /// <remarks>
+    /// 本接口是对于 <see langword="enum"/> 的特定实现
+    /// </remarks>
     /// <typeparam name="TProperty">属性类型, 必须为枚举类型</typeparam>
     public interface IGroupMemberEnumPropertyChangedEventArgs<TProperty> : IEnumPropertyChangedEventArgs<TProperty>, IMemberEventArgs where TProperty : Enum
     {

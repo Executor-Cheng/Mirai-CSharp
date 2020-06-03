@@ -28,10 +28,10 @@ namespace Mirai_CSharp
         }
         /// <summary>
         /// 异步连接到mirai-api-http。
-        /// <para>
-        /// 此方法不是线程安全的。
-        /// </para>
         /// </summary>
+        /// <remarks>
+        /// 此方法不是线程安全的。
+        /// </remarks>
         /// <exception cref="BotNotFoundException"/>
         /// <exception cref="InvalidAuthKeyException"/>
         /// <param name="options">连接信息</param>

@@ -185,7 +185,8 @@ namespace Mirai_CSharp
                             img.Save(ms, ImageFormat.Png);
                             imgStream.Dispose();
                             imgStream = ms;
-                            goto case nameof(ImageFormat.Png);
+                            format = "png";
+                            break;
                         }
                 }
             }
@@ -221,10 +222,10 @@ namespace Mirai_CSharp
         }
         /// <summary>
         /// 异步上传图片
-        /// <para>
-        /// 注意: 当 mirai-api-http 的版本小于等于v1.7.0时, 本方法返回的将是一个只有 Url 有值的 <see cref="ImageMessage"/>
-        /// </para>
         /// </summary>
+        /// <remarks>
+        /// 注意: 当 mirai-api-http 的版本小于等于v1.7.0时, 本方法返回的将是一个只有 Url 有值的 <see cref="ImageMessage"/>
+        /// </remarks>
         /// <exception cref="ArgumentException"/>
         /// <exception cref="FileNotFoundException"/>
         /// <exception cref="InvalidOperationException"/>
@@ -237,10 +238,10 @@ namespace Mirai_CSharp
         }
         /// <summary>
         /// 异步上传图片
-        /// <para>
-        /// 注意: 当 mirai-api-http 的版本小于等于v1.7.0时, 本方法返回的将是一个只有 Url 有值的 <see cref="ImageMessage"/>
-        /// </para>
         /// </summary>
+        /// <remarks>
+        /// 注意: 当 mirai-api-http 的版本小于等于v1.7.0时, 本方法返回的将是一个只有 Url 有值的 <see cref="ImageMessage"/>
+        /// </remarks>
         /// <exception cref="ArgumentException"/>
         /// <exception cref="InvalidOperationException"/>
         /// <param name="type">目标类型</param>
@@ -253,19 +254,14 @@ namespace Mirai_CSharp
         /// <summary>
         /// 异步撤回消息
         /// </summary>
-        /// <param name="messageId">消息Id, 应为 <see cref="SourceMessage.Id"/>
-        /// <para>
-        /// - 或 -
-        /// </para>
-        /// <see cref="SendFriendMessageAsync(long, IMessageBase[], int?)"/> 的返回值
-        /// <para>
-        /// - 或 -
-        /// </para>
-        /// <see cref="SendTempMessageAsync(long, long, IMessageBase[], int?)"/> 的返回值
-        /// <para>
-        /// - 或 -
-        /// </para>
-        /// <see cref="SendGroupMessageAsync(long, IMessageBase[], int?)"/> 的返回值
+        /// <param name="messageId">
+        /// 请提供以下之一
+        /// <list type="bullet">
+        /// <item><see cref="SourceMessage.Id"/></item>
+        /// <item><see cref="SendFriendMessageAsync(long, IMessageBase[], int?)"/> 的返回值</item>
+        /// <item><see cref="SendTempMessageAsync(long, long, IMessageBase[], int?)"/> 的返回值</item>
+        /// <item><see cref="SendGroupMessageAsync(long, IMessageBase[], int?)"/> 的返回值</item>
+        /// </list>
         /// </param>
         /// <exception cref="InvalidOperationException"/>
         /// <exception cref="TargetNotFoundException"/>
