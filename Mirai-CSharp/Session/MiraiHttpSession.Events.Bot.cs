@@ -48,5 +48,9 @@ namespace Mirai_CSharp
         /// Bot被踢出一个群
         /// </summary>
         public event CommonEventHandler<IBotKickedOutEventArgs> BotKickedOutEvt;
+        /// <summary>
+        /// Bot被邀请入群
+        /// </summary>
+        public event CommonEventHandler<IBotInvitedJoinGroupEventArgs> BotInvitedJoinGroupEvt;
     }
 }

@@ -51,6 +51,11 @@ namespace Mirai_CSharp
                                 _ = InvokeAsync<IBotRelogin, IBotReloginEventArgs>(Plugins, BotReloginEvt, this, root.Deserialize<BotEventArgs>());
                                 break;
                             }
+                        case "BotInvitedJoinGroupRequestEvent":
+                            {
+                                _ = InvokeAsync<IBotInvitedJoinGroup, IBotInvitedJoinGroupEventArgs>(Plugins, BotInvitedJoinGroupEvt, this, root.Deserialize<CommonGroupApplyEventArgs>());
+                                break;
+                            }
                         case "FriendMessage":
                             {
                                 _ = InvokeAsync<IFriendMessage, IFriendMessageEventArgs>(Plugins, FriendMessageEvt, this, root.Deserialize<FriendMessageEventArgs>());
@@ -183,7 +188,7 @@ namespace Mirai_CSharp
                             }
                         case "MemberJoinRequestEvent":
                             {
-                                _ = InvokeAsync<IGroupApply, IGroupApplyEventArgs>(Plugins, GroupApplyEvt, this, root.Deserialize<GroupApplyEventArgs>());
+                                _ = InvokeAsync<IGroupApply, IGroupApplyEventArgs>(Plugins, GroupApplyEvt, this, root.Deserialize<CommonGroupApplyEventArgs>());
                                 break;
                             }
                         default:
