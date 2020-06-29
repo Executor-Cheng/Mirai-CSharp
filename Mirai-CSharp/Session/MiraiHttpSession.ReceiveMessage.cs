@@ -216,6 +216,7 @@ namespace Mirai_CSharp
         private async void ReceiveCommandLoop(InternalSessionInfo session, CancellationToken token)
         {
             using ClientWebSocket ws = new ClientWebSocket();
+            ws.Options.KeepAliveInterval = TimeSpan.FromSeconds(-1);
             try
             {
                 await ws.ConnectAsync(new Uri($"ws://{session.Options.Host}:{session.Options.Port}/command?authKey={session.Options.AuthKey}"), token);

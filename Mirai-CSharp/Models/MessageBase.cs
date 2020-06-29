@@ -89,11 +89,11 @@ namespace Mirai_CSharp.Models
         /// </summary>
         [JsonConverter(typeof(IMessageBaseArrayConverter))]
         [JsonPropertyName("origin")]
-        public MessageBase[] OriginChain { get; set; }
+        public IMessageBase[] OriginChain { get; set; }
 
         public QuoteMessage() : base(MsgType) { }
 
-        public QuoteMessage(int id, long groupId, long senderId, long targetId, MessageBase[] originChain) : this()
+        public QuoteMessage(int id, long groupId, long senderId, long targetId, IMessageBase[] originChain) : this()
         {
             Id = id;
             GroupId = groupId;
