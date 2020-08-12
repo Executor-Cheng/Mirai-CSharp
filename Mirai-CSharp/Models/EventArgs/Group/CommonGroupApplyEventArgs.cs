@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 
 namespace Mirai_CSharp.Models
 {
@@ -16,13 +17,15 @@ namespace Mirai_CSharp.Models
                                        IBotInvitedJoinGroupEventArgs
     {
         [JsonPropertyName("groupName")]
-        public string FromGroupName { get; set; }
+        public string FromGroupName { get; set; } = null!;
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public CommonGroupApplyEventArgs()
         {
 
         }
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public CommonGroupApplyEventArgs(string fromGroupName, long eventId, long fromGroup, long fromQQ, string nickName) : base(eventId, fromGroup, fromQQ, nickName)
         {
             FromGroupName = fromGroupName;

@@ -7,6 +7,6 @@ namespace Mirai_CSharp
         /// <summary>
         /// 收到临时消息
         /// </summary>
-        public event CommonEventHandler<ITempMessageEventArgs> TempMessageEvt;
+        public event CommonEventHandler<ITempMessageEventArgs>? TempMessageEvt;
     }
 }

@@ -31,8 +31,8 @@ namespace Mirai_CSharp
         /// </summary>
         public Task<IMiraiSessionConfig> GetConfigAsync()
         {
-            CheckConnected();
-            return GetConfigAsync(SessionInfo);
+            InternalSessionInfo session = SafeGetSession();
+            return GetConfigAsync(session);
         }
         /// <summary>
         /// 异步设置当前Session的Config
@@ -40,8 +40,8 @@ namespace Mirai_CSharp
         /// <param name="config">配置信息</param>
         public Task SetConfigAsync(IMiraiSessionConfig config)
         {
-            CheckConnected();
-            return SetConfigAsync(SessionInfo, config);
+            InternalSessionInfo session = SafeGetSession();
+            return SetConfigAsync(session, config);
         }
     }
 }

@@ -9,10 +9,10 @@ namespace Mirai_CSharp
 {
     public partial class MiraiHttpSession
     {
-        private static Task<bool> InvokeAsync<TEventArgs>(IPlugin plugin, MiraiHttpSession session, TEventArgs e)
-        {
-            return plugin is IPlugin<TEventArgs> ? ((IPlugin<TEventArgs>)plugin).HandleEvent(session, e) : Task.FromResult(false);
-        }
+        //private static Task<bool> InvokeAsync<TEventArgs>(IPlugin plugin, MiraiHttpSession session, TEventArgs e)
+        //{
+        //    return plugin is IPlugin<TEventArgs> ? ((IPlugin<TEventArgs>)plugin).HandleEvent(session, e) : Task.FromResult(false);
+        //}
 
         //public static Task<bool> InvokeAsync<TPlugin, TEventArgs>(this IPlugin plugin, MiraiHttpSession session, TEventArgs e) where TPlugin : IPlugin<TEventArgs>
         //{
@@ -20,13 +20,13 @@ namespace Mirai_CSharp
         //    return plugin is TPlugin ? ((TPlugin)plugin).HandleEvent(session, e) : Task.FromResult(false);
         //}
 
-        private static async Task InvokeAsync<TPlugin, TEventArgs>(IEnumerable<IPlugin> plugins, CommonEventHandler<TEventArgs> handlers, MiraiHttpSession session, TEventArgs e) where TPlugin : IPlugin<TEventArgs>
+        private static async Task InvokeAsync<TEventArgs>(IEnumerable<IPlugin> plugins, CommonEventHandler<TEventArgs>? handlers, MiraiHttpSession session, TEventArgs e)
         {
             try
             {
                 foreach (IPlugin plugin in plugins)
                 {
-                    if (await InvokeAsync(plugin, session, e))
+                    if (plugin is IPlugin<TEventArgs> tPlugin && await tPlugin.HandleEvent(session, e))
                     {
                         return;
                     }

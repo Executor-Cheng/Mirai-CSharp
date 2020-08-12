@@ -23,8 +23,10 @@ namespace Mirai_CSharp.Models
         [JsonPropertyName("operator")]
         public long Operator { get; set; }
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public FriendMessageRevokedEventArgs() { }
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public FriendMessageRevokedEventArgs(long @operator, long senderId, int messageId, DateTime sentTime) : base(senderId, messageId, sentTime)
         {
             Operator = @operator;

@@ -10,7 +10,7 @@ namespace Mirai_CSharp.Utility.JsonConverters
     {
         public override IMessageBase[] Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            List<MessageBase> result = new List<MessageBase>();
+            List<IMessageBase> result = new List<IMessageBase>();
             while (reader.Read() && reader.TokenType != JsonTokenType.EndArray)
             {
                 JsonElement data = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
@@ -30,7 +30,7 @@ namespace Mirai_CSharp.Utility.JsonConverters
                     PokeMessage.MsgType => Utils.Deserialize<PokeMessage>(in data, options),
                     VoiceMessage.MsgType => Utils.Deserialize<VoiceMessage>(in data, options),
                     UnknownMessage.MsgType => Utils.Deserialize<UnknownMessage>(in data, options),
-                    _ => default
+                    _ => throw new NotImplementedException("未知的消息类型:" + data.GetProperty("type").GetString())
                 });
             }
             return result.ToArray();

@@ -57,7 +57,7 @@ namespace Mirai_CSharp.Utility
                     if (ctx.Request.HttpMethod == "GET" &&
                         ctx.Request.Url.AbsolutePath == "/fetch" &&
                         Guid.TryParse(ctx.Request.QueryString["guid"], out Guid guid) &&
-                        Cache.TryRemove(guid, out Stream imgStream))
+                        Cache.TryRemove(guid, out Stream? imgStream))
                     {
                         using (imgStream)
                         {

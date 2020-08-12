@@ -16,17 +16,17 @@ namespace Mirai_CSharp
         /// <param name="message">附加信息</param>
         public Task HandleNewFriendApplyAsync(IApplyResponseArgs args, FriendApplyAction action, string message = "")
         {
-            CheckConnected();
+            InternalSessionInfo session = SafeGetSession();
             byte[] payload = JsonSerializer.SerializeToUtf8Bytes(new
             {
-                sessionKey = SessionInfo.SessionKey,
+                sessionKey = session.SessionKey,
                 eventId = args.EventId,
                 fromId = args.FromQQ,
                 groupId = args.FromGroup,
                 operate = (int)action,
                 message
             });
-            return InternalHttpPostAsync($"{SessionInfo.Options.BaseUrl}/resp/newFriendRequestEvent", payload, SessionInfo.Canceller.Token);
+            return InternalHttpPostAsync($"{session.Options.BaseUrl}/resp/newFriendRequestEvent", payload, session.Token);
         }
         /// <summary>
         /// 异步处理加群请求或Bot受邀入群请求
@@ -42,17 +42,17 @@ namespace Mirai_CSharp
         /// <param name="message">附加信息</param>
         public Task HandleGroupApplyAsync(IApplyResponseArgs args, GroupApplyActions action, string message = "")
         {
-            CheckConnected();
+            InternalSessionInfo session = SafeGetSession();
             byte[] payload = JsonSerializer.SerializeToUtf8Bytes(new
             {
-                sessionKey = SessionInfo.SessionKey,
+                sessionKey = session.SessionKey,
                 eventId = args.EventId,
                 fromId = args.FromQQ,
                 groupId = args.FromGroup,
                 operate = (int)action,
                 message
             });
-            return InternalHttpPostAsync($"{SessionInfo.Options.BaseUrl}/resp/memberJoinRequestEvent", payload, SessionInfo.Canceller.Token);
+            return InternalHttpPostAsync($"{session.Options.BaseUrl}/resp/memberJoinRequestEvent", payload, session.Token);
         }
     }
 }

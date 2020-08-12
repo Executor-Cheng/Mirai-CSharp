@@ -1,9 +1,6 @@
-﻿using Mirai_CSharp.Plugin;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Reflection;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace Mirai_CSharp.Utility
 {
@@ -21,17 +18,17 @@ namespace Mirai_CSharp.Utility
         public static long DateTime2UnixTimeStamp_Ms(DateTime time)
             => (time.ToUniversalTime().Ticks - 621355968000000000) / 10000;
 
-        public static T Deserialize<T>(this in JsonElement element, JsonSerializerOptions options = null)
+        public static T Deserialize<T>(this in JsonElement element, JsonSerializerOptions? options = null)
         {
             var jsonDocument = JsonDeserialization.JsonDocumentField.GetValue(element);
-            ReadOnlyMemory<byte> bytes = (ReadOnlyMemory<byte>)JsonDeserialization.JsonDocumentUtf8JsonField.GetValue(jsonDocument);
-            return (T)JsonSerializer.Deserialize(bytes.Span, typeof(T), options);
+            ReadOnlyMemory<byte> bytes = (ReadOnlyMemory<byte>)JsonDeserialization.JsonDocumentUtf8JsonField.GetValue(jsonDocument)!;
+            return (T)JsonSerializer.Deserialize(bytes.Span, typeof(T), options)!;
         }
 
         private static class JsonDeserialization
         {
-            public static readonly FieldInfo JsonDocumentField = typeof(JsonElement).GetField("_parent", BindingFlags.NonPublic | BindingFlags.Instance);
-            public static readonly FieldInfo JsonDocumentUtf8JsonField = typeof(JsonDocument).GetField("_utf8Json", BindingFlags.NonPublic | BindingFlags.Instance);
+            public static readonly FieldInfo JsonDocumentField = typeof(JsonElement).GetField("_parent", BindingFlags.NonPublic | BindingFlags.Instance)!;
+            public static readonly FieldInfo JsonDocumentUtf8JsonField = typeof(JsonDocument).GetField("_utf8Json", BindingFlags.NonPublic | BindingFlags.Instance)!;
         }
     }
 }

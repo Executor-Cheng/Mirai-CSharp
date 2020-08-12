@@ -24,7 +24,7 @@ namespace Mirai_CSharp.Models
         /// </summary>
         [JsonConverter(typeof(IMessageBaseArrayConverter))]
         [JsonPropertyName("messageChain")]
-        public IMessageBase[] Chain { get; set; }
+        public IMessageBase[] Chain { get; set; } = null!;
 
         protected CommonMessageEventArgs() { }
 

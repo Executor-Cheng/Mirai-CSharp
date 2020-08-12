@@ -18,7 +18,7 @@ namespace Mirai_CSharp.Models
     {
         [JsonConverter(typeof(ChangeTypeJsonConverter<GroupMemberInfo, IGroupMemberInfo>))]
         [JsonPropertyName("sender")]
-        public IGroupMemberInfo Sender { get; set; }
+        public IGroupMemberInfo Sender { get; set; } = null!;
 
         protected GroupMessageBaseEventArgs() { }
 
@@ -28,6 +28,6 @@ namespace Mirai_CSharp.Models
         }
 
         public override string ToString()
-            => $"[{Sender.Group.Name}({Sender.Group.Id})] {Sender.Name}({Sender.Id}) -> {string.Join("", (IEnumerable<MessageBase>)Chain)}";
+            => $"[{Sender.Group.Name}({Sender.Group.Id})] {Sender.Name}({Sender.Id}) -> {string.Join("", (IEnumerable<Messages>)Chain)}";
     }
 }

@@ -38,7 +38,7 @@ namespace Mirai_CSharp.Models
         public long FromQQ { get; set; }
 
         [JsonPropertyName("nick")]
-        public string NickName { get; set; }
+        public string NickName { get; set; } = null!;
 
         protected NewApplyEventArgs() { }
 
