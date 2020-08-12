@@ -1,4 +1,6 @@
-﻿namespace Mirai_CSharp.Models
+﻿using System;
+
+namespace Mirai_CSharp.Models
 {
     /// <summary>
     /// 提供全员禁言设置被改变相关信息的接口。继承自 <see cref="IGroupPropertyChangedEventArgs{TProperty}"/>
@@ -38,11 +40,13 @@
                                                      IGroupConfessTalkChangedEventArgs,
                                                      IGroupMemberInviteChangedEventArgs
     {
+        [Obsolete("此类不应由用户主动创建实例。")]
         public GroupBoolPropertyChangedEventArgs()
         {
 
         }
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public GroupBoolPropertyChangedEventArgs(IGroupInfo group, IGroupMemberInfo @operator, bool origin, bool current) : base(group, @operator, origin, current)
         {
 

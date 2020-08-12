@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 
 namespace Mirai_CSharp.Models
 {
@@ -7,11 +8,19 @@ namespace Mirai_CSharp.Models
     /// </summary>
     public interface IFriendInfo : IBaseInfo
     {
+#if NETSTANDARD2_0
+        /// <summary>
+        /// 好友昵称
+        /// </summary>
+        [JsonPropertyName("nickname")]
+        new string Name { get; }
+#else
         /// <summary>
         /// 好友昵称
         /// </summary>
         [JsonPropertyName("nickname")]
         abstract string IBaseInfo.Name { get; }
+#endif
         /// <summary>
         /// 好友备注
         /// </summary>
@@ -30,16 +39,22 @@ namespace Mirai_CSharp.Models
         /// 好友备注
         /// </summary>
         [JsonPropertyName("remark")]
-        public string Remark { get; set; }
+        public string Remark { get; set; } = null!;
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public FriendInfo()
         {
 
         }
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public FriendInfo(long id, string name, string remark) : base(id, name)
         {
             Remark = remark;
         }
+#if NETSTANDARD2_0
+        [JsonPropertyName("nickname")]
+        string IFriendInfo.Name => base.Name;
+#endif
     }
 }

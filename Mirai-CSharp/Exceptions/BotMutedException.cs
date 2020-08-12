@@ -7,37 +7,24 @@ namespace Mirai_CSharp.Exceptions
     /// </summary>
     public sealed class BotMutedException : Exception
     {
+        private const string DefaultMessage = "给定的机器人QQ已被禁言。";
+
         /// <summary>
         /// 机器人QQ
         /// </summary>
         public long BotQQ { get; }
 
-        public BotMutedException() : this("给定的机器人QQ已被禁言。")
-        {
+        public BotMutedException() : this(DefaultMessage) { }
 
-        }
+        public BotMutedException(string message) : this(0, message) { }
 
-        public BotMutedException(string message) : base(message)
-        {
+        public BotMutedException(long botQQ) : this(botQQ, DefaultMessage, null) { }
 
-        }
+        public BotMutedException(long botQQ, string message) : this(botQQ, message, null) { }
 
-        public BotMutedException(long botQQ) : this(botQQ, "给定的机器人QQ已被禁言。", null)
-        {
+        public BotMutedException(string message, Exception? innerException) : this(0, message, innerException) { }
 
-        }
-
-        public BotMutedException(long botQQ, string message) : this(botQQ, message, null)
-        {
-
-        }
-
-        public BotMutedException(string message, Exception innerException) : base(message, innerException)
-        {
-
-        }
-
-        public BotMutedException(long botQQ, string message, Exception innerException) : base(message, innerException)
+        public BotMutedException(long botQQ, string message, Exception? innerException) : base(message ?? DefaultMessage, innerException)
         {
             BotQQ = botQQ;
         }

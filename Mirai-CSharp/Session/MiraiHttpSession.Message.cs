@@ -11,29 +11,49 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Mirai_CSharp
 {
     public partial class MiraiHttpSession
     {
+        private static readonly JsonSerializerOptions _forSendMsg = CreateSendMsgOpt();
+        
+        private static JsonSerializerOptions CreateSendMsgOpt()
+        {
+            JsonSerializerOptions opts = JsonSerializeOptionsFactory.IgnoreNulls;
+            opts.Converters.Add(new IMessageBaseArrayConverter());
+            return opts;
+        }
+
         private async Task<int> CommonSendMessageAsync(string action, long? qqNumber, long? fromGroup, IMessageBase[] chain, int? quoteMsgId)
         {
-            CheckConnected();
+            InternalSessionInfo session = SafeGetSession();
             if (chain == null || chain.Length == 0)
             {
                 throw new ArgumentException("消息链必须为非空且至少有1条消息。");
             }
-            JsonSerializerOptions opts = JsonSerializeOptionsFactory.IgnoreNulls;
-            opts.Converters.Add(new IMessageBaseArrayConverter());
+            if (chain.OfType<SourceMessage>().Any())
+            {
+                throw new ArgumentException("无法发送基本信息(SourceMessage)。");
+            }
+            if (chain.OfType<QuoteMessage>().Any())
+            {
+                throw new ArgumentException("无法发送引用信息(QuoteMessage), 请使用quoteMsgId参数进行引用。");
+            }
+            if (chain.All(p => p is PlainMessage pm && string.IsNullOrEmpty(pm.Message)))
+            {
+                throw new ArgumentException("消息链中的所有消息均为空。");
+            }
             byte[] payload = JsonSerializer.SerializeToUtf8Bytes(new
             {
-                sessionKey = SessionInfo.SessionKey,
+                sessionKey = session.SessionKey,
                 qq = qqNumber,
                 group = fromGroup,
                 quote = quoteMsgId,
                 messageChain = chain
-            }, opts);
-            using JsonDocument j = await HttpHelper.HttpPostAsync($"{SessionInfo.Options.BaseUrl}/{action}", payload).GetJsonAsync(token: SessionInfo.Canceller.Token);
+            }, _forSendMsg);
+            using JsonDocument j = await HttpHelper.HttpPostAsync($"{session.Options.BaseUrl}/{action}", payload).GetJsonAsync(token: session.Token);
             JsonElement root = j.RootElement;
             int code = root.GetProperty("code").GetInt32();
             if (code == 0)
@@ -89,19 +109,19 @@ namespace Mirai_CSharp
 
         private async Task<string[]> CommonSendImageAsync(long? qqNumber, long? groupNumber, string[] urls)
         {
-            CheckConnected();
+            InternalSessionInfo session = SafeGetSession();
             if (urls == null || urls.Length == 0)
             {
                 throw new ArgumentException("urls必须为非空且至少有1条url。");
             }
             byte[] payload = JsonSerializer.SerializeToUtf8Bytes(new
             {
-                sessionKey = SessionInfo.SessionKey,
+                sessionKey = session.SessionKey,
                 qq = qqNumber,
                 group = groupNumber,
                 urls
             }, JsonSerializeOptionsFactory.IgnoreNulls);
-            using JsonDocument j = await HttpHelper.HttpPostAsync($"{SessionInfo.Options.BaseUrl}/sendImageMessage", payload).GetJsonAsync(token: SessionInfo.Canceller.Token);
+            using JsonDocument j = await HttpHelper.HttpPostAsync($"{session.Options.BaseUrl}/sendImageMessage", payload).GetJsonAsync(token: session.Token);
             JsonElement root = j.RootElement;
             if (root.ValueKind == JsonValueKind.Object && root.TryGetProperty("code", out JsonElement code)) // 正常返回是没有code的
             {
@@ -148,15 +168,15 @@ namespace Mirai_CSharp
             return CommonSendImageAsync(null, groupNumber, urls);
         }
 
-        private async Task<ImageMessage> InternalUploadPictureAsync(PictureTarget type, Stream imgStream)
+        private async Task<ImageMessage> InternalUploadPictureAsync(InternalSessionInfo session, PictureTarget type, Stream imgStream)
         {
-            if (ApiVersion <= new Version(1, 7, 0))
+            if (session.ApiVersion <= new Version(1, 7, 0))
             {
                 Guid guid = Guid.NewGuid();
                 ImageHttpListener.RegisterImage(guid, imgStream);
                 return new ImageMessage(null, $"http://127.0.0.1:{ImageHttpListener.Port}/fetch?guid={guid:n}", null);
             }
-            HttpContent sessionKeyContent = new StringContent(SessionInfo.SessionKey);
+            HttpContent sessionKeyContent = new StringContent(session.SessionKey);
             sessionKeyContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
             {
                 Name = "sessionKey"
@@ -206,7 +226,7 @@ namespace Mirai_CSharp
             };
             try
             {
-                using JsonDocument j = await HttpHelper.HttpPostAsync($"{SessionInfo.Options.BaseUrl}/uploadImage", contents).GetJsonAsync(token: SessionInfo.Canceller.Token);
+                using JsonDocument j = await HttpHelper.HttpPostAsync($"{session.Options.BaseUrl}/uploadImage", contents).GetJsonAsync(token: session.Token);
                 JsonElement root = j.RootElement;
                 if (root.TryGetProperty("code", out JsonElement code)) // 正常返回是没有code的
                 {
@@ -233,8 +253,8 @@ namespace Mirai_CSharp
         /// <param name="imagePath">图片路径</param>
         public Task<ImageMessage> UploadPictureAsync(PictureTarget type, string imagePath)
         {
-            CheckConnected();
-            return InternalUploadPictureAsync(type, new FileStream(imagePath, FileMode.Open, FileAccess.Read, FileShare.Read));
+            InternalSessionInfo session = SafeGetSession();
+            return InternalUploadPictureAsync(session, type, new FileStream(imagePath, FileMode.Open, FileAccess.Read, FileShare.Read));
         }
         /// <summary>
         /// 异步上传图片
@@ -248,8 +268,8 @@ namespace Mirai_CSharp
         /// <param name="image">图片流</param>
         public Task<ImageMessage> UploadPictureAsync(PictureTarget type, Stream image)
         {
-            CheckConnected();
-            return InternalUploadPictureAsync(type, image);
+            InternalSessionInfo session = SafeGetSession();
+            return InternalUploadPictureAsync(session, type, image);
         }
         /// <summary>
         /// 异步撤回消息
@@ -267,13 +287,13 @@ namespace Mirai_CSharp
         /// <exception cref="TargetNotFoundException"/>
         public Task RevokeMessageAsync(int messageId)
         {
-            CheckConnected();
+            InternalSessionInfo session = SafeGetSession();
             byte[] payload = JsonSerializer.SerializeToUtf8Bytes(new
             {
-                sessionKey = SessionInfo.SessionKey,
+                sessionKey = session.SessionKey,
                 target = messageId
             });
-            return InternalHttpPostAsync($"{SessionInfo.Options.BaseUrl}/recall", payload, SessionInfo.Canceller.Token);
+            return InternalHttpPostAsync($"{session.Options.BaseUrl}/recall", payload, session.Token);
         }
     }
 }

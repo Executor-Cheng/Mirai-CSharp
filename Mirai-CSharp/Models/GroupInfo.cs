@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 
 namespace Mirai_CSharp.Models
 {
@@ -30,7 +31,7 @@ namespace Mirai_CSharp.Models
         /// 昵称/群名
         /// </summary>
         [JsonPropertyName("name")]
-        public virtual string Name { get; set; }
+        public virtual string Name { get; set; } = null!;
 
         protected BaseInfo()
         {
@@ -66,8 +67,10 @@ namespace Mirai_CSharp.Models
         [JsonPropertyName("permission")]
         public virtual GroupPermission Permission { get; set; }
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public GroupInfo() { }
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public GroupInfo(long id, string name, GroupPermission permission)
         {
             Id = id;

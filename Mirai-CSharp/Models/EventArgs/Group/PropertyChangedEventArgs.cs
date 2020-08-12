@@ -28,12 +28,12 @@ namespace Mirai_CSharp.Models
         /// 修改前
         /// </summary>
         [JsonPropertyName("origin")]
-        public virtual TProperty Origin { get; set; }
+        public virtual TProperty Origin { get; set; } = default!;
         /// <summary>
         /// 修改后
         /// </summary>
         [JsonPropertyName("current")]
-        public virtual TProperty Current { get; set; }
+        public virtual TProperty Current { get; set; } = default!;
 
         protected PropertyChangedEventArgs() { }
 
@@ -53,14 +53,27 @@ namespace Mirai_CSharp.Models
     /// <typeparam name="TProperty">属性类型, 必须为枚举类型</typeparam>
     public interface IEnumPropertyChangedEventArgs<TProperty> : IPropertyChangedEventArgs<TProperty> where TProperty : Enum
     {
+#if NETSTANDARD2_0
+        /// <inheritdoc/>
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        [JsonPropertyName("origin")]
+        new TProperty Origin { get; }
+
+        /// <inheritdoc/>
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        [JsonPropertyName("current")]
+        new TProperty Current { get; }
+#else
         /// <inheritdoc/>
         [JsonConverter(typeof(JsonStringEnumConverter))]
         [JsonPropertyName("origin")]
         abstract TProperty IPropertyChangedEventArgs<TProperty>.Origin { get; }
+
         /// <inheritdoc/>
         [JsonConverter(typeof(JsonStringEnumConverter))]
         [JsonPropertyName("current")]
         abstract TProperty IPropertyChangedEventArgs<TProperty>.Current { get; }
+#endif
     }
 
     public abstract class EnumPropertyChangedEventArgs<TProperty> : PropertyChangedEventArgs<TProperty> where TProperty : Enum
@@ -100,7 +113,7 @@ namespace Mirai_CSharp.Models
         /// </summary>
         [JsonConverter(typeof(ChangeTypeJsonConverter<GroupInfo, IGroupInfo>))]
         [JsonPropertyName("group")]
-        public IGroupInfo Group { get; set; }
+        public IGroupInfo Group { get; set; } = null!;
 
         protected BotGroupPropertyChangedEventArgs() { }
 
@@ -132,15 +145,26 @@ namespace Mirai_CSharp.Models
         [JsonPropertyName("current")]
         public override TProperty Current { get => base.Current; set => base.Current = value; }
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public BotGroupEnumPropertyChangedEventArgs()
         {
 
         }
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public BotGroupEnumPropertyChangedEventArgs(IGroupInfo group, TProperty origin, TProperty current) : base(group, origin, current)
         {
 
         }
+#if NETSTANDARD2_0
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        [JsonPropertyName("origin")]
+        TProperty IEnumPropertyChangedEventArgs<TProperty>.Origin => base.Origin;
+
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        [JsonPropertyName("current")]
+        TProperty IEnumPropertyChangedEventArgs<TProperty>.Current => base.Current;
+#endif
     }
 
     /// <summary>
@@ -159,12 +183,14 @@ namespace Mirai_CSharp.Models
         /// </summary>
         [JsonConverter(typeof(ChangeTypeJsonConverter<GroupMemberInfo, IGroupMemberInfo>))]
         [JsonPropertyName("operator")]
-        public IGroupMemberInfo Operator { get; set; }
+        public IGroupMemberInfo Operator { get; set; } = null!;
 
         /*protected*/
+        [Obsolete("此类不应由用户主动创建实例。")]
         public GroupPropertyChangedEventArgs() { }
 
         /*protected*/
+        [Obsolete("此类不应由用户主动创建实例。")]
         public GroupPropertyChangedEventArgs(IGroupInfo group, IGroupMemberInfo @operator, TProperty origin, TProperty current) : base(group, origin, current)
         {
             Operator = @operator;
@@ -272,12 +298,14 @@ namespace Mirai_CSharp.Models
         /// </summary>
         [JsonConverter(typeof(ChangeTypeJsonConverter<GroupMemberInfo, IGroupMemberInfo>))]
         [JsonPropertyName("member")]
-        public IGroupMemberInfo Member { get; set; }
+        public IGroupMemberInfo Member { get; set; } = null!;
 
         /*protected*/
+        [Obsolete("此类不应由用户主动创建实例。")]
         public GroupMemberPropertyChangedEventArgs() { }
 
         /*protected*/
+        [Obsolete("此类不应由用户主动创建实例。")]
         public GroupMemberPropertyChangedEventArgs(IGroupMemberInfo member, TProperty origin, TProperty current) : base(origin, current)
         {
             Member = member;
@@ -319,11 +347,22 @@ namespace Mirai_CSharp.Models
         [JsonPropertyName("current")]
         public override TProperty Current { get => base.Current; set => base.Current = value; }
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public GroupMemberEnumPropertyChangedEventArgs() { }
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public GroupMemberEnumPropertyChangedEventArgs(IGroupMemberInfo member, TProperty origin, TProperty current) : base(member, origin, current)
         {
 
         }
+#if NETSTANDARD2_0
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        [JsonPropertyName("origin")]
+        TProperty IEnumPropertyChangedEventArgs<TProperty>.Origin => base.Origin;
+
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        [JsonPropertyName("current")]
+        TProperty IEnumPropertyChangedEventArgs<TProperty>.Current => base.Current;
+#endif
     } // 不能继承多个类, 只能每次都啰嗦两次override
 }

@@ -1,4 +1,5 @@
 ﻿using Mirai_CSharp.Utility.JsonConverters;
+using System;
 using System.Text.Json.Serialization;
 
 namespace Mirai_CSharp.Models
@@ -20,10 +21,12 @@ namespace Mirai_CSharp.Models
     {
         [JsonConverter(typeof(ChangeTypeJsonConverter<GroupInfo, IGroupInfo>))]
         [JsonPropertyName("group")]
-        public IGroupInfo Group { get; set; }
+        public IGroupInfo Group { get; set; } = null!;
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public GroupEventArgs() { }
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public GroupEventArgs(GroupInfo group)
         {
             Group = group;
@@ -46,10 +49,12 @@ namespace Mirai_CSharp.Models
     {
         [JsonConverter(typeof(ChangeTypeJsonConverter<GroupMemberInfo, IGroupMemberInfo>))]
         [JsonPropertyName("member")]
-        public IGroupMemberInfo Member { get; set; }
+        public IGroupMemberInfo Member { get; set; } = null!;
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public MemberEventArgs() { }
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public MemberEventArgs(IGroupMemberInfo member)
         {
             Member = member;
@@ -70,10 +75,12 @@ namespace Mirai_CSharp.Models
     {
         [JsonConverter(typeof(ChangeTypeJsonConverter<GroupMemberInfo, IGroupMemberInfo>))]
         [JsonPropertyName("operator")]
-        public virtual IGroupMemberInfo Operator { get; set; }
+        public virtual IGroupMemberInfo Operator { get; set; } = null!;
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public OperatorEventArgs() { }
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public OperatorEventArgs(IGroupMemberInfo @operator)
         {
             Operator = @operator;
@@ -92,10 +99,12 @@ namespace Mirai_CSharp.Models
     {
         [JsonConverter(typeof(ChangeTypeJsonConverter<GroupInfo, IGroupInfo>))]
         [JsonPropertyName("group")]
-        public IGroupInfo Group { get; set; }
+        public IGroupInfo Group { get; set; } = null!;
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public GroupOperatingEventArgs() { }
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public GroupOperatingEventArgs(IGroupInfo group, IGroupMemberInfo @operator) : base(@operator)
         {
             Group = group;
@@ -115,10 +124,12 @@ namespace Mirai_CSharp.Models
     {
         [JsonConverter(typeof(ChangeTypeJsonConverter<GroupMemberInfo, IGroupMemberInfo>))]
         [JsonPropertyName("member")]
-        public IGroupMemberInfo Member { get; set; }
+        public IGroupMemberInfo Member { get; set; } = null!;
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public MemberOperatingEventArgs() { }
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public MemberOperatingEventArgs(IGroupMemberInfo member, IGroupMemberInfo @operator) : base(@operator)
         {
             Member = member;

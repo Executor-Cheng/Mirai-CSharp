@@ -11,7 +11,7 @@ namespace Mirai_CSharp.Utility.JsonConverters
             return reader.TokenType switch
             {
                 JsonTokenType.Number => Utils.UnixTimeStamp2DateTime(reader.GetInt32()),
-                JsonTokenType.String => DateTime.Parse(reader.GetString()),
+                JsonTokenType.String => DateTime.Parse(reader.GetString()!),
                 _ => throw new ArgumentException($"Expected unix timestamp or datetime string, got {reader.TokenType}")
             };
         }

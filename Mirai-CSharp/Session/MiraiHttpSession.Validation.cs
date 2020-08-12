@@ -23,7 +23,9 @@ namespace Mirai_CSharp
         /// <exception cref="MessageTooLongException"/>
         /// <exception cref="ArgumentException"/>
         /// <exception cref="UnknownResponseException"/>
+#if !NETSTANDARD2_0
         [DoesNotReturn]
+#endif
         private static T ThrowCommonException<T>(int code, in JsonElement root)
         {
             switch (code)
@@ -83,13 +85,11 @@ namespace Mirai_CSharp
             }
         }
 
-        private void CheckConnected()
+        private InternalSessionInfo SafeGetSession()
         {
             CheckDisposed();
-            if (!Connected)
-            {
-                throw new InvalidOperationException("请先连接到一个Session。");
-            }
+            InternalSessionInfo? session = SessionInfo;
+            return session ?? throw new InvalidOperationException("请先连接到一个Session。");
         }
     }
 }

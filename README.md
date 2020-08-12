@@ -9,7 +9,8 @@
 #### 从 nuget 上获取 **Mirai-CSharp** 即可
 
 ### 注意事项  
-#### 本项目使用 `C# 8.0` 编写, 意味着你需要至少`.NET Core 3.0` 或 `.NET Standard 2.1`才能使用本项目, 其中所有的api均为**异步**方法  
+#### 本项目使用`C# 8.0`编写, 你需要至少`.NET Core 2.0` 或 `.NET Framework 4.6.1`才能使用本项目, 其中所有的api均为**异步**方法  
+#### 使用.NET Standard 2.0的用户无法使用`Plugin\Interfaces`下的所有接口, 请自行实现`IPlugin<TEventArgs>`接口
 
 ### 一些例子  
 - [配置Session](https://github.com/Executor-Cheng/Mirai-CSharp/tree/master/Mirai-CSharp.Example/Program.cs)  

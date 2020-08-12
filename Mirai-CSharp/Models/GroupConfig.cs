@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 
 namespace Mirai_CSharp.Models
 {
@@ -45,12 +46,12 @@ namespace Mirai_CSharp.Models
         /// 群名
         /// </summary>
         [JsonPropertyName("name")]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
         /// <summary>
         /// 群公告
         /// </summary>
         [JsonPropertyName("announcement")]
-        public string Announcement { get; set; }
+        public string Announcement { get; set; } = null!;
         /// <summary>
         /// 是否允许坦白说
         /// </summary>
@@ -72,6 +73,7 @@ namespace Mirai_CSharp.Models
         [JsonPropertyName("anonymousChat")]
         public bool? AnonymousChat { get; set; }
 
+        [Obsolete("请使用带参数的构造方法初始化本类实例。")]
         public GroupConfig()
         {
 

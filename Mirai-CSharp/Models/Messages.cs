@@ -1,9 +1,11 @@
 ﻿using Mirai_CSharp.Utility.JsonConverters;
 using System;
+using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 #pragma warning disable CA1819 // Properties should not return arrays
+#pragma warning disable CS0618 // 此警告是用户专用的
 namespace Mirai_CSharp.Models
 {
     public interface IMessageBase
@@ -16,7 +18,7 @@ namespace Mirai_CSharp.Models
     }
 
     // -- 构成消息链的类 (为了方便Deserialize, 这些子类都不是readonly的。将来JsonSerializer会像Json.NET一样去寻找对应的有参构造, 届时再改为readonly。) --
-    public abstract class MessageBase : IMessageBase
+    public abstract class Messages : IMessageBase
     {
         /// <summary>
         /// 消息类型。供api或反序列化使用
@@ -24,7 +26,7 @@ namespace Mirai_CSharp.Models
         [JsonPropertyName("type")]
         public string Type { get; }
 
-        protected MessageBase(string type)
+        protected Messages(string type)
         {
             Type = type;
         }
@@ -32,7 +34,8 @@ namespace Mirai_CSharp.Models
     /// <summary>
     /// 表示消息的基本信息
     /// </summary>
-    public class SourceMessage : MessageBase
+    [DebuggerDisplay("{ToString(),nq}")]
+    public class SourceMessage : Messages
     {
         public const string MsgType = "Source";
         /// <summary>
@@ -47,8 +50,10 @@ namespace Mirai_CSharp.Models
         [JsonPropertyName("time")]
         public DateTime Time { get; set; }
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public SourceMessage() : base(MsgType) { }
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public SourceMessage(int id, DateTime time) : this()
         {
             Id = id;
@@ -61,7 +66,8 @@ namespace Mirai_CSharp.Models
     /// <summary>
     /// 表示引用消息
     /// </summary>
-    public class QuoteMessage : MessageBase
+    [DebuggerDisplay("{ToString(),nq}")]
+    public class QuoteMessage : Messages
     {
         public const string MsgType = "Quote";
         /// <summary>
@@ -89,8 +95,9 @@ namespace Mirai_CSharp.Models
         /// </summary>
         [JsonConverter(typeof(IMessageBaseArrayConverter))]
         [JsonPropertyName("origin")]
-        public IMessageBase[] OriginChain { get; set; }
+        public IMessageBase[] OriginChain { get; set; } = null!; // 只在反序列化时进行赋值, 故不为null
 
+        [Obsolete("请使用带参数的构造方法初始化本类实例。")]
         public QuoteMessage() : base(MsgType) { }
 
         public QuoteMessage(int id, long groupId, long senderId, long targetId, IMessageBase[] originChain) : this()
@@ -108,15 +115,17 @@ namespace Mirai_CSharp.Models
     /// <summary>
     /// 表示文字消息
     /// </summary>
-    public class PlainMessage : MessageBase
+    [DebuggerDisplay("{ToString(),nq}")]
+    public class PlainMessage : Messages
     {
         public const string MsgType = "Plain";
         /// <summary>
         /// 文字消息
         /// </summary>
         [JsonPropertyName("text")]
-        public string Message { get; set; }
+        public string Message { get; set; } = null!;
 
+        [Obsolete("请使用带参数的构造方法初始化本类实例。")]
         public PlainMessage() : base(MsgType) { }
 
         public PlainMessage(string message) : this()
@@ -130,25 +139,25 @@ namespace Mirai_CSharp.Models
     /// <summary>
     /// 图片消息基类
     /// </summary>
-    public abstract class CommonImageMessage : MessageBase
+    public abstract class CommonImageMessage : Messages
     {
         /// <summary>
         /// 图片的imageId，群图片与好友图片格式不同。不为空时将忽略url属性
         /// </summary>
         [JsonPropertyName("imageId")]
-        public string ImageId { get; set; }
+        public string? ImageId { get; set; }
         /// <summary>
         /// 图片的URL，发送时可作网络图片的链接；接收时为腾讯图片服务器的链接，可用于图片下载
         /// </summary>
         [JsonPropertyName("url")]
-        public string Url { get; set; }
+        public string? Url { get; set; }
         /// <summary>
         /// 图片的路径，发送本地图片，相对路径于 plugins/MiraiAPIHTTP/images
         /// </summary>
         [JsonPropertyName("path")]
-        public string Path { get; set; }
+        public string? Path { get; set; }
 
-        protected CommonImageMessage(string type, string imageId, string url, string path) : base(type)
+        protected CommonImageMessage(string type, string? imageId, string? url, string? path) : base(type)
         {
             ImageId = imageId;
             Url = url;
@@ -158,13 +167,15 @@ namespace Mirai_CSharp.Models
     /// <summary>
     /// 表示图片消息
     /// </summary>
+    [DebuggerDisplay("{ToString(),nq}")]
     public class ImageMessage : CommonImageMessage
     {
         public const string MsgType = "Image";
 
+        [Obsolete("请使用带参数的构造方法初始化本类实例。")]
         public ImageMessage() : this(null, null, null) { }
 
-        public ImageMessage(string imageId, string url, string path) : base(MsgType, imageId, url, path)
+        public ImageMessage(string? imageId, string? url, string? path) : base(MsgType, imageId, url, path)
         {
         }
 
@@ -174,13 +185,15 @@ namespace Mirai_CSharp.Models
     /// <summary>
     /// 表示闪照消息
     /// </summary>
+    [DebuggerDisplay("{ToString(),nq}")]
     public class FlashImageMessage : CommonImageMessage
     {
         public const string MsgType = "FlashImage";
 
+        [Obsolete("请使用带参数的构造方法初始化本类实例。")]
         public FlashImageMessage() : this(null, null, null) { }
 
-        public FlashImageMessage(string imageId, string url, string path) : base(MsgType, imageId, url, path)
+        public FlashImageMessage(string? imageId, string? url, string? path) : base(MsgType, imageId, url, path)
         {
         }
 
@@ -190,7 +203,8 @@ namespace Mirai_CSharp.Models
     /// <summary>
     /// 表示 @特定对象 消息
     /// </summary>
-    public class AtMessage : MessageBase
+    [DebuggerDisplay("{ToString(),nq}")]
+    public class AtMessage : Messages
     {
         public const string MsgType = "At";
         /// <summary>
@@ -202,13 +216,19 @@ namespace Mirai_CSharp.Models
         /// At时显示的文字，发送消息时无效，自动使用群名片
         /// </summary>
         [JsonPropertyName("display")]
-        public string Display { get; set; }
+        public string Display { get; set; } = null!; // 由反序列化赋值
 
+        [Obsolete("请使用AtMessage(long)构造方法初始化本类实例。")]
         public AtMessage() : base(MsgType) { }
 
-        public AtMessage(long target, string display) : this()
+        public AtMessage(long target) : this()
         {
             Target = target;
+        }
+
+        [Obsolete("请使用AtMessage(long)构造方法初始化本类实例。")]
+        public AtMessage(long target, string display) : this(target)
+        {
             Display = display;
         }
 
@@ -218,7 +238,8 @@ namespace Mirai_CSharp.Models
     /// <summary>
     /// 表示 @全体成员 消息
     /// </summary>
-    public class AtAllMessage : MessageBase
+    [DebuggerDisplay("{ToString(),nq}")]
+    public class AtAllMessage : Messages
     {
         public const string MsgType = "AtAll";
 
@@ -233,7 +254,8 @@ namespace Mirai_CSharp.Models
     /// <summary>
     /// 表示一个QQ表情
     /// </summary>
-    public class FaceMessage : MessageBase
+    [DebuggerDisplay("{ToString(),nq}")]
+    public class FaceMessage : Messages
     {
         public const string MsgType = "Face";
         /// <summary>
@@ -248,11 +270,12 @@ namespace Mirai_CSharp.Models
         /// QQ表情拼音，可选
         /// </summary>
         [JsonPropertyName("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
+        [Obsolete("请使用带参数的构造方法初始化本类实例。")]
         public FaceMessage() : base(MsgType) { }
 
-        public FaceMessage(int id, string name) : this()
+        public FaceMessage(int id, string? name) : this()
         {
             Id = id;
             Name = name;
@@ -264,13 +287,15 @@ namespace Mirai_CSharp.Models
     /// <summary>
     /// 表示xml消息
     /// </summary>
-    public class XmlMessage : MessageBase
+    [DebuggerDisplay("{ToString(),nq}")]
+    public class XmlMessage : Messages
     {
         public const string MsgType = "Xml";
 
         [JsonPropertyName("xml")]
-        public string Xml { get; set; }
+        public string Xml { get; set; } = null!;
 
+        [Obsolete("请使用带参数的构造方法初始化本类实例。")]
         public XmlMessage() : base(MsgType) { }
 
         public XmlMessage(string xml) : this()
@@ -284,13 +309,15 @@ namespace Mirai_CSharp.Models
     /// <summary>
     /// 表示Json消息
     /// </summary>
-    public class JsonMessage : MessageBase
+    [DebuggerDisplay("{ToString(),nq}")]
+    public class JsonMessage : Messages
     {
         public const string MsgType = "Json";
 
         [JsonPropertyName("json")]
-        public string Json { get; set; }
+        public string Json { get; set; } = null!;
 
+        [Obsolete("请使用带参数的构造方法初始化本类实例。")]
         public JsonMessage() : base(MsgType) { }
 
         public JsonMessage(string json) : this()
@@ -304,15 +331,17 @@ namespace Mirai_CSharp.Models
     /// <summary>
     /// 表示App消息
     /// </summary>
-    public class AppMessage : MessageBase
+    [DebuggerDisplay("{ToString(),nq}")]
+    public class AppMessage : Messages
     {
         public const string MsgType = "App";
         /// <summary>
         /// 消息内容
         /// </summary>
         [JsonPropertyName("content")]
-        public string Content { get; set; }
+        public string Content { get; set; } = null!;
 
+        [Obsolete("请使用带参数的构造方法初始化本类实例。")]
         public AppMessage() : base(MsgType) { }
 
         public AppMessage(string content) : this()
@@ -326,7 +355,8 @@ namespace Mirai_CSharp.Models
     /// <summary>
     /// 表示戳一戳消息
     /// </summary>
-    public class PokeMessage : MessageBase
+    [DebuggerDisplay("{ToString(),nq}")]
+    public class PokeMessage : Messages
     {
         public const string MsgType = "Poke";
         /// <summary>
@@ -370,6 +400,7 @@ namespace Mirai_CSharp.Models
         [JsonPropertyName("name")]
         public PokeType Name { get; set; }
 
+        [Obsolete("请使用带参数的构造方法初始化本类实例。")]
         public PokeMessage() : base(MsgType) { }
 
         public PokeMessage(PokeType name) : this()
@@ -385,25 +416,27 @@ namespace Mirai_CSharp.Models
     /// 表示语音消息。
     /// </summary>
     /// <remarks>
-    /// 提前实现。目前mirai-api-http v1.7.1暂不支持。
+    /// 提前实现。mirai-api-http不支持传递此消息。
     /// </remarks>
-    public class VoiceMessage : MessageBase
+    [Obsolete("mirai-api-http不支持传递此消息。")]
+    public class VoiceMessage : Messages
     {
         public const string MsgType = "Voice";
         /// <summary>
         /// 语音文件名
         /// </summary>
         [JsonPropertyName("fileName")]
-        public string FileName { get; set; }
+        public string FileName { get; set; } = null!;
         
         [JsonPropertyName("md5")]
-        public string Md5 { get; set; }
+        public string Md5 { get; set; } = null!;
         /// <summary>
         /// 用于下载语音的Url
         /// </summary>
         [JsonPropertyName("url")]
-        public string Url { get; set; }
+        public string Url { get; set; } = null!;
 
+        [Obsolete("请使用带参数的构造方法初始化本类实例。")]
         public VoiceMessage() : base(MsgType) { }
 
         public VoiceMessage(string fileName, string md5, string url) : this()
@@ -417,7 +450,7 @@ namespace Mirai_CSharp.Models
     /// <summary>
     /// 表示未知消息
     /// </summary>
-    public class UnknownMessage : MessageBase
+    public class UnknownMessage : Messages
     {
         public const string MsgType = "Unknown";
         /// <summary>
@@ -425,6 +458,7 @@ namespace Mirai_CSharp.Models
         /// </summary>
         public JsonElement Data { get; set; }
 
+        [Obsolete("请使用带参数的构造方法初始化本类实例。")]
         public UnknownMessage() : base(MsgType) { }
 
         public UnknownMessage(JsonElement data) : this()

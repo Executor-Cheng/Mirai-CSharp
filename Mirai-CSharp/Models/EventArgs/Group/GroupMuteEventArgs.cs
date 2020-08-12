@@ -25,11 +25,13 @@ namespace Mirai_CSharp.Models
 
     public class BotUnmutedEventArgs : OperatorEventArgs, IBotUnmutedEventArgs
     {
+        [Obsolete("此类不应由用户主动创建实例。")]
         public BotUnmutedEventArgs()
         {
 
         }
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public BotUnmutedEventArgs(GroupMemberInfo @operator) : base(@operator)
         {
 
@@ -50,8 +52,10 @@ namespace Mirai_CSharp.Models
         [JsonPropertyName("durationSeconds")]
         public TimeSpan Duration { get; set; }
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public BotMutedEventArgs() { }
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public BotMutedEventArgs(TimeSpan duration, GroupMemberInfo @operator) : base(@operator)
         {
             Duration = duration;
@@ -68,11 +72,13 @@ namespace Mirai_CSharp.Models
 
     public class GroupMemberUnmutedEventArgs : MemberOperatingEventArgs, IGroupMemberUnmutedEventArgs
     {
+        [Obsolete("此类不应由用户主动创建实例。")]
         public GroupMemberUnmutedEventArgs()
         {
 
         }
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public GroupMemberUnmutedEventArgs(IGroupMemberInfo member, IGroupMemberInfo @operator) : base(member, @operator)
         {
 
@@ -93,11 +99,13 @@ namespace Mirai_CSharp.Models
         [JsonPropertyName("durationSeconds")]
         public TimeSpan Duration { get; set; }
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public GroupMemberMutedEventArgs()
         {
 
         }
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public GroupMemberMutedEventArgs(TimeSpan duration, IGroupMemberInfo member, IGroupMemberInfo @operator) : base(member, @operator)
         {
             Duration = duration;

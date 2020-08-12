@@ -23,6 +23,6 @@ namespace Mirai_CSharp.Models
         }
 
         public override string ToString()
-            => $"[{Sender.Group.Name}({Sender.Group.Id})] {Sender.Name}(Temp {Sender.Id}) -> {string.Join("", (IEnumerable<MessageBase>)Chain)}";
+            => $"[{Sender.Group.Name}({Sender.Group.Id})] {Sender.Name}(Temp {Sender.Id}) -> {string.Join("", (IEnumerable<Messages>)Chain)}";
     }
 }
