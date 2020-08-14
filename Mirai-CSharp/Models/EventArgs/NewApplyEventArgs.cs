@@ -32,10 +32,10 @@ namespace Mirai_CSharp.Models
         public long EventId { get; set; }
 
         [JsonPropertyName("fromId")]
-        public long FromGroup { get; set; }
+        public long FromQQ { get; set; }
 
         [JsonPropertyName("groupId")]
-        public long FromQQ { get; set; }
+        public long FromGroup { get; set; }
 
         [JsonPropertyName("nick")]
         public string NickName { get; set; } = null!;
