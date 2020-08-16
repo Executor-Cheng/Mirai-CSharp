@@ -20,3 +20,4 @@
 - [处理入群申请](https://github.com/Executor-Cheng/Mirai-CSharp/blob/master/Mirai-CSharp.Example/ExamplePlugin.GroupApply.cs)  
 - [处理Bot受邀入群申请](https://github.com/Executor-Cheng/Mirai-CSharp/blob/master/Mirai-CSharp.Example/ExamplePlugin.BotInvitedJoinGroup.cs)  
 - [发送图片](https://github.com/Executor-Cheng/Mirai-CSharp/blob/master/Mirai-CSharp.Example/ExamplePlugin.SendPicture.cs)  
+- [处理Session掉线](https://github.com/Executor-Cheng/Mirai-CSharp/blob/master/Mirai-CSharp.Example/ExamplePlugin.Disconnected.cs)  

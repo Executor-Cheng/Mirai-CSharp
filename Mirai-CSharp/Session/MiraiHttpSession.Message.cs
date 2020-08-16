@@ -65,6 +65,22 @@ namespace Mirai_CSharp
         /// <summary>
         /// 异步发送好友消息
         /// </summary>
+        /// <remarks>
+        /// 本方法不会引用回复, 要引用回复, 请调用 <see cref="SendFriendMessageAsync(long, IMessageBase[], int?)"/>
+        /// </remarks>
+        /// <exception cref="ArgumentException"/>
+        /// <exception cref="InvalidOperationException"/>
+        /// <exception cref="MessageTooLongException"/>
+        /// <exception cref="TargetNotFoundException"/>
+        /// <param name="qqNumber">目标QQ号</param>
+        /// <param name="chain">消息链数组。不可为 <see langword="null"/> 或空数组</param>
+        public Task<int> SendFriendMessageAsync(long qqNumber, params IMessageBase[] chain)
+        {
+            return CommonSendMessageAsync("sendFriendMessage", qqNumber, null, chain, null);
+        }
+        /// <summary>
+        /// 异步发送好友消息
+        /// </summary>
         /// <exception cref="ArgumentException"/>
         /// <exception cref="InvalidOperationException"/>
         /// <exception cref="MessageTooLongException"/>
@@ -75,6 +91,23 @@ namespace Mirai_CSharp
         public Task<int> SendFriendMessageAsync(long qqNumber, IMessageBase[] chain, int? quoteMsgId = null)
         {
             return CommonSendMessageAsync("sendFriendMessage", qqNumber, null, chain, quoteMsgId);
+        }
+        /// <summary>
+        /// 异步发送临时消息
+        /// </summary>
+        /// <remarks>
+        /// 本方法不会引用回复, 要引用回复, 请调用 <see cref="SendTempMessageAsync(long, long, IMessageBase[], int?)"/>
+        /// </remarks>
+        /// <exception cref="ArgumentException"/>
+        /// <exception cref="InvalidOperationException"/>
+        /// <exception cref="MessageTooLongException"/>
+        /// <exception cref="TargetNotFoundException"/>
+        /// <param name="qqNumber">目标QQ号</param>
+        /// <param name="fromGroup">目标所在的群号</param>
+        /// <param name="chain">消息链数组。不可为 <see langword="null"/> 或空数组</param>
+        public Task<int> SendTempMessageAsync(long qqNumber, long fromGroup, params IMessageBase[] chain)
+        {
+            return CommonSendMessageAsync("sendTempMessage", qqNumber, fromGroup, chain, null);
         }
         /// <summary>
         /// 异步发送临时消息
@@ -90,6 +123,23 @@ namespace Mirai_CSharp
         public Task<int> SendTempMessageAsync(long qqNumber, long fromGroup, IMessageBase[] chain, int? quoteMsgId = null)
         {
             return CommonSendMessageAsync("sendTempMessage", qqNumber, fromGroup, chain, quoteMsgId);
+        }
+        /// <summary>
+        /// 异步发送群消息
+        /// </summary>
+        /// <remarks>
+        /// 本方法不会引用回复, 要引用回复, 请调用 <see cref="SendGroupMessageAsync(long, IMessageBase[], int?)"/>
+        /// </remarks>
+        /// <exception cref="ArgumentException"/>
+        /// <exception cref="BotMutedException"/>
+        /// <exception cref="InvalidOperationException"/>
+        /// <exception cref="MessageTooLongException"/>
+        /// <exception cref="TargetNotFoundException"/>
+        /// <param name="groupNumber">目标群号</param>
+        /// <param name="chain">消息链数组。不可为 <see langword="null"/> 或空数组</param>
+        public Task<int> SendGroupMessageAsync(long groupNumber, params IMessageBase[] chain)
+        {
+            return CommonSendMessageAsync("sendGroupMessage", null, groupNumber, chain, null);
         }
         /// <summary>
         /// 异步发送群消息

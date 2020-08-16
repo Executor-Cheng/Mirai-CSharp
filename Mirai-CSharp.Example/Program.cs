@@ -9,6 +9,7 @@ namespace Mirai_CSharp.Example
         public static async Task Main()
         {
             // 把你要连接到的 mirai-api-http 所需的主机名/IP, 端口 和 AuthKey 全部填好
+            // !! 最好不要用我例子里边的 key 和 端口, 请自己生成一个, 比如 System.Guid.NewGuid().ToString("n") !!
             MiraiHttpSessionOptions options = new MiraiHttpSessionOptions("127.0.0.1", 33111, "8d726307dd7b468d8550a95f236444f7");
             // session 使用 DisposeAsync 模式, 所以使用 await using 自动调用 DisposeAsync 方法。
             // 你也可以不在这里 await using, 不过使用完 session 后请务必调用 DisposeAsync 方法
