@@ -44,6 +44,11 @@ namespace Mirai_CSharp
         }
 
         /// <summary>
+        /// 初始化 <see cref="MiraiHttpSession"/> 类的新实例
+        /// </summary>
+        public MiraiHttpSession() { }
+
+        /// <summary>
         /// 添加一个用于处理消息的 <see cref="IPlugin"/>
         /// </summary>
         public void AddPlugin(IPlugin plugin)

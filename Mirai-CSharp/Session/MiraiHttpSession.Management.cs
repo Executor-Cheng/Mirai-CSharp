@@ -16,7 +16,7 @@ namespace Mirai_CSharp
         public Task<IFriendInfo[]> GetFriendListAsync()
         {
             InternalSessionInfo session = SafeGetSession();
-            return InternalHttpGetAsync<IFriendInfo[], FriendInfo[]>($"{session.Options.BaseUrl}/friendList?sessionKey={session.SessionKey}", session.Token);
+            return InternalHttpGetNoSuccCodeAsync<IFriendInfo[], FriendInfo[]>($"{session.Options.BaseUrl}/friendList?sessionKey={session.SessionKey}", session.Token);
         }
         /// <summary>
         /// 异步获取群列表
@@ -25,7 +25,7 @@ namespace Mirai_CSharp
         public Task<IGroupInfo[]> GetGroupListAsync()
         {
             InternalSessionInfo session = SafeGetSession();
-            return InternalHttpGetAsync<IGroupInfo[], GroupInfo[]>($"{session.Options.BaseUrl}/groupList?sessionKey={session.SessionKey}", session.Token);
+            return InternalHttpGetNoSuccCodeAsync<IGroupInfo[], GroupInfo[]>($"{session.Options.BaseUrl}/groupList?sessionKey={session.SessionKey}", session.Token);
         }
         /// <summary>
         /// 异步获取群成员列表
@@ -36,9 +36,17 @@ namespace Mirai_CSharp
         public Task<IGroupMemberInfo[]> GetGroupMemberListAsync(long groupNumber)
         {
             InternalSessionInfo session = SafeGetSession();
-            return InternalHttpGetAsync<IGroupMemberInfo[], GroupMemberInfo[]>($"{session.Options.BaseUrl}/memberList?sessionKey={session.SessionKey}&target={groupNumber}", session.Token);
+            return InternalHttpGetNoSuccCodeAsync<IGroupMemberInfo[], GroupMemberInfo[]>($"{session.Options.BaseUrl}/memberList?sessionKey={session.SessionKey}&target={groupNumber}", session.Token);
         }
 
+        /// <summary>
+        /// 内部使用
+        /// </summary>
+        /// <exception cref="InvalidOperationException"/>
+        /// <exception cref="PermissionDeniedException"/>
+        /// <exception cref="TargetNotFoundException"/>
+        /// <param name="action">禁言为 <see langword="true"/>, 解禁为 <see langword="false"/></param>
+        /// <param name="groupNumber">将要操作的群号</param>
         private Task InternalToggleMuteAllAsync(bool action, long groupNumber)
         {
             InternalSessionInfo session = SafeGetSession();
@@ -52,10 +60,8 @@ namespace Mirai_CSharp
         /// <summary>
         /// 异步开启全体禁言
         /// </summary>
-        /// <exception cref="InvalidOperationException"/>
-        /// <exception cref="PermissionDeniedException"/>
-        /// <exception cref="TargetNotFoundException"/>
         /// <param name="groupNumber">将要进行全体禁言的群号</param>
+        /// <inheritdoc cref="InternalToggleMuteAllAsync"/>
         public Task MuteAllAsync(long groupNumber)
         {
             return InternalToggleMuteAllAsync(true, groupNumber);
@@ -63,10 +69,8 @@ namespace Mirai_CSharp
         /// <summary>
         /// 异步关闭全体禁言
         /// </summary>
-        /// <exception cref="InvalidOperationException"/>
-        /// <exception cref="PermissionDeniedException"/>
-        /// <exception cref="TargetNotFoundException"/>
         /// <param name="groupNumber">将要关闭全体禁言的群号</param>
+        /// <inheritdoc cref="InternalToggleMuteAllAsync"/>
         public Task UnmuteAllAsync(long groupNumber)
         {
             return InternalToggleMuteAllAsync(false, groupNumber);
