@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json;
 
 namespace Mirai_CSharp.Exceptions
 {
@@ -9,6 +10,14 @@ namespace Mirai_CSharp.Exceptions
         public string? Response { get; }
 
         public UnknownResponseException() { }
+
+        public UnknownResponseException(in JsonElement root) : this(root.GetRawText()) { }
+
+        public UnknownResponseException(in JsonElement root, string? message) : this(root.GetRawText(), message) { }
+
+        public UnknownResponseException(in JsonElement root, Exception? innerException) : this(root.GetRawText(), innerException) { }
+
+        public UnknownResponseException(in JsonElement root, string? message, Exception? innerException) : this(root.GetRawText(), message, innerException) { }
 
         public UnknownResponseException(string? response) : this(response, DefaultMessage, null) { }
 

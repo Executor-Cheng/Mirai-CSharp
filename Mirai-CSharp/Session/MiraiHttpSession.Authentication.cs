@@ -84,7 +84,7 @@ namespace Mirai_CSharp
             return code switch
             {
                 0 => root.GetProperty("session").GetString()!,
-                _ => ThrowCommonException<string>(code, in root)
+                _ => throw GetCommonException(code, in root)
             };
         }
 
@@ -115,7 +115,7 @@ namespace Mirai_CSharp
                 return Version.Parse(root.GetProperty("data").GetProperty("version").GetString()![1..]); // v1.0.0, skip 'v'
 #endif
             }
-            return ThrowCommonException<Version>(code, in root);
+            throw GetCommonException(code, in root);
         }
         /// <summary>
         /// 异步释放Session

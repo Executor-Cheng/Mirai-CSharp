@@ -116,15 +116,9 @@ namespace Mirai_CSharp
         /// <param name="qqNumber">机器人QQ号</param>
         /// <param name="token">用于取消操作的Token</param>
         /// <returns>能够管理此机器人的QQ号数组</returns>
-        public static async Task<long[]> GetManagersAsync(MiraiHttpSessionOptions options, long qqNumber, CancellationToken token = default)
+        public static Task<long[]> GetManagersAsync(MiraiHttpSessionOptions options, long qqNumber, CancellationToken token = default)
         {
-            using JsonDocument j = await HttpHelper.HttpGetAsync($"{options.BaseUrl}/managers?qq={qqNumber}").GetJsonAsync(token: token);
-            JsonElement root = j.RootElement;
-            if (root.ValueKind == JsonValueKind.Object && root.TryGetProperty("code", out JsonElement code)) // 正常返回是没有code的
-            {
-                return ThrowCommonException<long[]>(code.GetInt32(), in root);
-            }
-            return Utils.Deserialize<long[]>(in root);
+            return InternalHttpGetNoSuccCodeAsync<long[], long[]>($"{options.BaseUrl}/managers?qq={qqNumber}", token);
         }
         /// <summary>
         /// 异步获取给定QQ的Managers

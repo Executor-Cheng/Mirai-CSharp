@@ -13,6 +13,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Linq;
 
+#pragma warning disable CS1573 // 参数在 XML 注释中没有匹配的 param 标记(但其他参数有) // 已经 inheritdocs, 警告无效
 namespace Mirai_CSharp
 {
     public partial class MiraiHttpSession
@@ -25,8 +26,20 @@ namespace Mirai_CSharp
             opts.Converters.Add(new IMessageBaseArrayConverter());
             return opts;
         }
-
-        private async Task<int> CommonSendMessageAsync(string action, long? qqNumber, long? fromGroup, IMessageBase[] chain, int? quoteMsgId)
+        /// <summary>
+        /// 内部使用
+        /// </summary>
+        /// <param name="action">api的action</param>
+        /// <param name="qqNumber">目标QQ号</param>
+        /// <param name="groupNumber">目标所在的群号</param>
+        /// <param name="chain">消息链数组。不可为 <see langword="null"/> 或空数组</param>
+        /// <param name="quoteMsgId">引用一条消息的messageId进行回复。为 <see langword="null"/> 时不进行引用。</param>
+        /// <exception cref="ArgumentException"/>
+        /// <exception cref="InvalidOperationException"/>
+        /// <exception cref="MessageTooLongException"/>
+        /// <exception cref="TargetNotFoundException"/>
+        /// <returns>用于标识本条消息的 Id</returns>
+        private async Task<int> CommonSendMessageAsync(string action, long? qqNumber, long? groupNumber, IMessageBase[] chain, int? quoteMsgId)
         {
             InternalSessionInfo session = SafeGetSession();
             if (chain == null || chain.Length == 0)
@@ -49,7 +62,7 @@ namespace Mirai_CSharp
             {
                 sessionKey = session.SessionKey,
                 qq = qqNumber,
-                group = fromGroup,
+                group = groupNumber,
                 quote = quoteMsgId,
                 messageChain = chain
             }, _forSendMsg);
@@ -60,8 +73,9 @@ namespace Mirai_CSharp
             {
                 return root.GetProperty("messageId").GetInt32();
             }
-            return ThrowCommonException<int>(code, in root);
+            throw GetCommonException(code, in root);
         }
+        
         /// <summary>
         /// 异步发送好友消息
         /// </summary>
@@ -93,50 +107,52 @@ namespace Mirai_CSharp
             return CommonSendMessageAsync("sendFriendMessage", qqNumber, null, chain, quoteMsgId);
         }
         /// <summary>
+        /// 异步发送好友消息
+        /// </summary>
+        /// <param name="builder">构建完毕的 <see cref="IMessageBuilder"/></param>
+        /// <inheritdoc cref="CommonSendMessageAsync"/>
+        public Task<int> SendFriendMessageAsync(long qqNumber, IMessageBuilder builder, int? quoteMsgId = null)
+        {
+            return CommonSendMessageAsync("sendFriendMessage", qqNumber, null, builder.Build(), quoteMsgId);
+        }
+
+        /// <summary>
         /// 异步发送临时消息
         /// </summary>
         /// <remarks>
         /// 本方法不会引用回复, 要引用回复, 请调用 <see cref="SendTempMessageAsync(long, long, IMessageBase[], int?)"/>
         /// </remarks>
-        /// <exception cref="ArgumentException"/>
-        /// <exception cref="InvalidOperationException"/>
-        /// <exception cref="MessageTooLongException"/>
-        /// <exception cref="TargetNotFoundException"/>
-        /// <param name="qqNumber">目标QQ号</param>
-        /// <param name="fromGroup">目标所在的群号</param>
-        /// <param name="chain">消息链数组。不可为 <see langword="null"/> 或空数组</param>
-        public Task<int> SendTempMessageAsync(long qqNumber, long fromGroup, params IMessageBase[] chain)
+        /// <inheritdoc cref="CommonSendMessageAsync"/>
+        public Task<int> SendTempMessageAsync(long qqNumber, long groupNumber, params IMessageBase[] chain)
         {
-            return CommonSendMessageAsync("sendTempMessage", qqNumber, fromGroup, chain, null);
+            return CommonSendMessageAsync("sendTempMessage", qqNumber, groupNumber, chain, null);
         }
         /// <summary>
         /// 异步发送临时消息
         /// </summary>
-        /// <exception cref="ArgumentException"/>
-        /// <exception cref="InvalidOperationException"/>
-        /// <exception cref="MessageTooLongException"/>
-        /// <exception cref="TargetNotFoundException"/>
-        /// <param name="qqNumber">目标QQ号</param>
-        /// <param name="fromGroup">目标所在的群号</param>
-        /// <param name="chain">消息链数组。不可为 <see langword="null"/> 或空数组</param>
-        /// <param name="quoteMsgId">引用一条消息的messageId进行回复。为 <see langword="null"/> 时不进行引用。</param>
-        public Task<int> SendTempMessageAsync(long qqNumber, long fromGroup, IMessageBase[] chain, int? quoteMsgId = null)
+        /// <inheritdoc cref="CommonSendMessageAsync"/>
+        public Task<int> SendTempMessageAsync(long qqNumber, long groupNumber, IMessageBase[] chain, int? quoteMsgId = null)
         {
-            return CommonSendMessageAsync("sendTempMessage", qqNumber, fromGroup, chain, quoteMsgId);
+            return CommonSendMessageAsync("sendTempMessage", qqNumber, groupNumber, chain, quoteMsgId);
         }
+        /// <summary>
+        /// 异步发送临时消息
+        /// </summary>
+        /// <param name="builder">构建完毕的 <see cref="IMessageBuilder"/></param>
+        /// <inheritdoc cref="CommonSendMessageAsync"/>
+        public Task<int> SendTempMessageAsync(long qqNumber, long groupNumber, IMessageBuilder builder, int? quoteMsgId = null)
+        {
+            return CommonSendMessageAsync("sendTempMessage", qqNumber, groupNumber, builder.Build(), quoteMsgId);
+        }
+
         /// <summary>
         /// 异步发送群消息
         /// </summary>
         /// <remarks>
         /// 本方法不会引用回复, 要引用回复, 请调用 <see cref="SendGroupMessageAsync(long, IMessageBase[], int?)"/>
         /// </remarks>
-        /// <exception cref="ArgumentException"/>
         /// <exception cref="BotMutedException"/>
-        /// <exception cref="InvalidOperationException"/>
-        /// <exception cref="MessageTooLongException"/>
-        /// <exception cref="TargetNotFoundException"/>
-        /// <param name="groupNumber">目标群号</param>
-        /// <param name="chain">消息链数组。不可为 <see langword="null"/> 或空数组</param>
+        /// <inheritdoc cref="CommonSendMessageAsync"/>
         public Task<int> SendGroupMessageAsync(long groupNumber, params IMessageBase[] chain)
         {
             return CommonSendMessageAsync("sendGroupMessage", null, groupNumber, chain, null);
@@ -144,20 +160,35 @@ namespace Mirai_CSharp
         /// <summary>
         /// 异步发送群消息
         /// </summary>
-        /// <exception cref="ArgumentException"/>
         /// <exception cref="BotMutedException"/>
-        /// <exception cref="InvalidOperationException"/>
-        /// <exception cref="MessageTooLongException"/>
-        /// <exception cref="TargetNotFoundException"/>
-        /// <param name="groupNumber">目标群号</param>
-        /// <param name="chain">消息链数组。不可为 <see langword="null"/> 或空数组</param>
-        /// <param name="quoteMsgId">引用一条消息的messageId进行回复。为 <see langword="null"/> 时不进行引用。</param>
+        /// <inheritdoc cref="CommonSendMessageAsync"/>
         public Task<int> SendGroupMessageAsync(long groupNumber, IMessageBase[] chain, int? quoteMsgId = null)
         {
             return CommonSendMessageAsync("sendGroupMessage", null, groupNumber, chain, quoteMsgId);
         }
+        /// <summary>
+        /// 异步发送群消息
+        /// </summary>
+        /// <exception cref="BotMutedException"/>
+        /// <param name="builder">构建完毕的 <see cref="IMessageBuilder"/></param>
+        /// <inheritdoc cref="CommonSendMessageAsync"/>
+        public Task<int> SendGroupMessageAsync(long groupNumber, IMessageBuilder builder, int? quoteMsgId = null)
+        {
+            return CommonSendMessageAsync("sendGroupMessage", null, groupNumber, builder.Build(), quoteMsgId);
+        }
 
-        private async Task<string[]> CommonSendImageAsync(long? qqNumber, long? groupNumber, string[] urls)
+        /// <summary>
+        /// 内部使用
+        /// </summary>
+        /// <exception cref="ArgumentException"/>
+        /// <exception cref="InvalidOperationException"/>
+        /// <exception cref="NotSupportedException"/>
+        /// <exception cref="TargetNotFoundException"/>
+        /// <param name="qqNumber">目标QQ号</param>
+        /// <param name="groupNumber">目标QQ号所在的群号</param>
+        /// <param name="urls">一个Url数组。不可为 <see langword="null"/> 或空数组</param>
+        /// <returns>一组ImageId</returns>
+        private Task<string[]> CommonSendImageAsync(long? qqNumber, long? groupNumber, string[] urls)
         {
             InternalSessionInfo session = SafeGetSession();
             if (urls == null || urls.Length == 0)
@@ -171,22 +202,12 @@ namespace Mirai_CSharp
                 group = groupNumber,
                 urls
             }, JsonSerializeOptionsFactory.IgnoreNulls);
-            using JsonDocument j = await HttpHelper.HttpPostAsync($"{session.Options.BaseUrl}/sendImageMessage", payload).GetJsonAsync(token: session.Token);
-            JsonElement root = j.RootElement;
-            if (root.ValueKind == JsonValueKind.Object && root.TryGetProperty("code", out JsonElement code)) // 正常返回是没有code的
-            {
-                return ThrowCommonException<string[]>(code.GetInt32(), in root);
-            }
-            return Utils.Deserialize<string[]>(in root);
+            return InternalHttpPostNoSuccCodeAsync<string[], string[]>($"{session.Options.BaseUrl}/sendImageMessage", payload, session.Token);
         }
         /// <summary>
         /// 异步发送给定Url数组中的图片到给定好友
         /// </summary>
-        /// <exception cref="ArgumentException"/>
-        /// <exception cref="InvalidOperationException"/>
-        /// <exception cref="TargetNotFoundException"/>
-        /// <param name="qqNumber">目标QQ号</param>
-        /// <param name="urls">一个Url数组。不可为 <see langword="null"/> 或空数组</param>
+        /// <inheritdoc cref="CommonSendImageAsync"/>
         public Task<string[]> SendImageToFriendAsync(long qqNumber, string[] urls)
         {
             return CommonSendImageAsync(qqNumber, null, urls);
@@ -194,12 +215,7 @@ namespace Mirai_CSharp
         /// <summary>
         /// 异步发送给定Url数组中的图片到临时会话
         /// </summary>
-        /// <exception cref="ArgumentException"/>
-        /// <exception cref="InvalidOperationException"/>
-        /// <exception cref="TargetNotFoundException"/>
-        /// <param name="qqNumber">目标QQ号</param>
-        /// <param name="groupNumber">目标QQ号所在的群号</param>
-        /// <param name="urls">一个Url数组。不可为 <see langword="null"/> 或空数组</param>
+        /// <inheritdoc cref="CommonSendImageAsync"/>
         public Task<string[]> SendImageToTempAsync(long qqNumber, long groupNumber, string[] urls)
         {
             return CommonSendImageAsync(qqNumber, groupNumber, urls);
@@ -207,24 +223,30 @@ namespace Mirai_CSharp
         /// <summary>
         /// 异步发送给定Url数组中的图片到群
         /// </summary>
-        /// <exception cref="ArgumentException"/>
         /// <exception cref="BotMutedException"/>
-        /// <exception cref="InvalidOperationException"/>
-        /// <exception cref="TargetNotFoundException"/>
-        /// <param name="groupNumber">目标群号</param>
-        /// <param name="urls">一个Url数组。不可为 <see langword="null"/> 或空数组</param>
+        /// <inheritdoc cref="CommonSendImageAsync"/>
         public Task<string[]> SendImageToGroupAsync(long groupNumber, string[] urls)
         {
             return CommonSendImageAsync(null, groupNumber, urls);
         }
 
-        private async Task<ImageMessage> InternalUploadPictureAsync(InternalSessionInfo session, PictureTarget type, Stream imgStream)
+        /// <summary>
+        /// 内部使用
+        /// </summary>
+        /// <exception cref="InvalidOperationException"/>
+        /// <param name="type">目标类型</param>
+        /// <param name="imgStream">图片流</param>
+        /// <remarks>
+        /// 注意: 当 mirai-api-http 的版本小于等于v1.7.0时, 本方法返回的将是一个只有 Url 有值的 <see cref="ImageMessage"/>
+        /// </remarks>
+        /// <returns>一个 <see cref="ImageMessage"/> 实例, 可用于以后的消息发送</returns>
+        private Task<ImageMessage> InternalUploadPictureAsync(InternalSessionInfo session, PictureTarget type, Stream imgStream)
         {
             if (session.ApiVersion <= new Version(1, 7, 0))
             {
                 Guid guid = Guid.NewGuid();
                 ImageHttpListener.RegisterImage(guid, imgStream);
-                return new ImageMessage(null, $"http://127.0.0.1:{ImageHttpListener.Port}/fetch?guid={guid:n}", null);
+                return Task.FromResult(new ImageMessage(null, $"http://127.0.0.1:{ImageHttpListener.Port}/fetch?guid={guid:n}", null));
             }
             HttpContent sessionKeyContent = new StringContent(session.SessionKey);
             sessionKeyContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
@@ -274,33 +296,17 @@ namespace Mirai_CSharp
                 typeContent,
                 imageContent
             };
-            try
-            {
-                using JsonDocument j = await HttpHelper.HttpPostAsync($"{session.Options.BaseUrl}/uploadImage", contents).GetJsonAsync(token: session.Token);
-                JsonElement root = j.RootElement;
-                if (root.TryGetProperty("code", out JsonElement code)) // 正常返回是没有code的
-                {
-                    return ThrowCommonException<ImageMessage>(code.GetInt32(), in root);
-                }
-                return Utils.Deserialize<ImageMessage>(in root);
-
-            }
-            catch (JsonException) // https://github.com/mamoe/mirai-api-http/issues/85
-            {
-                throw new NotSupportedException("当前版本的mirai-api-http无法发送图片。");
-            }
+            return InternalHttpPostNoSuccCodeAsync<ImageMessage, ImageMessage>($"{session.Options.BaseUrl}/uploadImage", contents, session.Token)
+                .ContinueWith(t => t.IsFaulted && t.Exception!.InnerException is JsonException ? Task.FromException<ImageMessage>(new NotSupportedException("当前版本的mirai-api-http无法发送图片。")) : t, TaskContinuationOptions.ExecuteSynchronously).Unwrap();
+            //  ^-- 处理 JsonException 到 NotSupportedException, https://github.com/mamoe/mirai-api-http/issues/85
         }
         /// <summary>
         /// 异步上传图片
         /// </summary>
-        /// <remarks>
-        /// 注意: 当 mirai-api-http 的版本小于等于v1.7.0时, 本方法返回的将是一个只有 Url 有值的 <see cref="ImageMessage"/>
-        /// </remarks>
         /// <exception cref="ArgumentException"/>
         /// <exception cref="FileNotFoundException"/>
-        /// <exception cref="InvalidOperationException"/>
-        /// <param name="type">目标类型</param>
         /// <param name="imagePath">图片路径</param>
+        /// <inheritdoc cref="InternalUploadPictureAsync"/>
         public Task<ImageMessage> UploadPictureAsync(PictureTarget type, string imagePath)
         {
             InternalSessionInfo session = SafeGetSession();
@@ -309,13 +315,9 @@ namespace Mirai_CSharp
         /// <summary>
         /// 异步上传图片
         /// </summary>
-        /// <remarks>
-        /// 注意: 当 mirai-api-http 的版本小于等于v1.7.0时, 本方法返回的将是一个只有 Url 有值的 <see cref="ImageMessage"/>
-        /// </remarks>
         /// <exception cref="ArgumentException"/>
-        /// <exception cref="InvalidOperationException"/>
-        /// <param name="type">目标类型</param>
         /// <param name="image">图片流</param>
+        /// <inheritdoc cref="InternalUploadPictureAsync"/>
         public Task<ImageMessage> UploadPictureAsync(PictureTarget type, Stream image)
         {
             InternalSessionInfo session = SafeGetSession();
