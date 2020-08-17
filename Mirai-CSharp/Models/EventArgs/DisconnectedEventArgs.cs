@@ -16,13 +16,15 @@ namespace Mirai_CSharp.Models
 
     public class DisconnectedEventArgs : IDisconnectedEventArgs
     {
-        public Exception Exception { get; set; }
+        public Exception Exception { get; set; } = null!;
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public DisconnectedEventArgs()
         {
 
         }
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public DisconnectedEventArgs(Exception exception)
         {
             Exception = exception;

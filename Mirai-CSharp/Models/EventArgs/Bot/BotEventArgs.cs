@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 
 namespace Mirai_CSharp.Models
 {
@@ -14,7 +15,11 @@ namespace Mirai_CSharp.Models
         long QQNumber { get; }
     }
 
-    public class BotEventArgs : IBotOnlineEventArgs, IBotPositiveOfflineEventArgs, IBotKickedOfflineEventArgs, IBotDroppedEventArgs, IBotReloginEventArgs
+    public class BotEventArgs : IBotOnlineEventArgs, 
+                                IBotPositiveOfflineEventArgs,
+                                IBotKickedOfflineEventArgs, 
+                                IBotDroppedEventArgs, 
+                                IBotReloginEventArgs
     {
         /// <summary>
         /// 机器人QQ号
@@ -22,14 +27,16 @@ namespace Mirai_CSharp.Models
         [JsonPropertyName("qq")]
         public long QQNumber { get; set; }
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public BotEventArgs()
         {
 
         }
 
-        public BotEventArgs(long qQNumber)
+        [Obsolete("此类不应由用户主动创建实例。")]
+        public BotEventArgs(long qqNumber)
         {
-            QQNumber = qQNumber;
+            QQNumber = qqNumber;
         }
     }
 

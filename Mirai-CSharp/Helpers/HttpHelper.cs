@@ -16,12 +16,12 @@ namespace Mirai_CSharp.Helpers
 
         static HttpHelper()
         {
-            Version version = Assembly.GetExecutingAssembly().GetName().Version;
-            Assembly coreclr = Assembly.GetAssembly(typeof(object));
-            UserAgent = $"Mirai-CSharp/{version.ToString(version.MinorRevision > 0 ? 4 : 3)} CoreCLR/{coreclr.GetCustomAttribute<AssemblyFileVersionAttribute>().Version}";
+            Version version = Assembly.GetExecutingAssembly().GetName().Version!;
+            Assembly coreclr = Assembly.GetAssembly(typeof(object))!;
+            UserAgent = $"Mirai-CSharp/{version.ToString(version.MinorRevision > 0 ? 4 : 3)} CoreCLR/{coreclr.GetCustomAttribute<AssemblyFileVersionAttribute>()!.Version}";
         }
 
-        public static Task<WebResponse> HttpGetAsync(string url, double timeout = 10, string userAgent = null)
+        public static Task<WebResponse> HttpGetAsync(string url, double timeout = 10, string? userAgent = null)
         {
             HttpWebRequest request = WebRequest.CreateHttp(url);
             request.Timeout = (int)(timeout * 1000);
@@ -29,7 +29,7 @@ namespace Mirai_CSharp.Helpers
             return request.GetResponseAsync();
         }
 
-        public static Task<WebResponse> HttpPostAsync(string url, byte[] payload, double timeout = 10, string userAgent = null)
+        public static Task<WebResponse> HttpPostAsync(string url, byte[] payload, double timeout = 10, string? userAgent = null)
         {
             HttpWebRequest request = WebRequest.CreateHttp(url);
             request.Method = "POST";
@@ -39,12 +39,16 @@ namespace Mirai_CSharp.Helpers
                                                                // MemoryStream类下的异步方法都是调用对应的同步方法, 然后返回
                                                                // default(ValueTask) / Task.CompletedTask
             {
+#if NETSTANDARD2_0
+                stream.Write(payload, 0, payload.Length);
+#else
                 stream.Write(payload);
+#endif
             }
             return request.GetResponseAsync();
         }
 
-        public static async Task<WebResponse> HttpPostAsync(string url, HttpContent[] contents, double timeout = 10, string userAgent = null)
+        public static async Task<WebResponse> HttpPostAsync(string url, HttpContent[] contents, double timeout = 10, string? userAgent = null)
         {
             HttpWebRequest request = WebRequest.CreateHttp(url);
             request.Method = "POST";
@@ -64,7 +68,7 @@ namespace Mirai_CSharp.Helpers
             return await request.GetResponseAsync();
         }
 
-        public static async Task<string> GetStringAsync(this WebResponse response, Encoding encoding = null, bool disposeResponse = true)
+        public static async Task<string> GetStringAsync(this WebResponse response, Encoding? encoding = null, bool disposeResponse = true)
         {
             try
             {
@@ -80,7 +84,7 @@ namespace Mirai_CSharp.Helpers
                 }
             }
         }
-        public static async Task<string> GetStringAsync(this Task<WebResponse> responseTask, Encoding encoding = null)
+        public static async Task<string> GetStringAsync(this Task<WebResponse> responseTask, Encoding? encoding = null)
         {
             using WebResponse response = await responseTask.ConfigureAwait(false);
             using Stream stream = response.GetResponseStream();
@@ -114,7 +118,7 @@ namespace Mirai_CSharp.Helpers
         {
             return task.ContinueWith(t =>
             {
-                if (t.IsFaulted && t.Exception.InnerException is WebException e)
+                if (t.IsFaulted && t.Exception!.InnerException is WebException e && e.Response != null)
                 {
                     return Task.FromResult(e.Response);
                 }

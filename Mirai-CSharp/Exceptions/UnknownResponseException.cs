@@ -1,20 +1,31 @@
 ﻿using System;
+using System.Text.Json;
 
 namespace Mirai_CSharp.Exceptions
 {
     public sealed class UnknownResponseException : Exception
     {
-        public string Response { get; }
+        private const string DefaultMessage = "未知的服务器返回。";
+
+        public string? Response { get; }
 
         public UnknownResponseException() { }
 
-        public UnknownResponseException(string response) : this(response, "未知的服务器返回.", null) { }
+        public UnknownResponseException(in JsonElement root) : this(root.GetRawText()) { }
 
-        public UnknownResponseException(string response, string message) : this(response, message, null) { }
+        public UnknownResponseException(in JsonElement root, string? message) : this(root.GetRawText(), message) { }
 
-        public UnknownResponseException(string response, Exception innerException) : this(response, "未知的服务器返回.", innerException) { }
+        public UnknownResponseException(in JsonElement root, Exception? innerException) : this(root.GetRawText(), innerException) { }
 
-        public UnknownResponseException(string response, string message, Exception innerException) : base(message, innerException)
+        public UnknownResponseException(in JsonElement root, string? message, Exception? innerException) : this(root.GetRawText(), message, innerException) { }
+
+        public UnknownResponseException(string? response) : this(response, DefaultMessage, null) { }
+
+        public UnknownResponseException(string? response, string? message) : this(response, message, null) { }
+
+        public UnknownResponseException(string? response, Exception? innerException) : this(response, DefaultMessage, innerException) { }
+
+        public UnknownResponseException(string? response, string? message, Exception? innerException) : base(message ?? DefaultMessage, innerException)
             => Response = response;
     }
 }

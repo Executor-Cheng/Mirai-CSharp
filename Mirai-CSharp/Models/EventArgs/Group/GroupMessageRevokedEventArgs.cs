@@ -19,16 +19,18 @@ namespace Mirai_CSharp.Models
         /// </summary>
         [JsonConverter(typeof(ChangeTypeJsonConverter<GroupInfo, IGroupInfo>))]
         [JsonPropertyName("group")]
-        public IGroupInfo Group { get; set; }
+        public IGroupInfo Group { get; set; } = null!;
         /// <summary>
         /// 进行撤回操作的用户信息
         /// </summary>
         [JsonConverter(typeof(ChangeTypeJsonConverter<GroupMemberInfo, IGroupMemberInfo>))]
         [JsonPropertyName("operator")]
-        public IGroupMemberInfo Operator { get; set; }
+        public IGroupMemberInfo Operator { get; set; } = null!;
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public GroupMessageRevokedEventArgs() { }
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public GroupMessageRevokedEventArgs(IGroupInfo group, IGroupMemberInfo @operator, long senderId, int messageId, DateTime sentTime) : base(senderId, messageId, sentTime)
         {
             Group = group;

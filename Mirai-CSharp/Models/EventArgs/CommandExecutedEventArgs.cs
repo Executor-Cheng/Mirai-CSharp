@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 
 #pragma warning disable CA1819 // Properties should not return arrays
 namespace Mirai_CSharp.Models
@@ -47,15 +48,18 @@ namespace Mirai_CSharp.Models
     public class CommandExecutedEventArgs : ICommandExecutedEventArgs
     {
         [JsonPropertyName("name")]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         [JsonPropertyName("args")]
-        public string[] Args { get; set; }
+        public string[] Args { get; set; } = null!;
 
         [JsonPropertyName("sender")]
         public long Sender { get; set; }
 
         [JsonPropertyName("group")]
         public long Group { get; set; }
+
+        [Obsolete("此类不应由用户主动创建实例。")]
+        public CommandExecutedEventArgs() { }
     }
 }

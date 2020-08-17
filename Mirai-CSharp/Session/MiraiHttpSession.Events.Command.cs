@@ -7,6 +7,6 @@ namespace Mirai_CSharp
         /// <summary>
         /// 指令执行后引发的事件
         /// </summary>
-        public event CommonEventHandler<ICommandExecutedEventArgs> CommandExecuted;
+        public event CommonEventHandler<ICommandExecutedEventArgs>? CommandExecuted;
     }
 }

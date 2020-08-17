@@ -30,7 +30,7 @@ namespace Mirai_CSharp
         /// 异步连接到mirai-api-http。
         /// </summary>
         /// <remarks>
-        /// 此方法不是线程安全的。
+        /// 此方法线程安全。但是在连接过程中, 如果尝试多次调用, 除了第一次以后的所有调用都将立即返回。
         /// </remarks>
         /// <exception cref="BotNotFoundException"/>
         /// <exception cref="InvalidAuthKeyException"/>
@@ -40,39 +40,38 @@ namespace Mirai_CSharp
         public async Task ConnectAsync(MiraiHttpSessionOptions options, long qqNumber, bool listenCommand)
         {
             CheckDisposed();
-            if (this.Connected)
+            InternalSessionInfo session = new InternalSessionInfo();
+            if (Interlocked.CompareExchange(ref SessionInfo, session, null!) == null)
             {
-                return;
-            }
-            string sessionKey = await AuthorizeAsync(options);
-            await VerifyAsync(options, sessionKey, qqNumber);
-            ApiVersion = await GetVersionAsync(options);
-            InternalSessionInfo session = new InternalSessionInfo
-            {
-                Options = options,
-                SessionKey = sessionKey,
-                QQNumber = qqNumber,
-                Canceller = new CancellationTokenSource()
-            };
-            try
-            {
-                IMiraiSessionConfig config = await this.GetConfigAsync(session);
-                if (!config.EnableWebSocket.GetValueOrDefault())
+                try
                 {
-                    await this.SetConfigAsync(session, new MiraiSessionConfig { CacheSize = config.CacheSize, EnableWebSocket = true });
+                    session.SessionKey = await AuthorizeAsync(options);
+                    session.Options = options;
+                    await VerifyAsync(options, session.SessionKey, qqNumber);
+                    session.QQNumber = qqNumber;
+                    session.ApiVersion = await GetVersionAsync(options);
+                    CancellationTokenSource canceller = new CancellationTokenSource();
+                    session.Canceller = canceller;
+                    session.Token = canceller.Token;
+                    session.Connected = true;
+                    IMiraiSessionConfig config = await this.GetConfigAsync(session);
+                    if (!config.EnableWebSocket.GetValueOrDefault())
+                    {
+                        await this.SetConfigAsync(session, new MiraiSessionConfig { CacheSize = config.CacheSize, EnableWebSocket = true });
+                    }
+                    CancellationToken token = session.Canceller.Token;
+                    ReceiveMessageLoop(session, token);
+                    if (listenCommand)
+                    {
+                        ReceiveCommandLoop(session, token);
+                    }
                 }
-                CancellationToken token = session.Canceller.Token;
-                ReceiveMessageLoop(session, token);
-                if (listenCommand)
+                catch
                 {
-                    ReceiveCommandLoop(session, token);
+                    SessionInfo = null!;
+                    _ = InternalReleaseAsync(session);
+                    throw;
                 }
-                SessionInfo = session;
-            }
-            catch // 如果这都报错那真是见了鬼了
-            {
-                _ = InternalReleaseAsync(session);
-                throw;
             }
         }
 
@@ -84,8 +83,8 @@ namespace Mirai_CSharp
             int code = root.GetProperty("code").GetInt32();
             return code switch
             {
-                0 => root.GetProperty("session").GetString(),
-                _ => ThrowCommonException<string>(code, in root)
+                0 => root.GetProperty("session").GetString()!,
+                _ => throw GetCommonException(code, in root)
             };
         }
 
@@ -110,9 +109,13 @@ namespace Mirai_CSharp
             int code = root.GetProperty("code").GetInt32();
             if (code == 0)
             {
-                return Version.Parse(root.GetProperty("data").GetProperty("version").GetString()[1..]); // v1.0.0, skip 'v'
+#if NETSTANDARD2_0
+                return Version.Parse(root.GetProperty("data").GetProperty("version").GetString()!.Substring(1)); // v1.0.0, skip 'v'
+#else
+                return Version.Parse(root.GetProperty("data").GetProperty("version").GetString()![1..]); // v1.0.0, skip 'v'
+#endif
             }
-            return ThrowCommonException<Version>(code, in root);
+            throw GetCommonException(code, in root);
         }
         /// <summary>
         /// 异步释放Session
@@ -122,7 +125,7 @@ namespace Mirai_CSharp
         public Task ReleaseAsync(CancellationToken token = default)
         {
             CheckDisposed();
-            InternalSessionInfo session = Interlocked.Exchange(ref SessionInfo, null);
+            InternalSessionInfo? session = Interlocked.Exchange(ref SessionInfo, null!);
             if (session == null)
             {
                 throw new InvalidOperationException("请先连接到一个Session。");
@@ -132,13 +135,9 @@ namespace Mirai_CSharp
 
         private Task InternalReleaseAsync(InternalSessionInfo session, CancellationToken token = default)
         {
-            Plugins = null;
-            foreach (FieldInfo eventField in typeof(MiraiHttpSession).GetEvents().Select(p => typeof(MiraiHttpSession).GetField(p.Name, BindingFlags.NonPublic | BindingFlags.Instance)))
-            {
-                eventField.SetValue(this, null); // 用反射解决掉所有事件的Handler
-            }
-            session.Canceller.Cancel();
-            session.Canceller.Dispose();
+            session.Connected = false;
+            session.Canceller?.Cancel();
+            session.Canceller?.Dispose();
             byte[] payload = JsonSerializer.SerializeToUtf8Bytes(new
             {
                 sessionKey = session.SessionKey,

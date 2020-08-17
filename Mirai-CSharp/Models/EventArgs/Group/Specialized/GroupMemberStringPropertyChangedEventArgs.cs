@@ -1,4 +1,6 @@
-﻿namespace Mirai_CSharp.Models
+﻿using System;
+
+namespace Mirai_CSharp.Models
 {
     /// <summary>
     /// 提供群名片改动相关信息的接口。继承自 <see cref="IGroupMemberPropertyChangedEventArgs{TProperty}"/>
@@ -20,11 +22,13 @@
                                                              IGroupMemberCardChangedEventArgs,
                                                              IGroupMemberSpecialTitleChangedEventArgs
     {
+        [Obsolete("此类不应由用户主动创建实例。")]
         public GroupMemberStringPropertyChangedEventArgs()
         {
 
         }
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public GroupMemberStringPropertyChangedEventArgs(IGroupMemberInfo member, string origin, string current) : base(member, origin, current)
         {
 

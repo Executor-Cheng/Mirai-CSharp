@@ -22,7 +22,7 @@ namespace Mirai_CSharp
         /// <param name="alias">指令别名</param>
         /// <param name="description">指令描述</param>
         /// <param name="usage">指令用法, 会在指令执行错误时显示</param>
-        public static async Task RegisterCommandAsync(MiraiHttpSessionOptions options, string name, string[] alias = null, string description = null, string usage = null)
+        public static async Task RegisterCommandAsync(MiraiHttpSessionOptions options, string name, string[]? alias = null, string? description = null, string? usage = null)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -56,10 +56,10 @@ namespace Mirai_CSharp
         /// <param name="alias">指令别名</param>
         /// <param name="description">指令描述</param>
         /// <param name="usage">指令用法, 会在指令执行错误时显示</param>
-        public Task RegisterCommandAsync(string name, string[] alias = null, string description = null, string usage = null)
+        public Task RegisterCommandAsync(string name, string[]? alias = null, string? description = null, string? usage = null)
         {
-            CheckConnected();
-            return RegisterCommandAsync(SessionInfo.Options, name, alias, description, usage);
+            InternalSessionInfo session = SafeGetSession();
+            return RegisterCommandAsync(session.Options, name, alias, description, usage);
         }
         /// <summary>
         /// 异步执行指令
@@ -104,8 +104,8 @@ namespace Mirai_CSharp
         /// <param name="args">指令参数</param>
         public Task ExecuteCommandAsync(string name, params string[] args)
         {
-            CheckConnected();
-            return ExecuteCommandAsync(SessionInfo.Options, name, args);
+            InternalSessionInfo session = SafeGetSession();
+            return ExecuteCommandAsync(session.Options, name, args);
         }
         /// <summary>
         /// 异步获取给定QQ的Managers
@@ -116,15 +116,9 @@ namespace Mirai_CSharp
         /// <param name="qqNumber">机器人QQ号</param>
         /// <param name="token">用于取消操作的Token</param>
         /// <returns>能够管理此机器人的QQ号数组</returns>
-        public static async Task<long[]> GetManagersAsync(MiraiHttpSessionOptions options, long qqNumber, CancellationToken token = default)
+        public static Task<long[]> GetManagersAsync(MiraiHttpSessionOptions options, long qqNumber, CancellationToken token = default)
         {
-            using JsonDocument j = await HttpHelper.HttpGetAsync($"{options.BaseUrl}/managers?qq={qqNumber}").GetJsonAsync(token: token);
-            JsonElement root = j.RootElement;
-            if (root.ValueKind == JsonValueKind.Object && root.TryGetProperty("code", out JsonElement code)) // 正常返回是没有code的
-            {
-                return ThrowCommonException<long[]>(code.GetInt32(), in root);
-            }
-            return Utils.Deserialize<long[]>(in root);
+            return InternalHttpGetNoSuccCodeAsync<long[], long[]>($"{options.BaseUrl}/managers?qq={qqNumber}", token);
         }
         /// <summary>
         /// 异步获取给定QQ的Managers
@@ -134,8 +128,8 @@ namespace Mirai_CSharp
         /// <returns>能够管理此机器人的QQ号数组</returns>
         public Task<long[]> GetManagersAsync(long qqNumber)
         {
-            CheckConnected();
-            return GetManagersAsync(SessionInfo.Options, qqNumber, SessionInfo.Canceller.Token);
+            InternalSessionInfo session = SafeGetSession();
+            return GetManagersAsync(session.Options, qqNumber, session.Token);
         }
     }
 }

@@ -2,6 +2,8 @@
 using Mirai_CSharp.Plugin;
 using System;
 using System.Collections.Immutable;
+using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,15 +14,13 @@ namespace Mirai_CSharp
         /// <summary>
         /// Session连接状态
         /// </summary>
-        public bool Connected => SessionInfo != null;
+        public bool Connected => SessionInfo?.Connected ?? false;
         /// <summary>
         /// Session绑定的QQ号。未连接为 <see langword="null"/>。
         /// </summary>
         public long? QQNumber => SessionInfo?.QQNumber;
 
-        private Version ApiVersion;
-
-        private InternalSessionInfo SessionInfo;
+        private InternalSessionInfo? SessionInfo;
 
         private ImmutableList<IPlugin> Plugins = Array.Empty<IPlugin>().ToImmutableList();
 
@@ -28,14 +28,25 @@ namespace Mirai_CSharp
 
         private class InternalSessionInfo
         {
-            public MiraiHttpSessionOptions Options;
+            public MiraiHttpSessionOptions Options = null!;
 
-            public string SessionKey;
+            public Version ApiVersion = null!;
+
+            public string SessionKey = null!;
 
             public long QQNumber;
 
-            public volatile CancellationTokenSource Canceller;
+            public CancellationToken Token;
+
+            public CancellationTokenSource Canceller = null!;
+
+            public bool Connected;
         }
+
+        /// <summary>
+        /// 初始化 <see cref="MiraiHttpSession"/> 类的新实例
+        /// </summary>
+        public MiraiHttpSession() { }
 
         /// <summary>
         /// 添加一个用于处理消息的 <see cref="IPlugin"/>
@@ -72,9 +83,14 @@ namespace Mirai_CSharp
                 }
                 _disposed = true;
             }
-            InternalSessionInfo session = Interlocked.Exchange(ref SessionInfo, null);
+            InternalSessionInfo? session = Interlocked.Exchange(ref SessionInfo, null);
             if (session != null)
             {
+                Plugins = null!;
+                foreach (FieldInfo eventField in typeof(MiraiHttpSession).GetEvents().Select(p => typeof(MiraiHttpSession).GetField(p.Name, BindingFlags.NonPublic | BindingFlags.Instance)!))
+                {
+                    eventField.SetValue(this, null); // 用反射解决掉所有事件的Handler
+                }
                 return new ValueTask(this.InternalReleaseAsync(session));
             }
             return default;

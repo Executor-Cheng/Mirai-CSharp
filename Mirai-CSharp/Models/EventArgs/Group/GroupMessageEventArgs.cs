@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Mirai_CSharp.Models
 {
@@ -12,17 +13,19 @@ namespace Mirai_CSharp.Models
 
     public class GroupMessageEventArgs : GroupMessageBaseEventArgs, IGroupMessageEventArgs
     {
+        [Obsolete("此类不应由用户主动创建实例。")]
         public GroupMessageEventArgs()
         {
 
         }
 
+        [Obsolete("此类不应由用户主动创建实例。")]
         public GroupMessageEventArgs(IMessageBase[] chain, IGroupMemberInfo sender) : base(chain, sender)
         {
 
         }
 
         public override string ToString()
-            => $"[{Sender.Group.Name}({Sender.Group.Id})] {Sender.Name}({Sender.Id}) -> {string.Join("", (IEnumerable<MessageBase>)Chain)}";
+            => $"[{Sender.Group.Name}({Sender.Group.Id})] {Sender.Name}({Sender.Id}) -> {string.Join("", (IEnumerable<Messages>)Chain)}";
     }
 }
