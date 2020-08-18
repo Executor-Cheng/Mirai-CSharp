@@ -53,65 +53,65 @@ namespace Mirai_CSharp
             throw GetCommonException(code, in root);
         }
 
-        private static async Task InternalHttpGetAsync(string url, CancellationToken token = default)
+        private static async Task InternalHttpGetAsync(HttpClient client, string url, CancellationToken token = default)
         {
-            using JsonDocument j = await HttpHelper.HttpGetAsync(url).GetJsonAsync(token: token);
+            using JsonDocument j = await client.HttpGetAsync(url).GetJsonAsync(token: token);
             JsonElement root = j.RootElement;
             ProcessResponse(in root);
         }
 
-        private static async Task<TResult> InternalHttpGetAsync<TResult, TImpl>(string url, CancellationToken token = default) where TImpl : class, TResult
+        private static async Task<TResult> InternalHttpGetAsync<TResult, TImpl>(HttpClient client, string url, CancellationToken token = default) where TImpl : class, TResult
         {
-            using JsonDocument j = await HttpHelper.HttpGetAsync(url).GetJsonAsync(token: token);
+            using JsonDocument j = await client.HttpGetAsync(url).GetJsonAsync(token: token);
             JsonElement root = j.RootElement;
             return ProcessResponse<TImpl>(in root);
         }
 
-        private static async Task InternalHttpGetNoSuccCodeAsync(string url, CancellationToken token = default)
+        private static async Task InternalHttpGetNoSuccCodeAsync(HttpClient client, string url, CancellationToken token = default)
         {
-            using JsonDocument j = await HttpHelper.HttpGetAsync(url).GetJsonAsync(token: token);
+            using JsonDocument j = await client.HttpGetAsync(url).GetJsonAsync(token: token);
             JsonElement root = j.RootElement;
             ProcessNoSuccCodeResponse(in root);
         }
 
-        private static async Task<TResult> InternalHttpGetNoSuccCodeAsync<TResult, TImpl>(string url, CancellationToken token = default) where TImpl : class, TResult
+        private static async Task<TResult> InternalHttpGetNoSuccCodeAsync<TResult, TImpl>(HttpClient client, string url, CancellationToken token = default) where TImpl : class, TResult
         {
-            using JsonDocument j = await HttpHelper.HttpGetAsync(url).GetJsonAsync(token: token);
+            using JsonDocument j = await client.HttpGetAsync(url).GetJsonAsync(token: token);
             JsonElement root = j.RootElement;
             return ProcessNoSuccCodeResponse<TImpl>(in root);
         }
 
-        private static async Task InternalHttpPostAsync(string url, byte[] payload, CancellationToken token = default)
+        private static async Task InternalHttpPostAsync(HttpClient client, string url, byte[] payload, CancellationToken token = default)
         {
-            using JsonDocument j = await HttpHelper.HttpPostAsync(url, payload).GetJsonAsync(token: token);
+            using JsonDocument j = await client.HttpPostAsync(url, payload).GetJsonAsync(token: token);
             JsonElement root = j.RootElement;
             ProcessResponse(in root);
         }
 
-        private static async Task<TResult> InternalHttpPostAsync<TResult, TImpl>(string url, byte[] payload, CancellationToken token = default) where TImpl : class, TResult
+        private static async Task<TResult> InternalHttpPostAsync<TResult, TImpl>(HttpClient client, string url, byte[] payload, CancellationToken token = default) where TImpl : class, TResult
         {
-            using JsonDocument j = await HttpHelper.HttpPostAsync(url, payload).GetJsonAsync(token: token);
+            using JsonDocument j = await client.HttpPostAsync(url, payload).GetJsonAsync(token: token);
             JsonElement root = j.RootElement;
             return ProcessResponse<TImpl>(in root);
         }
 
-        private static async Task InternalHttpPostNoSuccCodeAsync(string url, byte[] payload, CancellationToken token = default)
+        private static async Task InternalHttpPostNoSuccCodeAsync(HttpClient client, string url, byte[] payload, CancellationToken token = default)
         {
-            using JsonDocument j = await HttpHelper.HttpPostAsync(url, payload).GetJsonAsync(token: token);
+            using JsonDocument j = await client.HttpPostAsync(url, payload).GetJsonAsync(token: token);
             JsonElement root = j.RootElement;
             ProcessNoSuccCodeResponse(in root);
         }
 
-        private static async Task<TResult> InternalHttpPostNoSuccCodeAsync<TResult, TImpl>(string url, byte[] payload, CancellationToken token = default) where TImpl : class, TResult
+        private static async Task<TResult> InternalHttpPostNoSuccCodeAsync<TResult, TImpl>(HttpClient client, string url, byte[] payload, CancellationToken token = default) where TImpl : class, TResult
         {
-            using JsonDocument j = await HttpHelper.HttpPostAsync(url, payload).GetJsonAsync(token: token);
+            using JsonDocument j = await client.HttpPostAsync(url, payload).GetJsonAsync(token: token);
             JsonElement root = j.RootElement;
             return ProcessNoSuccCodeResponse<TImpl>(in root);
         }
 
-        private static async Task<TResult> InternalHttpPostNoSuccCodeAsync<TResult, TImpl>(string url, HttpContent[] contents, CancellationToken token = default) where TImpl : class, TResult
+        private static async Task<TResult> InternalHttpPostNoSuccCodeAsync<TResult, TImpl>(HttpClient client, string url, HttpContent[] contents, CancellationToken token = default) where TImpl : class, TResult
         {
-            using JsonDocument j = await HttpHelper.HttpPostAsync(url, contents).GetJsonAsync(token: token);
+            using JsonDocument j = await client.HttpPostAsync(url, contents).GetJsonAsync(token: token);
             JsonElement root = j.RootElement;
             return ProcessNoSuccCodeResponse<TImpl>(in root);
         }

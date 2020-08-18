@@ -3,6 +3,7 @@ using Mirai_CSharp.Helpers;
 using Mirai_CSharp.Models;
 using System;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading;
@@ -45,11 +46,12 @@ namespace Mirai_CSharp
             {
                 try
                 {
-                    session.SessionKey = await AuthorizeAsync(options);
+                    session.Client = new HttpClient();
+                    session.SessionKey = await AuthorizeAsync(session.Client, options);
                     session.Options = options;
-                    await VerifyAsync(options, session.SessionKey, qqNumber);
+                    await VerifyAsync(session.Client, options, session.SessionKey, qqNumber);
                     session.QQNumber = qqNumber;
-                    session.ApiVersion = await GetVersionAsync(options);
+                    session.ApiVersion = await GetVersionAsync(session.Client, options);
                     CancellationTokenSource canceller = new CancellationTokenSource();
                     session.Canceller = canceller;
                     session.Token = canceller.Token;
@@ -75,10 +77,10 @@ namespace Mirai_CSharp
             }
         }
 
-        private static async Task<string> AuthorizeAsync(MiraiHttpSessionOptions options)
+        private static async Task<string> AuthorizeAsync(HttpClient client, MiraiHttpSessionOptions options)
         {
             byte[] payload = JsonSerializer.SerializeToUtf8Bytes(new { authKey = options.AuthKey });
-            using JsonDocument j = await HttpHelper.HttpPostAsync($"{options.BaseUrl}/auth", payload).GetJsonAsync();
+            using JsonDocument j = await client.HttpPostAsync($"{options.BaseUrl}/auth", payload).GetJsonAsync();
             JsonElement root = j.RootElement;
             int code = root.GetProperty("code").GetInt32();
             return code switch
@@ -88,23 +90,24 @@ namespace Mirai_CSharp
             };
         }
 
-        private static Task VerifyAsync(MiraiHttpSessionOptions options, string sessionKey, long qqNumber)
+        private static Task VerifyAsync(HttpClient client, MiraiHttpSessionOptions options, string sessionKey, long qqNumber)
         {
             byte[] payload = JsonSerializer.SerializeToUtf8Bytes(new
             {
                 sessionKey,
                 qq = qqNumber
             });
-            return InternalHttpPostAsync($"{options.BaseUrl}/verify", payload);
+            return InternalHttpPostAsync(client, $"{options.BaseUrl}/verify", payload);
         }
         /// <summary>
         /// 异步获取mirai-api-http的版本号
         /// </summary>
+        /// <param name="client">要进行请求的 <see cref="HttpClient"/></param>
         /// <param name="options">连接信息</param>
-        /// <returns></returns>
-        public static async Task<Version> GetVersionAsync(MiraiHttpSessionOptions options)
+        /// <returns>表示此异步操作的 <see cref="Task"/></returns>
+        public static async Task<Version> GetVersionAsync(HttpClient client, MiraiHttpSessionOptions options)
         {
-            using JsonDocument j = await HttpHelper.HttpGetAsync($"{options.BaseUrl}/about").GetJsonAsync();
+            using JsonDocument j = await client.HttpGetAsync($"{options.BaseUrl}/about").GetJsonAsync();
             JsonElement root = j.RootElement;
             int code = root.GetProperty("code").GetInt32();
             if (code == 0)
@@ -117,6 +120,20 @@ namespace Mirai_CSharp
             }
             throw GetCommonException(code, in root);
         }
+
+        /// <inheritdoc cref="GetVersionAsync(HttpClient, MiraiHttpSessionOptions)"/>
+        public static Task<Version> GetVersionAsync(MiraiHttpSessionOptions options)
+        {
+            return GetVersionAsync(_Client, options);
+        }
+
+        /// <inheritdoc cref="GetVersionAsync(HttpClient, MiraiHttpSessionOptions)"/>
+        public Task<Version> GetVersionAsync()
+        {
+            InternalSessionInfo session = SafeGetSession();
+            return GetVersionAsync(session.Client, session.Options);
+        }
+
         /// <summary>
         /// 异步释放Session
         /// </summary>
@@ -133,7 +150,7 @@ namespace Mirai_CSharp
             return InternalReleaseAsync(session, token);
         }
 
-        private Task InternalReleaseAsync(InternalSessionInfo session, CancellationToken token = default)
+        private async Task InternalReleaseAsync(InternalSessionInfo session, CancellationToken token = default)
         {
             session.Connected = false;
             session.Canceller?.Cancel();
@@ -143,7 +160,14 @@ namespace Mirai_CSharp
                 sessionKey = session.SessionKey,
                 qq = session.QQNumber
             });
-            return InternalHttpPostAsync($"{session.Options.BaseUrl}/release", payload, token: token);
+            try
+            {
+                await InternalHttpPostAsync(session.Client, $"{session.Options.BaseUrl}/release", payload, token: token);
+            }
+            finally
+            {
+                session.Client?.Dispose();
+            }
         }
     }
 }

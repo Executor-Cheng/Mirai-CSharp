@@ -1,8 +1,8 @@
 ﻿using Mirai_CSharp.Exceptions;
 using Mirai_CSharp.Helpers;
 using Mirai_CSharp.Models;
-using Mirai_CSharp.Utility;
 using System;
+using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,12 +17,14 @@ namespace Mirai_CSharp
         /// </summary>
         /// <exception cref="InvalidAuthKeyException"/>
         /// <exception cref="InvalidOperationException"/>
+        /// <param name="client">要进行请求的 <see cref="HttpClient"/></param>
         /// <param name="options">连接信息</param>
         /// <param name="name">指令名</param>
         /// <param name="alias">指令别名</param>
         /// <param name="description">指令描述</param>
         /// <param name="usage">指令用法, 会在指令执行错误时显示</param>
-        public static async Task RegisterCommandAsync(MiraiHttpSessionOptions options, string name, string[]? alias = null, string? description = null, string? usage = null)
+        /// <returns>表示此异步操作的 <see cref="Task"/></returns>
+        public static async Task RegisterCommandAsync(HttpClient client, MiraiHttpSessionOptions options, string name, string[]? alias = null, string? description = null, string? usage = null)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -36,7 +38,7 @@ namespace Mirai_CSharp
                 description,
                 usage
             });
-            string json = await HttpHelper.HttpPostAsync($"{options.BaseUrl}/command/register", payload).GetStringAsync();
+            string json = await client.HttpPostAsync($"{options.BaseUrl}/command/register", payload).GetStringAsync();
             try
             {
                 using JsonDocument j = JsonDocument.Parse(json);
@@ -48,29 +50,32 @@ namespace Mirai_CSharp
                 throw new InvalidOperationException(json);
             }
         }
-        /// <summary>
-        /// 异步注册指令
-        /// </summary>
-        /// <exception cref="InvalidOperationException"/>
-        /// <param name="name">指令名</param>
-        /// <param name="alias">指令别名</param>
-        /// <param name="description">指令描述</param>
-        /// <param name="usage">指令用法, 会在指令执行错误时显示</param>
+
+        /// <inheritdoc cref="RegisterCommandAsync(HttpClient, MiraiHttpSessionOptions, string, string[], string, string)"/>
+        public static Task RegisterCommandAsync(MiraiHttpSessionOptions options, string name, string[]? alias = null, string? description = null, string? usage = null)
+        {
+            return RegisterCommandAsync(_Client, options, name, alias, description, usage);
+        }
+
+        /// <inheritdoc cref="RegisterCommandAsync(HttpClient, MiraiHttpSessionOptions, string, string[], string, string)"/>
         public Task RegisterCommandAsync(string name, string[]? alias = null, string? description = null, string? usage = null)
         {
             InternalSessionInfo session = SafeGetSession();
-            return RegisterCommandAsync(session.Options, name, alias, description, usage);
+            return RegisterCommandAsync(session.Client, session.Options, name, alias, description, usage);
         }
+
         /// <summary>
         /// 异步执行指令
         /// </summary>
         /// <exception cref="InvalidAuthKeyException"/>
         /// <exception cref="InvalidOperationException"/>
         /// <exception cref="TargetNotFoundException"/>
+        /// <param name="client">要进行请求的 <see cref="HttpClient"/></param>
         /// <param name="options">连接信息</param>
         /// <param name="name">指令名</param>
         /// <param name="args">指令参数</param>
-        public static async Task ExecuteCommandAsync(MiraiHttpSessionOptions options, string name, params string[] args)
+        /// <returns>表示此异步操作的 <see cref="Task"/></returns>
+        public static async Task ExecuteCommandAsync(HttpClient client, MiraiHttpSessionOptions options, string name, params string[] args)
         {
             byte[] payload = JsonSerializer.SerializeToUtf8Bytes(new
             {
@@ -78,7 +83,7 @@ namespace Mirai_CSharp
                 name,
                 args
             });
-            string json = await HttpHelper.HttpPostAsync($"{options.BaseUrl}/command/send", payload).GetStringAsync();
+            string json = await client.HttpPostAsync($"{options.BaseUrl}/command/send", payload).GetStringAsync();
             try
             {
                 using JsonDocument j = JsonDocument.Parse(json);
@@ -95,41 +100,47 @@ namespace Mirai_CSharp
                 throw e;
             }
         }
-        /// <summary>
-        /// 异步执行指令
-        /// </summary>
-        /// <exception cref="InvalidOperationException"/>
-        /// <exception cref="TargetNotFoundException"/>
-        /// <param name="name">指令名</param>
-        /// <param name="args">指令参数</param>
+
+        /// <inheritdoc cref="ExecuteCommandAsync(HttpClient, MiraiHttpSessionOptions, string, string[])"/>
+        public static Task ExecuteCommandAsync(MiraiHttpSessionOptions options, string name, params string[] args)
+        {
+            return ExecuteCommandAsync(_Client, options, name, args);
+        }
+
+        /// <inheritdoc cref="ExecuteCommandAsync(HttpClient, MiraiHttpSessionOptions, string, string[])"/>
         public Task ExecuteCommandAsync(string name, params string[] args)
         {
             InternalSessionInfo session = SafeGetSession();
             return ExecuteCommandAsync(session.Options, name, args);
         }
+
         /// <summary>
         /// 异步获取给定QQ的Managers
         /// </summary>
         /// <exception cref="BotNotFoundException"/>
         /// <exception cref="InvalidAuthKeyException"/>
+        /// <param name="client">要进行请求的 <see cref="HttpClient"/></param>
         /// <param name="options">连接信息</param>
         /// <param name="qqNumber">机器人QQ号</param>
         /// <param name="token">用于取消操作的Token</param>
         /// <returns>能够管理此机器人的QQ号数组</returns>
+        /// <returns>表示此异步操作的 <see cref="Task"/></returns>
+        public static Task<long[]> GetManagersAsync(HttpClient client, MiraiHttpSessionOptions options, long qqNumber, CancellationToken token = default)
+        {
+            return InternalHttpGetNoSuccCodeAsync<long[], long[]>(client, $"{options.BaseUrl}/managers?qq={qqNumber}", token);
+        }
+
+        /// <inheritdoc cref="GetManagersAsync(HttpClient, MiraiHttpSessionOptions, long, CancellationToken)"/>
         public static Task<long[]> GetManagersAsync(MiraiHttpSessionOptions options, long qqNumber, CancellationToken token = default)
         {
-            return InternalHttpGetNoSuccCodeAsync<long[], long[]>($"{options.BaseUrl}/managers?qq={qqNumber}", token);
+            return GetManagersAsync(_Client, options, qqNumber, token);
         }
-        /// <summary>
-        /// 异步获取给定QQ的Managers
-        /// </summary>
-        /// <exception cref="BotNotFoundException"/>
-        /// <param name="qqNumber">机器人QQ号</param>
-        /// <returns>能够管理此机器人的QQ号数组</returns>
+
+        /// <inheritdoc cref="GetManagersAsync(HttpClient, MiraiHttpSessionOptions, long, CancellationToken)"/>
         public Task<long[]> GetManagersAsync(long qqNumber)
         {
             InternalSessionInfo session = SafeGetSession();
-            return GetManagersAsync(session.Options, qqNumber, session.Token);
+            return GetManagersAsync(session.Client, session.Options, qqNumber, session.Token);
         }
     }
 }
