@@ -16,7 +16,7 @@ namespace Mirai_CSharp
         public Task<IFriendInfo[]> GetFriendListAsync()
         {
             InternalSessionInfo session = SafeGetSession();
-            return InternalHttpGetNoSuccCodeAsync<IFriendInfo[], FriendInfo[]>($"{session.Options.BaseUrl}/friendList?sessionKey={session.SessionKey}", session.Token);
+            return InternalHttpGetNoSuccCodeAsync<IFriendInfo[], FriendInfo[]>(session.Client, $"{session.Options.BaseUrl}/friendList?sessionKey={session.SessionKey}", session.Token);
         }
         /// <summary>
         /// 异步获取群列表
@@ -25,7 +25,7 @@ namespace Mirai_CSharp
         public Task<IGroupInfo[]> GetGroupListAsync()
         {
             InternalSessionInfo session = SafeGetSession();
-            return InternalHttpGetNoSuccCodeAsync<IGroupInfo[], GroupInfo[]>($"{session.Options.BaseUrl}/groupList?sessionKey={session.SessionKey}", session.Token);
+            return InternalHttpGetNoSuccCodeAsync<IGroupInfo[], GroupInfo[]>(session.Client, $"{session.Options.BaseUrl}/groupList?sessionKey={session.SessionKey}", session.Token);
         }
         /// <summary>
         /// 异步获取群成员列表
@@ -36,9 +36,8 @@ namespace Mirai_CSharp
         public Task<IGroupMemberInfo[]> GetGroupMemberListAsync(long groupNumber)
         {
             InternalSessionInfo session = SafeGetSession();
-            return InternalHttpGetNoSuccCodeAsync<IGroupMemberInfo[], GroupMemberInfo[]>($"{session.Options.BaseUrl}/memberList?sessionKey={session.SessionKey}&target={groupNumber}", session.Token);
+            return InternalHttpGetNoSuccCodeAsync<IGroupMemberInfo[], GroupMemberInfo[]>(session.Client, $"{session.Options.BaseUrl}/memberList?sessionKey={session.SessionKey}&target={groupNumber}", session.Token);
         }
-
         /// <summary>
         /// 内部使用
         /// </summary>
@@ -55,7 +54,7 @@ namespace Mirai_CSharp
                 sessionKey = session.SessionKey,
                 target = groupNumber
             });
-            return InternalHttpPostAsync($"{session.Options.BaseUrl}/{(action ? "muteAll" : "unmuteAll")}", payload, session.Token);
+            return InternalHttpPostAsync(session.Client, $"{session.Options.BaseUrl}/{(action ? "muteAll" : "unmuteAll")}", payload, session.Token);
         }
         /// <summary>
         /// 异步开启全体禁言
@@ -98,7 +97,7 @@ namespace Mirai_CSharp
                 memberId,
                 time = (int)duration.TotalSeconds
             });
-            return InternalHttpPostAsync($"{session.Options.BaseUrl}/mute", payload, session.Token);
+            return InternalHttpPostAsync(session.Client, $"{session.Options.BaseUrl}/mute", payload, session.Token);
         }
         /// <summary>
         /// 异步解禁给定用户
@@ -117,7 +116,7 @@ namespace Mirai_CSharp
                 target = groupNumber,
                 memberId,
             });
-            return InternalHttpPostAsync($"{session.Options.BaseUrl}/unmute", payload, session.Token);
+            return InternalHttpPostAsync(session.Client, $"{session.Options.BaseUrl}/unmute", payload, session.Token);
         }
         /// <summary>
         /// 异步将给定用户踢出给定的群
@@ -138,7 +137,7 @@ namespace Mirai_CSharp
                 memberId,
                 msg
             });
-            return InternalHttpPostAsync($"{session.Options.BaseUrl}/kick", payload, session.Token);
+            return InternalHttpPostAsync(session.Client, $"{session.Options.BaseUrl}/kick", payload, session.Token);
         }
         /// <summary>
         /// 异步使当前机器人退出给定的群
@@ -154,7 +153,7 @@ namespace Mirai_CSharp
                 sessionKey = session.SessionKey,
                 target = groupNumber,
             });
-            return InternalHttpPostAsync($"{session.Options.BaseUrl}/quit", payload, session.Token);
+            return InternalHttpPostAsync(session.Client, $"{session.Options.BaseUrl}/quit", payload, session.Token);
         }
         /// <summary>
         /// 异步修改群信息
@@ -173,7 +172,7 @@ namespace Mirai_CSharp
                 target = groupNumber,
                 config
             }, JsonSerializeOptionsFactory.IgnoreNulls);
-            return InternalHttpPostAsync($"{session.Options.BaseUrl}/groupConfig", payload, session.Token);
+            return InternalHttpPostAsync(session.Client, $"{session.Options.BaseUrl}/groupConfig", payload, session.Token);
         }
         /// <summary>
         /// 异步获取群信息
@@ -184,7 +183,7 @@ namespace Mirai_CSharp
         public Task<IGroupConfig> GetGroupConfigAsync(long groupNumber)
         {
             InternalSessionInfo session = SafeGetSession();
-            return InternalHttpGetAsync<IGroupConfig, GroupConfig>($"{session.Options.BaseUrl}/groupConfig?sessionKey={session.SessionKey}&target={groupNumber}", session.Token);
+            return InternalHttpGetAsync<IGroupConfig, GroupConfig>(session.Client, $"{session.Options.BaseUrl}/groupConfig?sessionKey={session.SessionKey}&target={groupNumber}", session.Token);
         }
         /// <summary>
         /// 异步修改给定群员的信息
@@ -205,7 +204,7 @@ namespace Mirai_CSharp
                 memberId,
                 info
             }, JsonSerializeOptionsFactory.IgnoreNulls);
-            return InternalHttpPostAsync($"{session.Options.BaseUrl}/memberInfo", payload, session.Token);
+            return InternalHttpPostAsync(session.Client, $"{session.Options.BaseUrl}/memberInfo", payload, session.Token);
         }
         /// <summary>
         /// 异步获取给定群员的信息
@@ -217,7 +216,7 @@ namespace Mirai_CSharp
         public Task<IGroupMemberCardInfo> GetGroupMemberInfoAsync(long memberId, long groupNumber)
         {
             InternalSessionInfo session = SafeGetSession();
-            return InternalHttpGetAsync<IGroupMemberCardInfo, GroupMemberCardInfo>($"{session.Options.BaseUrl}/memberInfo?sessionKey={session.SessionKey}&target={groupNumber}&memberId={memberId}", session.Token);
+            return InternalHttpGetAsync<IGroupMemberCardInfo, GroupMemberCardInfo>(session.Client, $"{session.Options.BaseUrl}/memberInfo?sessionKey={session.SessionKey}&target={groupNumber}&memberId={memberId}", session.Token);
         }
     }
 }

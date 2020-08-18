@@ -3,6 +3,7 @@ using Mirai_CSharp.Plugin;
 using System;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,6 +12,8 @@ namespace Mirai_CSharp
 {
     public partial class MiraiHttpSession : IAsyncDisposable
     {
+        private static readonly HttpClient _Client = new HttpClient();
+
         /// <summary>
         /// Session连接状态
         /// </summary>
@@ -29,6 +32,8 @@ namespace Mirai_CSharp
         private class InternalSessionInfo
         {
             public MiraiHttpSessionOptions Options = null!;
+
+            public HttpClient Client = null!;
 
             public Version ApiVersion = null!;
 

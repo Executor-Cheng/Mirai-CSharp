@@ -5,9 +5,9 @@
     <RootNamespace>Mirai_CSharp</RootNamespace>
     <OutputType>Library</OutputType>
     <NoWin32Manifest>true</NoWin32Manifest>
-    <Version>1.0.1.9</Version>
-    <AssemblyVersion>1.0.1.9</AssemblyVersion>
-    <FileVersion>1.0.1.9</FileVersion>
+    <Version>1.0.2.0</Version>
+    <AssemblyVersion>1.0.2.0</AssemblyVersion>
+    <FileVersion>1.0.2.0</FileVersion>
     <Nullable>enable</Nullable>
     <LangVersion>preview</LangVersion>
     <Authors>Executor</Authors>

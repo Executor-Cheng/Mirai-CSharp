@@ -66,7 +66,7 @@ namespace Mirai_CSharp
                 quote = quoteMsgId,
                 messageChain = chain
             }, _forSendMsg);
-            using JsonDocument j = await HttpHelper.HttpPostAsync($"{session.Options.BaseUrl}/{action}", payload).GetJsonAsync(token: session.Token);
+            using JsonDocument j = await session.Client.HttpPostAsync($"{session.Options.BaseUrl}/{action}", payload).GetJsonAsync(token: session.Token);
             JsonElement root = j.RootElement;
             int code = root.GetProperty("code").GetInt32();
             if (code == 0)
@@ -202,7 +202,7 @@ namespace Mirai_CSharp
                 group = groupNumber,
                 urls
             }, JsonSerializeOptionsFactory.IgnoreNulls);
-            return InternalHttpPostNoSuccCodeAsync<string[], string[]>($"{session.Options.BaseUrl}/sendImageMessage", payload, session.Token);
+            return InternalHttpPostNoSuccCodeAsync<string[], string[]>(session.Client, $"{session.Options.BaseUrl}/sendImageMessage", payload, session.Token);
         }
         /// <summary>
         /// 异步发送给定Url数组中的图片到给定好友
@@ -296,7 +296,7 @@ namespace Mirai_CSharp
                 typeContent,
                 imageContent
             };
-            return InternalHttpPostNoSuccCodeAsync<ImageMessage, ImageMessage>($"{session.Options.BaseUrl}/uploadImage", contents, session.Token)
+            return InternalHttpPostNoSuccCodeAsync<ImageMessage, ImageMessage>(session.Client, $"{session.Options.BaseUrl}/uploadImage", contents, session.Token)
                 .ContinueWith(t => t.IsFaulted && t.Exception!.InnerException is JsonException ? Task.FromException<ImageMessage>(new NotSupportedException("当前版本的mirai-api-http无法发送图片。")) : t, TaskContinuationOptions.ExecuteSynchronously).Unwrap();
             //  ^-- 处理 JsonException 到 NotSupportedException, https://github.com/mamoe/mirai-api-http/issues/85
         }
@@ -345,7 +345,7 @@ namespace Mirai_CSharp
                 sessionKey = session.SessionKey,
                 target = messageId
             });
-            return InternalHttpPostAsync($"{session.Options.BaseUrl}/recall", payload, session.Token);
+            return InternalHttpPostAsync(session.Client, $"{session.Options.BaseUrl}/recall", payload, session.Token);
         }
     }
 }
