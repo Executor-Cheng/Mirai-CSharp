@@ -45,7 +45,7 @@ namespace Mirai_CSharp
                 typeContent,
                 voiceContent
             };
-            return InternalHttpPostNoSuccCodeAsync<VoiceMessage, VoiceMessage>(session.Client, $"{session.Options.BaseUrl}/uploadImage", contents, session.Token);
+            return InternalHttpPostNoSuccCodeAsync<VoiceMessage, VoiceMessage>(session.Client, $"{session.Options.BaseUrl}/uploadVoice", contents, session.Token);
         }
         /// <summary>
         /// 异步上传语音
