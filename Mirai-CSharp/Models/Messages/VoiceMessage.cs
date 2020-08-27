@@ -17,7 +17,7 @@ namespace Mirai_CSharp.Models
         /// 此属性不为 <see langword="null"/> 时将忽略 <see cref="Url"/>
         /// </remarks>
         [JsonPropertyName("voiceId")]
-        public string VoiceId { get; set; } = null!;
+        public string? VoiceId { get; set; } = null!;
         /// <summary>
         /// 用于下载语音的Url
         /// </summary>
@@ -25,12 +25,12 @@ namespace Mirai_CSharp.Models
         /// 此属性不为 <see langword="null"/> 时将忽略 <see cref="Path"/>
         /// </remarks>
         [JsonPropertyName("url")]
-        public string Url { get; set; } = null!;
+        public string? Url { get; set; } = null!;
         /// <summary>
         /// 语音文件的路径
         /// </summary>
         [JsonPropertyName("path")]
-        public string Path { get; set; } = null!;
+        public string? Path { get; set; } = null!;
         /// <summary>
         /// 初始化 <see cref="VoiceMessage"/> 类的新实例
         /// </summary>
@@ -42,7 +42,7 @@ namespace Mirai_CSharp.Models
         /// <param name="voiceId">语音Id</param>
         /// <param name="url">用于下载语音的Url</param>
         /// <param name="path">语音文件的路径, 相对路径于 plugins/MiraiAPIHTTP/voices</param>
-        public VoiceMessage(string voiceId, string url, string path) : this()
+        public VoiceMessage(string? voiceId, string? url, string? path) : this()
         {
             VoiceId = voiceId;
             Url = url;

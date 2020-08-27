@@ -155,10 +155,25 @@ namespace Mirai_CSharp.Extensions
         /// 不会检查传入的 <paramref name="fileName"/> 是否存在
         /// </remarks>
         /// <returns>传入的 <see cref="IMessageBuilder"/>, 可继续用于链式调用</returns>
-        [Obsolete("mirai-api-http不支持传递此消息。", true)]
-        public static IMessageBuilder AddVoiceMessage(this IMessageBuilder builder, string fileName)
+        [Obsolete("请使用AddVoiceMessage(IMessageBuilder, string, string, string)。", true)]
+        public static IMessageBuilder AddVoiceMessage(this IMessageBuilder builder, string? fileName)
         {
-            return builder.Add(new VoiceMessage(fileName, null!, null!));
+            throw new NotImplementedException();
+        }
+        /// <summary>
+        /// 为给定的 <see cref="IMessageBuilder"/> 添加一条 <see cref="VoiceMessage"/>
+        /// </summary>
+        /// <param name="builder">要添加到的目标</param>
+        /// <param name="voiceId">语音Id</param>
+        /// <param name="url">用于下载并发送语音的Url</param>
+        /// <param name="path">语音文件路径, 相对路径于 plugins/MiraiAPIHTTP/voices</param>
+        /// <remarks>
+        /// 不会检查传入的 <paramref name="path"/> 是否存在
+        /// </remarks>
+        /// <returns>传入的 <see cref="IMessageBuilder"/>, 可继续用于链式调用</returns>
+        public static IMessageBuilder AddVoiceMessage(this IMessageBuilder builder, string? voiceId = null, string? url = null, string? path = null)
+        {
+            return builder.Add(new VoiceMessage(voiceId, url, path));
         }
     }
 }
