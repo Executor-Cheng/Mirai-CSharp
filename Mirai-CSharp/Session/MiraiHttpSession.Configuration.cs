@@ -1,31 +1,33 @@
-﻿using Mirai_CSharp.Helpers;
+﻿using Mirai_CSharp.Extensions;
 using Mirai_CSharp.Models;
 using Mirai_CSharp.Utility;
 using System.Net;
-using System.Text.Json;
 using System.Threading.Tasks;
+#if NET5_0
+using System.Net.Http.Json;
+#endif
 
 namespace Mirai_CSharp
 {
     public partial class MiraiHttpSession
     {
-        private async Task<IMiraiSessionConfig> GetConfigAsync(InternalSessionInfo session)
+        private Task<IMiraiSessionConfig> GetConfigAsync(InternalSessionInfo session)
         {
-            using JsonDocument j = await session.Client.HttpGetAsync($"{session.Options.BaseUrl}/config?sessionKey={WebUtility.UrlEncode(session.SessionKey)}").GetJsonAsync(token: session.Canceller.Token);
-            JsonElement root = j.RootElement;
-            return Utils.Deserialize<MiraiSessionConfig>(in root);
+            return session.Client.GetAsync($"{session.Options.BaseUrl}/config?sessionKey={WebUtility.UrlEncode(session.SessionKey)}", session.Token)
+                .AsNoSuccCodeApiRespAsync<IMiraiSessionConfig, MiraiSessionConfig>(session.Token);
         }
 
         private Task SetConfigAsync(InternalSessionInfo session, IMiraiSessionConfig config)
         {
-            byte[] payload = JsonSerializer.SerializeToUtf8Bytes(new
+            var payload = new
             {
                 sessionKey = session.SessionKey,
                 cacheSize = config.CacheSize,
                 enableWebsocket = config.EnableWebSocket
-            }, JsonSerializeOptionsFactory.IgnoreNulls);
-            return InternalHttpPostAsync(session.Client, $"{session.Options.BaseUrl}/config", payload, session.Canceller.Token);
+            };
+            return session.Client.PostAsJsonAsync($"{session.Options.BaseUrl}/config", payload, JsonSerializeOptionsFactory.IgnoreNulls, session.Token).AsApiRespAsync(session.Token);
         }
+
         /// <summary>
         /// 异步获取当前Session的Config
         /// </summary>
@@ -34,6 +36,7 @@ namespace Mirai_CSharp
             InternalSessionInfo session = SafeGetSession();
             return GetConfigAsync(session);
         }
+
         /// <summary>
         /// 异步设置当前Session的Config
         /// </summary>

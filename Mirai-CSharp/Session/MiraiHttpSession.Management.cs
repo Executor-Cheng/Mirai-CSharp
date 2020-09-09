@@ -1,9 +1,12 @@
 ﻿using Mirai_CSharp.Exceptions;
+using Mirai_CSharp.Extensions;
 using Mirai_CSharp.Models;
 using Mirai_CSharp.Utility;
 using System;
-using System.Text.Json;
 using System.Threading.Tasks;
+#if NET5_0
+using System.Net.Http.Json;
+#endif
 
 namespace Mirai_CSharp
 {
@@ -16,7 +19,8 @@ namespace Mirai_CSharp
         public Task<IFriendInfo[]> GetFriendListAsync()
         {
             InternalSessionInfo session = SafeGetSession();
-            return InternalHttpGetNoSuccCodeAsync<IFriendInfo[], FriendInfo[]>(session.Client, $"{session.Options.BaseUrl}/friendList?sessionKey={session.SessionKey}", session.Token);
+            return session.Client.GetAsync($"{session.Options.BaseUrl}/friendList?sessionKey={session.SessionKey}", session.Token)
+                .AsNoSuccCodeApiRespAsync<IFriendInfo[], FriendInfo[]>(session.Token);
         }
         /// <summary>
         /// 异步获取群列表
@@ -25,7 +29,8 @@ namespace Mirai_CSharp
         public Task<IGroupInfo[]> GetGroupListAsync()
         {
             InternalSessionInfo session = SafeGetSession();
-            return InternalHttpGetNoSuccCodeAsync<IGroupInfo[], GroupInfo[]>(session.Client, $"{session.Options.BaseUrl}/groupList?sessionKey={session.SessionKey}", session.Token);
+            return session.Client.GetAsync($"{session.Options.BaseUrl}/groupList?sessionKey={session.SessionKey}", session.Token)
+                .AsNoSuccCodeApiRespAsync<IGroupInfo[], GroupInfo[]>(session.Token);
         }
         /// <summary>
         /// 异步获取群成员列表
@@ -36,7 +41,8 @@ namespace Mirai_CSharp
         public Task<IGroupMemberInfo[]> GetGroupMemberListAsync(long groupNumber)
         {
             InternalSessionInfo session = SafeGetSession();
-            return InternalHttpGetNoSuccCodeAsync<IGroupMemberInfo[], GroupMemberInfo[]>(session.Client, $"{session.Options.BaseUrl}/memberList?sessionKey={session.SessionKey}&target={groupNumber}", session.Token);
+            return session.Client.GetAsync($"{session.Options.BaseUrl}/memberList?sessionKey={session.SessionKey}&target={groupNumber}", session.Token)
+                .AsNoSuccCodeApiRespAsync<IGroupMemberInfo[], GroupMemberInfo[]>(session.Token);
         }
         /// <summary>
         /// 内部使用
@@ -49,12 +55,13 @@ namespace Mirai_CSharp
         private Task InternalToggleMuteAllAsync(bool action, long groupNumber)
         {
             InternalSessionInfo session = SafeGetSession();
-            byte[] payload = JsonSerializer.SerializeToUtf8Bytes(new
+            var payload = new
             {
                 sessionKey = session.SessionKey,
                 target = groupNumber
-            });
-            return InternalHttpPostAsync(session.Client, $"{session.Options.BaseUrl}/{(action ? "muteAll" : "unmuteAll")}", payload, session.Token);
+            };
+            return session.Client.PostAsJsonAsync($"{session.Options.BaseUrl}/{(action ? "muteAll" : "unmuteAll")}", payload, session.Token)
+                .AsApiRespAsync(session.Token);
         }
         /// <summary>
         /// 异步开启全体禁言
@@ -90,14 +97,15 @@ namespace Mirai_CSharp
             {
                 throw new ArgumentOutOfRangeException(nameof(duration));
             }
-            byte[] payload = JsonSerializer.SerializeToUtf8Bytes(new
+            var payload = new
             {
                 sessionKey = session.SessionKey,
                 target = groupNumber,
                 memberId,
                 time = (int)duration.TotalSeconds
-            });
-            return InternalHttpPostAsync(session.Client, $"{session.Options.BaseUrl}/mute", payload, session.Token);
+            };
+            return session.Client.PostAsJsonAsync($"{session.Options.BaseUrl}/mute", payload, session.Token)
+                .AsApiRespAsync(session.Token);
         }
         /// <summary>
         /// 异步解禁给定用户
@@ -110,13 +118,14 @@ namespace Mirai_CSharp
         public Task UnmuteAsync(long memberId, long groupNumber)
         {
             InternalSessionInfo session = SafeGetSession();
-            byte[] payload = JsonSerializer.SerializeToUtf8Bytes(new
+            var payload = new
             {
                 sessionKey = session.SessionKey,
                 target = groupNumber,
                 memberId,
-            });
-            return InternalHttpPostAsync(session.Client, $"{session.Options.BaseUrl}/unmute", payload, session.Token);
+            };
+            return session.Client.PostAsJsonAsync($"{session.Options.BaseUrl}/unmute", payload, session.Token)
+                .AsApiRespAsync(session.Token);
         }
         /// <summary>
         /// 异步将给定用户踢出给定的群
@@ -130,14 +139,15 @@ namespace Mirai_CSharp
         public Task KickMemberAsync(long memberId, long groupNumber, string msg = "您已被移出群聊")
         {
             InternalSessionInfo session = SafeGetSession();
-            byte[] payload = JsonSerializer.SerializeToUtf8Bytes(new
+            var payload = new
             {
                 sessionKey = session.SessionKey,
                 target = groupNumber,
                 memberId,
                 msg
-            });
-            return InternalHttpPostAsync(session.Client, $"{session.Options.BaseUrl}/kick", payload, session.Token);
+            };
+            return session.Client.PostAsJsonAsync($"{session.Options.BaseUrl}/kick", payload, session.Token)
+                .AsApiRespAsync(session.Token);
         }
         /// <summary>
         /// 异步使当前机器人退出给定的群
@@ -148,12 +158,13 @@ namespace Mirai_CSharp
         public Task LeaveGroupAsync(long groupNumber)
         {
             InternalSessionInfo session = SafeGetSession();
-            byte[] payload = JsonSerializer.SerializeToUtf8Bytes(new
+            var payload = new
             {
                 sessionKey = session.SessionKey,
                 target = groupNumber,
-            });
-            return InternalHttpPostAsync(session.Client, $"{session.Options.BaseUrl}/quit", payload, session.Token);
+            };
+            return session.Client.PostAsJsonAsync($"{session.Options.BaseUrl}/quit", payload, session.Token)
+                .AsApiRespAsync(session.Token);
         }
         /// <summary>
         /// 异步修改群信息
@@ -166,13 +177,14 @@ namespace Mirai_CSharp
         public Task ChangeGroupConfigAsync(long groupNumber, IGroupConfig config)
         {
             InternalSessionInfo session = SafeGetSession();
-            byte[] payload = JsonSerializer.SerializeToUtf8Bytes(new
+            var payload = new
             {
                 sessionKey = session.SessionKey,
                 target = groupNumber,
                 config
-            }, JsonSerializeOptionsFactory.IgnoreNulls);
-            return InternalHttpPostAsync(session.Client, $"{session.Options.BaseUrl}/groupConfig", payload, session.Token);
+            };
+            return session.Client.PostAsJsonAsync($"{session.Options.BaseUrl}/groupConfig", payload, JsonSerializeOptionsFactory.IgnoreNulls, session.Token)
+                .AsApiRespAsync(session.Token);
         }
         /// <summary>
         /// 异步获取群信息
@@ -183,7 +195,8 @@ namespace Mirai_CSharp
         public Task<IGroupConfig> GetGroupConfigAsync(long groupNumber)
         {
             InternalSessionInfo session = SafeGetSession();
-            return InternalHttpGetAsync<IGroupConfig, GroupConfig>(session.Client, $"{session.Options.BaseUrl}/groupConfig?sessionKey={session.SessionKey}&target={groupNumber}", session.Token);
+            return session.Client.GetAsync($"{session.Options.BaseUrl}/groupConfig?sessionKey={session.SessionKey}&target={groupNumber}", session.Token)
+                .AsApiRespAsync<IGroupConfig, GroupConfig>(session.Token);
         }
         /// <summary>
         /// 异步修改给定群员的信息
@@ -197,14 +210,15 @@ namespace Mirai_CSharp
         public Task ChangeGroupMemberInfoAsync(long memberId, long groupNumber, IGroupMemberCardInfo info)
         {
             InternalSessionInfo session = SafeGetSession();
-            byte[] payload = JsonSerializer.SerializeToUtf8Bytes(new
+            var payload = new
             {
                 sessionKey = session.SessionKey,
                 target = groupNumber,
                 memberId,
                 info
-            }, JsonSerializeOptionsFactory.IgnoreNulls);
-            return InternalHttpPostAsync(session.Client, $"{session.Options.BaseUrl}/memberInfo", payload, session.Token);
+            };
+            return session.Client.PostAsJsonAsync($"{session.Options.BaseUrl}/memberInfo", payload, session.Token)
+                .AsApiRespAsync(session.Token);
         }
         /// <summary>
         /// 异步获取给定群员的信息
@@ -216,7 +230,8 @@ namespace Mirai_CSharp
         public Task<IGroupMemberCardInfo> GetGroupMemberInfoAsync(long memberId, long groupNumber)
         {
             InternalSessionInfo session = SafeGetSession();
-            return InternalHttpGetAsync<IGroupMemberCardInfo, GroupMemberCardInfo>(session.Client, $"{session.Options.BaseUrl}/memberInfo?sessionKey={session.SessionKey}&target={groupNumber}&memberId={memberId}", session.Token);
+            return session.Client.GetAsync($"{session.Options.BaseUrl}/memberInfo?sessionKey={session.SessionKey}&target={groupNumber}&memberId={memberId}", session.Token)
+                .AsApiRespAsync<IGroupMemberCardInfo, GroupMemberCardInfo>(session.Token);
         }
     }
 }

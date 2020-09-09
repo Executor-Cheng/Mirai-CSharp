@@ -1,4 +1,5 @@
-﻿using Mirai_CSharp.Models;
+﻿using Mirai_CSharp.Extensions;
+using Mirai_CSharp.Models;
 using System;
 using System.IO;
 using System.Net.Http;
@@ -17,7 +18,7 @@ namespace Mirai_CSharp
         /// <param name="type">目标类型</param>
         /// <param name="voiceStream">语音流</param>
         /// <returns>一个 <see cref="VoiceMessage"/> 实例, 可用于以后的消息发送</returns>
-        private Task<VoiceMessage> InternalUploadVoiceAsync(InternalSessionInfo session, UploadTarget type, Stream voiceStream)
+        private static Task<VoiceMessage> InternalUploadVoiceAsync(InternalSessionInfo session, UploadTarget type, Stream voiceStream)
         {
             if (session.ApiVersion < new Version(1, 8, 0))
             {
@@ -45,7 +46,8 @@ namespace Mirai_CSharp
                 typeContent,
                 voiceContent
             };
-            return InternalHttpPostNoSuccCodeAsync<VoiceMessage, VoiceMessage>(session.Client, $"{session.Options.BaseUrl}/uploadVoice", contents, session.Token);
+            return session.Client.PostAsync($"{session.Options.BaseUrl}/uploadVoice", contents, session.Token)
+                .AsNoSuccCodeApiRespAsync<VoiceMessage>(session.Token);
         }
         /// <summary>
         /// 异步上传语音
@@ -53,20 +55,20 @@ namespace Mirai_CSharp
         /// <exception cref="FileNotFoundException"/>
         /// <param name="voicePath">语音路径</param>
         /// <inheritdoc cref="InternalUploadVoiceAsync"/>
-        public Task<ImageMessage> UploadVoiceAsync(UploadTarget type, string voicePath)
+        public Task<VoiceMessage> UploadVoiceAsync(UploadTarget type, string voicePath)
         {
             InternalSessionInfo session = SafeGetSession();
-            return InternalUploadPictureAsync(session, type, new FileStream(voicePath, FileMode.Open, FileAccess.Read, FileShare.Read));
+            return InternalUploadVoiceAsync(session, type, new FileStream(voicePath, FileMode.Open, FileAccess.Read, FileShare.Read));
         }
         /// <summary>
         /// 异步上传语音
         /// </summary>
         /// <param name="voice">语音流</param>
         /// <inheritdoc cref="InternalUploadVoiceAsync"/>
-        public Task<ImageMessage> UploadVoiceAsync(UploadTarget type, Stream voice)
+        public Task<VoiceMessage> UploadVoiceAsync(UploadTarget type, Stream voice)
         {
             InternalSessionInfo session = SafeGetSession();
-            return InternalUploadPictureAsync(session, type, voice);
+            return InternalUploadVoiceAsync(session, type, voice);
         }
     }
 }

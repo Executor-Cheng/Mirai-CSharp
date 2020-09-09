@@ -1,4 +1,5 @@
 ﻿using Mirai_CSharp.Exceptions;
+using Mirai_CSharp.Extensions;
 using Mirai_CSharp.Models;
 using Mirai_CSharp.Utility;
 using System;
@@ -9,6 +10,9 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
+#if NET5_0
+using System.Net.Http.Json;
+#endif
 
 #pragma warning disable CS1573 // 参数在 XML 注释中没有匹配的 param 标记(但其他参数有) // 已经 inheritdocs, 警告无效
 namespace Mirai_CSharp
@@ -33,14 +37,15 @@ namespace Mirai_CSharp
             {
                 throw new ArgumentException("urls必须为非空且至少有1条url。");
             }
-            byte[] payload = JsonSerializer.SerializeToUtf8Bytes(new
+            var payload = new
             {
                 sessionKey = session.SessionKey,
                 qq = qqNumber,
                 group = groupNumber,
                 urls
-            }, JsonSerializeOptionsFactory.IgnoreNulls);
-            return InternalHttpPostNoSuccCodeAsync<string[], string[]>(session.Client, $"{session.Options.BaseUrl}/sendImageMessage", payload, session.Token);
+            };
+            return session.Client.PostAsJsonAsync($"{session.Options.BaseUrl}/sendImageMessage", payload, JsonSerializeOptionsFactory.IgnoreNulls, session.Token)
+                .AsNoSuccCodeApiRespAsync<string[]>();
         }
         /// <summary>
         /// 异步发送给定Url数组中的图片到给定好友
@@ -78,7 +83,7 @@ namespace Mirai_CSharp
         /// 注意: 当 mirai-api-http 的版本小于等于v1.7.0时, 本方法返回的将是一个只有 Url 有值的 <see cref="ImageMessage"/>
         /// </remarks>
         /// <returns>一个 <see cref="ImageMessage"/> 实例, 可用于以后的消息发送</returns>
-        private Task<ImageMessage> InternalUploadPictureAsync(InternalSessionInfo session, UploadTarget type, Stream imgStream)
+        private static Task<ImageMessage> InternalUploadPictureAsync(InternalSessionInfo session, UploadTarget type, Stream imgStream)
         {
             if (session.ApiVersion <= new Version(1, 7, 0))
             {
@@ -134,8 +139,9 @@ namespace Mirai_CSharp
                 typeContent,
                 imageContent
             };
-            return InternalHttpPostNoSuccCodeAsync<ImageMessage, ImageMessage>(session.Client, $"{session.Options.BaseUrl}/uploadImage", contents, session.Token)
-                .ContinueWith(t => t.IsFaulted && t.Exception!.InnerException is JsonException ? Task.FromException<ImageMessage>(new NotSupportedException("当前版本的mirai-api-http无法发送图片。")) : t, TaskContinuationOptions.ExecuteSynchronously).Unwrap();
+            return session.Client.PostAsync($"{session.Options.BaseUrl}/uploadImage", contents, session.Token)
+                .AsNoSuccCodeApiRespAsync<ImageMessage>(session.Token)
+                .ContinueWith(t => t.IsFaulted && t.Exception!.InnerException is JsonException ? throw new NotSupportedException("当前版本的mirai-api-http无法发送图片。") : t, TaskContinuationOptions.ExecuteSynchronously).Unwrap();
             //  ^-- 处理 JsonException 到 NotSupportedException, https://github.com/mamoe/mirai-api-http/issues/85
         }
         /// <summary>

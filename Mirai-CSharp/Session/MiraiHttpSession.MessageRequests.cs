@@ -1,17 +1,15 @@
 ﻿using Mirai_CSharp.Exceptions;
-using Mirai_CSharp.Helpers;
+using Mirai_CSharp.Extensions;
 using Mirai_CSharp.Models;
 using Mirai_CSharp.Utility;
 using Mirai_CSharp.Utility.JsonConverters;
 using System;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Linq;
+#if NET5_0
+using System.Net.Http.Json;
+#endif
 
 #pragma warning disable CS1573 // 参数在 XML 注释中没有匹配的 param 标记(但其他参数有) // 已经 inheritdocs, 警告无效
 namespace Mirai_CSharp
@@ -58,15 +56,15 @@ namespace Mirai_CSharp
             {
                 throw new ArgumentException("消息链中的所有消息均为空。");
             }
-            byte[] payload = JsonSerializer.SerializeToUtf8Bytes(new
+            var payload = new
             {
                 sessionKey = session.SessionKey,
                 qq = qqNumber,
                 group = groupNumber,
                 quote = quoteMsgId,
                 messageChain = chain
-            }, _forSendMsg);
-            using JsonDocument j = await session.Client.HttpPostAsync($"{session.Options.BaseUrl}/{action}", payload).GetJsonAsync(token: session.Token);
+            };
+            using JsonDocument j = await session.Client.PostAsJsonAsync($"{session.Options.BaseUrl}/{action}", payload, _forSendMsg).GetJsonAsync(token: session.Token);
             JsonElement root = j.RootElement;
             int code = root.GetProperty("code").GetInt32();
             if (code == 0)
@@ -194,12 +192,12 @@ namespace Mirai_CSharp
         public Task RevokeMessageAsync(int messageId)
         {
             InternalSessionInfo session = SafeGetSession();
-            byte[] payload = JsonSerializer.SerializeToUtf8Bytes(new
+            var payload = new
             {
                 sessionKey = session.SessionKey,
                 target = messageId
-            });
-            return InternalHttpPostAsync(session.Client, $"{session.Options.BaseUrl}/recall", payload, session.Token);
+            };
+            return session.Client.PostAsJsonAsync($"{session.Options.BaseUrl}/recall", payload, session.Token).AsApiRespAsync(session.Token);
         }
     }
 }
