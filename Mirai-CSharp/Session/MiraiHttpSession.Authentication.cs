@@ -108,10 +108,12 @@ namespace Mirai_CSharp
             int code = root.GetProperty("code").GetInt32();
             if (code == 0)
             {
+                string version = root.GetProperty("data").GetProperty("version").GetString()!;
+                int vIndex = version.IndexOf('v');
 #if NETSTANDARD2_0
-                return Version.Parse(root.GetProperty("data").GetProperty("version").GetString()!.Substring(1)); // v1.0.0, skip 'v'
+                return Version.Parse(vIndex > 0 ? version.Substring(vIndex) : version); // v1.0.0 ~ v1.7.2, skip 'v'
 #else
-                return Version.Parse(root.GetProperty("data").GetProperty("version").GetString()![1..]); // v1.0.0, skip 'v'
+                return Version.Parse(vIndex > 0 ? version[vIndex..] : version); // v1.0.0 ~ v1.7.2, skip 'v'
 #endif
             }
             throw GetCommonException(code, in root);
