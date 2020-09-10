@@ -28,7 +28,7 @@ namespace Mirai_CSharp
         /// <item><term><see cref="UnknownResponseException"/></term><description>其它情况</description></item>
         /// </list>
         /// </returns>
-        private static Exception GetCommonException(int code, in JsonElement root)
+        internal static Exception GetCommonException(int code, in JsonElement root)
         {
             return code switch
             {

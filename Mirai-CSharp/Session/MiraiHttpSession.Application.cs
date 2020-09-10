@@ -1,7 +1,10 @@
-﻿using Mirai_CSharp.Models;
+﻿using Mirai_CSharp.Extensions;
+using Mirai_CSharp.Models;
 using System;
-using System.Text.Json;
 using System.Threading.Tasks;
+#if NET5_0
+using System.Net.Http.Json;
+#endif
 
 #pragma warning disable CS1573 // 参数在 XML 注释中没有匹配的 param 标记(但其他参数有)
 namespace Mirai_CSharp
@@ -44,7 +47,7 @@ namespace Mirai_CSharp
         private Task CommonHandleApplyAsync(string actpath, IApplyResponseArgs args, int action, string message)
         {
             InternalSessionInfo session = SafeGetSession();
-            byte[] payload = JsonSerializer.SerializeToUtf8Bytes(new
+            var payload = new
             {
                 sessionKey = session.SessionKey,
                 eventId = args.EventId,
@@ -52,8 +55,8 @@ namespace Mirai_CSharp
                 groupId = args.FromGroup,
                 operate = action,
                 message
-            });
-            return InternalHttpPostAsync(session.Client, $"{session.Options.BaseUrl}/resp/{actpath}", payload, session.Token);
+            };
+            return session.Client.PostAsJsonAsync($"{session.Options.BaseUrl}/resp/{actpath}", payload, session.Token).AsApiRespAsync();
         }
     }
 }

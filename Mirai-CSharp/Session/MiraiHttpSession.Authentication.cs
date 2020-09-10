@@ -1,32 +1,28 @@
 ﻿using Mirai_CSharp.Exceptions;
-using Mirai_CSharp.Helpers;
+using Mirai_CSharp.Extensions;
 using Mirai_CSharp.Models;
 using System;
-using System.Linq;
 using System.Net.Http;
-using System.Reflection;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+#if NET5_0
+using System.Net.Http.Json;
+#endif
 
 namespace Mirai_CSharp
 {
     public partial class MiraiHttpSession
     {
-        /// <summary>
-        /// 异步连接到mirai-api-http。
-        /// </summary>
         /// <remarks>
-        /// 不会连接到指令监控的ws服务。此方法不是线程安全的。
+        /// 不会连接到指令监控的ws服务。此方法线程安全。但是在连接过程中, 如果尝试多次调用, 除了第一次以后的所有调用都将立即返回。
         /// </remarks>
-        /// <exception cref="BotNotFoundException"/>
-        /// <exception cref="InvalidAuthKeyException"/>
-        /// <param name="options">连接信息</param>
-        /// <param name="qqNumber">Session将要绑定的Bot的qq号</param>
+        /// <inheritdoc cref="ConnectAsync(MiraiHttpSessionOptions, long, bool)"/>
         public Task ConnectAsync(MiraiHttpSessionOptions options, long qqNumber)
         {
             return ConnectAsync(options, qqNumber, false);
         }
+
         /// <summary>
         /// 异步连接到mirai-api-http。
         /// </summary>
@@ -70,7 +66,7 @@ namespace Mirai_CSharp
                 }
                 catch
                 {
-                    SessionInfo = null!;
+                    Interlocked.CompareExchange(ref SessionInfo, null, session);
                     _ = InternalReleaseAsync(session);
                     throw;
                 }
@@ -79,8 +75,7 @@ namespace Mirai_CSharp
 
         private static async Task<string> AuthorizeAsync(HttpClient client, MiraiHttpSessionOptions options)
         {
-            byte[] payload = JsonSerializer.SerializeToUtf8Bytes(new { authKey = options.AuthKey });
-            using JsonDocument j = await client.HttpPostAsync($"{options.BaseUrl}/auth", payload).GetJsonAsync();
+            using JsonDocument j = await client.PostAsJsonAsync($"{options.BaseUrl}/auth", new { authKey = options.AuthKey }).GetJsonAsync();
             JsonElement root = j.RootElement;
             int code = root.GetProperty("code").GetInt32();
             return code switch
@@ -92,13 +87,14 @@ namespace Mirai_CSharp
 
         private static Task VerifyAsync(HttpClient client, MiraiHttpSessionOptions options, string sessionKey, long qqNumber)
         {
-            byte[] payload = JsonSerializer.SerializeToUtf8Bytes(new
+            var payload = new
             {
                 sessionKey,
                 qq = qqNumber
-            });
-            return InternalHttpPostAsync(client, $"{options.BaseUrl}/verify", payload);
+            };
+            return client.PostAsJsonAsync($"{options.BaseUrl}/verify", payload).AsApiRespAsync();
         }
+
         /// <summary>
         /// 异步获取mirai-api-http的版本号
         /// </summary>
@@ -107,15 +103,17 @@ namespace Mirai_CSharp
         /// <returns>表示此异步操作的 <see cref="Task"/></returns>
         public static async Task<Version> GetVersionAsync(HttpClient client, MiraiHttpSessionOptions options)
         {
-            using JsonDocument j = await client.HttpGetAsync($"{options.BaseUrl}/about").GetJsonAsync();
+            using JsonDocument j = await client.GetAsync($"{options.BaseUrl}/about").GetJsonAsync();
             JsonElement root = j.RootElement;
             int code = root.GetProperty("code").GetInt32();
             if (code == 0)
             {
+                string version = root.GetProperty("data").GetProperty("version").GetString()!;
+                int vIndex = version.IndexOf('v');
 #if NETSTANDARD2_0
-                return Version.Parse(root.GetProperty("data").GetProperty("version").GetString()!.Substring(1)); // v1.0.0, skip 'v'
+                return Version.Parse(vIndex > 0 ? version.Substring(vIndex) : version); // v1.0.0 ~ v1.7.2, skip 'v'
 #else
-                return Version.Parse(root.GetProperty("data").GetProperty("version").GetString()![1..]); // v1.0.0, skip 'v'
+                return Version.Parse(vIndex > 0 ? version[vIndex..] : version); // v1.0.0 ~ v1.7.2, skip 'v'
 #endif
             }
             throw GetCommonException(code, in root);
@@ -155,14 +153,14 @@ namespace Mirai_CSharp
             session.Connected = false;
             session.Canceller?.Cancel();
             session.Canceller?.Dispose();
-            byte[] payload = JsonSerializer.SerializeToUtf8Bytes(new
+            var payload = new
             {
                 sessionKey = session.SessionKey,
                 qq = session.QQNumber
-            });
+            };
             try
             {
-                await InternalHttpPostAsync(session.Client, $"{session.Options.BaseUrl}/release", payload, token: token);
+                await session.Client.PostAsJsonAsync($"{session.Options.BaseUrl}/release", payload, token).AsApiRespAsync(token);
             }
             finally
             {

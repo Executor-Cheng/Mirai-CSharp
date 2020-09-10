@@ -1,12 +1,16 @@
 ﻿using Mirai_CSharp.Exceptions;
-using Mirai_CSharp.Helpers;
+using Mirai_CSharp.Extensions;
 using Mirai_CSharp.Models;
 using System;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+#if NET5_0
+using System.Net.Http.Json;
+#endif
 
+#pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable CA1031 // Do not catch general exception types
 namespace Mirai_CSharp
 {
@@ -30,22 +34,26 @@ namespace Mirai_CSharp
             {
                 throw new ArgumentException("指令名必须非空。", nameof(name));
             }
-            byte[] payload = JsonSerializer.SerializeToUtf8Bytes(new
+            var payload = new
             {
                 authKey = options.AuthKey,
                 name,
                 alias = alias ?? Array.Empty<string>(),
                 description,
                 usage
-            });
-            string json = await client.HttpPostAsync($"{options.BaseUrl}/command/register", payload).GetStringAsync();
+            };
+            string json = await client.PostAsJsonAsync($"{options.BaseUrl}/command/register", payload).GetStringAsync();
             try
             {
                 using JsonDocument j = JsonDocument.Parse(json);
                 JsonElement root = j.RootElement;
-                ProcessResponse(in root);
+                int code = root.GetProperty("code").GetInt32();
+                if (code != 0)
+                {
+                    throw GetCommonException(code, in root);
+                }
             }
-            catch (JsonException) // 返回值非json就是执行失败, 把返回信息重新抛出
+            catch (JsonException) // 返回值非json就是执行失败, 把响应正文重新抛出
             {
                 throw new InvalidOperationException(json);
             }
@@ -77,27 +85,31 @@ namespace Mirai_CSharp
         /// <returns>表示此异步操作的 <see cref="Task"/></returns>
         public static async Task ExecuteCommandAsync(HttpClient client, MiraiHttpSessionOptions options, string name, params string[] args)
         {
-            byte[] payload = JsonSerializer.SerializeToUtf8Bytes(new
+            var payload = new
             {
                 authKey = options.AuthKey,
                 name,
                 args
-            });
-            string json = await client.HttpPostAsync($"{options.BaseUrl}/command/send", payload).GetStringAsync();
+            };
+            string json = await client.PostAsJsonAsync($"{options.BaseUrl}/command/send", payload).GetStringAsync();
             try
             {
                 using JsonDocument j = JsonDocument.Parse(json);
                 JsonElement root = j.RootElement;
-                ProcessResponse(in root);
+                int code = root.GetProperty("code").GetInt32();
+                if (code != 0)
+                {
+                    throw GetCommonException(code, in root);
+                }
             }
-            catch (JsonException) // 返回值非json就是执行失败, 把返回信息重新抛出
+            catch (JsonException) // 返回值非json就是执行失败, 把响应正文重新抛出
             {
                 throw new InvalidOperationException(json);
             }
             catch (TargetNotFoundException e) // 指令不存在
             {
                 e._message = "给定的指令不存在。";
-                throw e;
+                throw;
             }
         }
 
@@ -127,7 +139,7 @@ namespace Mirai_CSharp
         /// <returns>表示此异步操作的 <see cref="Task"/></returns>
         public static Task<long[]> GetManagersAsync(HttpClient client, MiraiHttpSessionOptions options, long qqNumber, CancellationToken token = default)
         {
-            return InternalHttpGetNoSuccCodeAsync<long[], long[]>(client, $"{options.BaseUrl}/managers?qq={qqNumber}", token);
+            return client.GetAsync($"{options.BaseUrl}/managers?qq={qqNumber}", token).AsNoSuccCodeApiRespAsync<long[]>(token);
         }
 
         /// <inheritdoc cref="GetManagersAsync(HttpClient, MiraiHttpSessionOptions, long, CancellationToken)"/>
