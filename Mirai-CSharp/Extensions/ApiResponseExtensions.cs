@@ -32,7 +32,7 @@ namespace Mirai_CSharp.Extensions
             JsonElement root = j.RootElement;
             if (!root.CheckApiRespCode(out int? code))
             {
-                throw MiraiHttpSession.GetCommonException(code.Value, in root);
+                throw MiraiHttpSession.GetCommonException(code!.Value, in root);
             }
         }
 
@@ -49,7 +49,7 @@ namespace Mirai_CSharp.Extensions
             {
                 return root.Deserialize<TImpl>();
             }
-            throw MiraiHttpSession.GetCommonException(code.Value, in root);
+            throw MiraiHttpSession.GetCommonException(code!.Value, in root);
         }
     }
 }

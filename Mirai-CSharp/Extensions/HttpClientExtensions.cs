@@ -124,8 +124,8 @@ namespace Mirai_CSharp.Extensions
         }
 
         /// <inheritdoc cref="GetObjectAsync{T}(Task{HttpResponseMessage}, JsonSerializerOptions?, CancellationToken)"/>
-        public static Task<T> GetObjectAsync<T>(this Task<HttpResponseMessage> responseTask, CancellationToken token = default)
-            => responseTask.GetObjectAsync<T>(null, token);
+        public static Task<T?> GetObjectAsync<T>(this Task<HttpResponseMessage> responseTask, CancellationToken token = default)
+            => responseTask.GetObjectAsync<T?>(null, token);
 
         /// <summary>
         /// 将服务器响应正文异步序列化为 <typeparamref name="T"/> 的一个实例
@@ -134,10 +134,10 @@ namespace Mirai_CSharp.Extensions
         /// <param name="options">反序列化时要使用的 <see cref="JsonSerializerOptions"/></param>
         /// <param name="token">用于取消反序列化的 <see cref="CancellationToken"/></param>
         /// <returns>表示此异步操作的 <see cref="Task"/></returns>
-        public static async Task<T> GetObjectAsync<T>(this Task<HttpResponseMessage> responseTask, JsonSerializerOptions? options, CancellationToken token = default)
+        public static async Task<T?> GetObjectAsync<T>(this Task<HttpResponseMessage> responseTask, JsonSerializerOptions? options, CancellationToken token = default)
         {
             using HttpResponseMessage response = await responseTask.ConfigureAwait(false);
-            return await response.Content.ReadFromJsonAsync<T>(options, token);
+            return await response.Content.ReadFromJsonAsync<T?>(options, token);
         }
 
         /// <inheritdoc cref="GetObjectAsync(Task{HttpResponseMessage}, Type, JsonSerializerOptions?, CancellationToken)"/>

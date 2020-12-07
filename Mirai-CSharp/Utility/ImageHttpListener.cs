@@ -55,7 +55,7 @@ namespace Mirai_CSharp.Utility
                 {
                     HttpListenerContext ctx = await Listener.GetContextAsync();
                     if (ctx.Request.HttpMethod == "GET" &&
-                        ctx.Request.Url.AbsolutePath == "/fetch" &&
+                        ctx.Request.Url!.AbsolutePath == "/fetch" &&
                         Guid.TryParse(ctx.Request.QueryString["guid"], out Guid guid) &&
                         Cache.TryRemove(guid, out Stream? imgStream))
                     {

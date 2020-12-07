@@ -38,7 +38,7 @@ namespace Mirai_CSharp
         {
             CheckDisposed();
             InternalSessionInfo session = new InternalSessionInfo();
-            if (Interlocked.CompareExchange(ref SessionInfo, session, null!) == null)
+            if (Interlocked.CompareExchange(ref SessionInfo, session, null) == null)
             {
                 try
                 {
@@ -66,7 +66,7 @@ namespace Mirai_CSharp
                 }
                 catch
                 {
-                    Interlocked.CompareExchange(ref SessionInfo, null, session);
+                    Interlocked.CompareExchange(ref SessionInfo, (InternalSessionInfo?)null, session); // 奇妙的Rosyln
                     _ = InternalReleaseAsync(session);
                     throw;
                 }
@@ -115,7 +115,7 @@ namespace Mirai_CSharp
                 return Version.Parse(vIndex > 0 ? version[vIndex..] : version); // v1.0.0 ~ v1.7.2, skip 'v'
 #endif
             }
-            throw GetCommonException(code.Value, in root);
+            throw GetCommonException(code!.Value, in root);
         }
 
         /// <inheritdoc cref="GetVersionAsync(HttpClient, MiraiHttpSessionOptions)"/>

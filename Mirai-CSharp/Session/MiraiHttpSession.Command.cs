@@ -49,7 +49,7 @@ namespace Mirai_CSharp
                 JsonElement root = j.RootElement;
                 if (!root.CheckApiRespCode(out int? code))
                 {
-                    throw GetCommonException(code.Value, in root);
+                    throw GetCommonException(code!.Value, in root);
                 }
             }
             catch (JsonException) // 返回值非json就是执行失败, 把响应正文重新抛出
@@ -97,7 +97,7 @@ namespace Mirai_CSharp
                 JsonElement root = j.RootElement;
                 if (!root.CheckApiRespCode(out int? code))
                 {
-                    throw GetCommonException(code.Value, in root);
+                    throw GetCommonException(code!.Value, in root);
                 }
             }
             catch (JsonException) // 返回值非json就是执行失败, 把响应正文重新抛出

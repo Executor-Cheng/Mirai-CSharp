@@ -70,7 +70,7 @@ namespace Mirai_CSharp
             {
                 return root.GetProperty("messageId").GetInt32();
             }
-            throw GetCommonException(code.Value, in root);
+            throw GetCommonException(code!.Value, in root);
         }
         
         /// <summary>
