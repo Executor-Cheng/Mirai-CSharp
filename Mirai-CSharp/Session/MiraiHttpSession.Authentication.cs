@@ -110,9 +110,9 @@ namespace Mirai_CSharp
                 string version = root.GetProperty("data").GetProperty("version").GetString()!;
                 int vIndex = version.IndexOf('v');
 #if NETSTANDARD2_0
-                return Version.Parse(vIndex > 0 ? version.Substring(vIndex) : version); // v1.0.0 ~ v1.7.2, skip 'v'
+                return Version.Parse(vIndex != -1 ? version.Substring(vIndex) : version); // v1.0.0 ~ v1.7.4, skip 'v'
 #else
-                return Version.Parse(vIndex > 0 ? version[vIndex..] : version); // v1.0.0 ~ v1.7.2, skip 'v'
+                return Version.Parse(vIndex != -1 ? version[(vIndex + 1)..] : version); // v1.0.0 ~ v1.7.4, skip 'v'
 #endif
             }
             throw GetCommonException(code!.Value, in root);
