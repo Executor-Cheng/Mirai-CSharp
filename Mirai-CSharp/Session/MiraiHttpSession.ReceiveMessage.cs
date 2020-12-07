@@ -6,6 +6,7 @@ using System.Net.WebSockets;
 using System.Text.Json;
 using System.Threading;
 
+#pragma warning disable CS0618 // 类型或成员已过时
 #pragma warning disable CA1031 // Do not catch general exception types
 namespace Mirai_CSharp
 {
@@ -204,8 +205,8 @@ namespace Mirai_CSharp
             {
                 if (Interlocked.CompareExchange(ref SessionInfo, null, session) != null)
                 {
-                    _ = InternalReleaseAsync(session); // 不异步等待, 省的抛错没地捕获
-                    try { DisconnectedEvt?.Invoke(this, e); } catch { } // 扔掉所有异常
+                    _ = InternalReleaseAsync(session, default); // 不异步等待, 省的抛错没地捕获
+                    _ = InvokeAsync(Plugins, DisconnectedEvt, this, new DisconnectedEventArgs(e));
                 }
             }
         }
@@ -233,8 +234,8 @@ namespace Mirai_CSharp
             {
                 if (Interlocked.CompareExchange(ref SessionInfo, null, session) != null)
                 {
-                    _ = InternalReleaseAsync(session); // 不异步等待, 省的抛错没地捕获
-                    try { DisconnectedEvt?.Invoke(this, e); } catch { } // 扔掉所有异常
+                    _ = InternalReleaseAsync(session, default); // 不异步等待, 省的抛错没地捕获
+                    _ = InvokeAsync(Plugins, DisconnectedEvt, this, new DisconnectedEventArgs(e));
                 }
             }
         }

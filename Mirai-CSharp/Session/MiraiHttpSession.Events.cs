@@ -16,7 +16,7 @@ namespace Mirai_CSharp
         /// <summary>
         /// 与mirai-api-http的ws连接被异常断开
         /// </summary>
-        public event CommonEventHandler<Exception>? DisconnectedEvt;
+        public event CommonEventHandler<IDisconnectedEventArgs>? DisconnectedEvt;
         /// <summary>
         /// 收到未知消息。如有需要, 请自行解析
         /// </summary>
