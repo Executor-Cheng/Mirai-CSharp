@@ -96,7 +96,7 @@ namespace Mirai_CSharp
                 {
                     eventField.SetValue(this, null); // 用反射解决掉所有事件的Handler
                 }
-                return new ValueTask(this.InternalReleaseAsync(session));
+                return new ValueTask(InternalReleaseAsync(session));
             }
             return default;
         }

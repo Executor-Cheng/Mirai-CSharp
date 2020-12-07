@@ -147,7 +147,7 @@ namespace Mirai_CSharp
             return InternalReleaseAsync(session, token);
         }
 
-        private async Task InternalReleaseAsync(InternalSessionInfo session, CancellationToken token = default)
+        private static async Task InternalReleaseAsync(InternalSessionInfo session, CancellationToken token = default)
         {
             session.Connected = false;
             session.Canceller?.Cancel();
