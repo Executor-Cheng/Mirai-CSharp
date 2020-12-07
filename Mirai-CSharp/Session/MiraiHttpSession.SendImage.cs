@@ -45,7 +45,7 @@ namespace Mirai_CSharp
                 urls
             };
             return session.Client.PostAsJsonAsync($"{session.Options.BaseUrl}/sendImageMessage", payload, JsonSerializeOptionsFactory.IgnoreNulls, session.Token)
-                .AsNoSuccCodeApiRespAsync<string[]>();
+                .AsApiRespAsync<string[]>();
         }
         /// <summary>
         /// 异步发送给定Url数组中的图片到给定好友
@@ -140,7 +140,7 @@ namespace Mirai_CSharp
                 imageContent
             };
             return session.Client.PostAsync($"{session.Options.BaseUrl}/uploadImage", contents, session.Token)
-                .AsNoSuccCodeApiRespAsync<ImageMessage>(session.Token)
+                .AsApiRespAsync<ImageMessage>(session.Token)
                 .ContinueWith(t => t.IsFaulted && t.Exception!.InnerException is JsonException ? throw new NotSupportedException("当前版本的mirai-api-http无法发送图片。") : t, TaskContinuationOptions.ExecuteSynchronously).Unwrap();
             //  ^-- 处理 JsonException 到 NotSupportedException, https://github.com/mamoe/mirai-api-http/issues/85
         }

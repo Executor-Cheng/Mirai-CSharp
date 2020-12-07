@@ -47,7 +47,7 @@ namespace Mirai_CSharp
                 voiceContent
             };
             return session.Client.PostAsync($"{session.Options.BaseUrl}/uploadVoice", contents, session.Token)
-                .AsNoSuccCodeApiRespAsync<VoiceMessage>(session.Token);
+                .AsApiRespAsync<VoiceMessage>(session.Token);
         }
         /// <summary>
         /// 异步上传语音

@@ -47,10 +47,9 @@ namespace Mirai_CSharp
             {
                 using JsonDocument j = JsonDocument.Parse(json);
                 JsonElement root = j.RootElement;
-                int code = root.GetProperty("code").GetInt32();
-                if (code != 0)
+                if (!root.CheckApiRespCode(out int? code))
                 {
-                    throw GetCommonException(code, in root);
+                    throw GetCommonException(code.Value, in root);
                 }
             }
             catch (JsonException) // 返回值非json就是执行失败, 把响应正文重新抛出
@@ -96,10 +95,9 @@ namespace Mirai_CSharp
             {
                 using JsonDocument j = JsonDocument.Parse(json);
                 JsonElement root = j.RootElement;
-                int code = root.GetProperty("code").GetInt32();
-                if (code != 0)
+                if (!root.CheckApiRespCode(out int? code))
                 {
-                    throw GetCommonException(code, in root);
+                    throw GetCommonException(code.Value, in root);
                 }
             }
             catch (JsonException) // 返回值非json就是执行失败, 把响应正文重新抛出
@@ -139,7 +137,7 @@ namespace Mirai_CSharp
         /// <returns>表示此异步操作的 <see cref="Task"/></returns>
         public static Task<long[]> GetManagersAsync(HttpClient client, MiraiHttpSessionOptions options, long qqNumber, CancellationToken token = default)
         {
-            return client.GetAsync($"{options.BaseUrl}/managers?qq={qqNumber}", token).AsNoSuccCodeApiRespAsync<long[]>(token);
+            return client.GetAsync($"{options.BaseUrl}/managers?qq={qqNumber}", token).AsApiRespAsync<long[]>(token);
         }
 
         /// <inheritdoc cref="GetManagersAsync(HttpClient, MiraiHttpSessionOptions, long, CancellationToken)"/>

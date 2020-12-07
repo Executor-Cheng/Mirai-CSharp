@@ -14,7 +14,7 @@ namespace Mirai_CSharp
         private Task<IMiraiSessionConfig> GetConfigAsync(InternalSessionInfo session)
         {
             return session.Client.GetAsync($"{session.Options.BaseUrl}/config?sessionKey={WebUtility.UrlEncode(session.SessionKey)}", session.Token)
-                .AsNoSuccCodeApiRespAsync<IMiraiSessionConfig, MiraiSessionConfig>(session.Token);
+                .AsApiRespAsync<IMiraiSessionConfig, MiraiSessionConfig>(session.Token);
         }
 
         private Task SetConfigAsync(InternalSessionInfo session, IMiraiSessionConfig config)

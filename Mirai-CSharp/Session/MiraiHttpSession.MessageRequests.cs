@@ -66,12 +66,11 @@ namespace Mirai_CSharp
             };
             using JsonDocument j = await session.Client.PostAsJsonAsync($"{session.Options.BaseUrl}/{action}", payload, _forSendMsg).GetJsonAsync(token: session.Token);
             JsonElement root = j.RootElement;
-            int code = root.GetProperty("code").GetInt32();
-            if (code == 0)
+            if (root.CheckApiRespCode(out int? code))
             {
                 return root.GetProperty("messageId").GetInt32();
             }
-            throw GetCommonException(code, in root);
+            throw GetCommonException(code.Value, in root);
         }
         
         /// <summary>

@@ -105,8 +105,7 @@ namespace Mirai_CSharp
         {
             using JsonDocument j = await client.GetAsync($"{options.BaseUrl}/about").GetJsonAsync();
             JsonElement root = j.RootElement;
-            int code = root.GetProperty("code").GetInt32();
-            if (code == 0)
+            if (root.CheckApiRespCode(out int? code))
             {
                 string version = root.GetProperty("data").GetProperty("version").GetString()!;
                 int vIndex = version.IndexOf('v');
@@ -116,7 +115,7 @@ namespace Mirai_CSharp
                 return Version.Parse(vIndex > 0 ? version[vIndex..] : version); // v1.0.0 ~ v1.7.2, skip 'v'
 #endif
             }
-            throw GetCommonException(code, in root);
+            throw GetCommonException(code.Value, in root);
         }
 
         /// <inheritdoc cref="GetVersionAsync(HttpClient, MiraiHttpSessionOptions)"/>

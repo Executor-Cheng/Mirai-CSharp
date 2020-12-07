@@ -20,7 +20,7 @@ namespace Mirai_CSharp
         {
             InternalSessionInfo session = SafeGetSession();
             return session.Client.GetAsync($"{session.Options.BaseUrl}/friendList?sessionKey={session.SessionKey}", session.Token)
-                .AsNoSuccCodeApiRespAsync<IFriendInfo[], FriendInfo[]>(session.Token);
+                .AsApiRespAsync<IFriendInfo[], FriendInfo[]>(session.Token);
         }
         /// <summary>
         /// 异步获取群列表
@@ -30,7 +30,7 @@ namespace Mirai_CSharp
         {
             InternalSessionInfo session = SafeGetSession();
             return session.Client.GetAsync($"{session.Options.BaseUrl}/groupList?sessionKey={session.SessionKey}", session.Token)
-                .AsNoSuccCodeApiRespAsync<IGroupInfo[], GroupInfo[]>(session.Token);
+                .AsApiRespAsync<IGroupInfo[], GroupInfo[]>(session.Token);
         }
         /// <summary>
         /// 异步获取群成员列表
@@ -42,7 +42,7 @@ namespace Mirai_CSharp
         {
             InternalSessionInfo session = SafeGetSession();
             return session.Client.GetAsync($"{session.Options.BaseUrl}/memberList?sessionKey={session.SessionKey}&target={groupNumber}", session.Token)
-                .AsNoSuccCodeApiRespAsync<IGroupMemberInfo[], GroupMemberInfo[]>(session.Token);
+                .AsApiRespAsync<IGroupMemberInfo[], GroupMemberInfo[]>(session.Token);
         }
         /// <summary>
         /// 内部使用
