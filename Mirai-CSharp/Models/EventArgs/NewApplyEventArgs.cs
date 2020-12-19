@@ -7,12 +7,24 @@ namespace Mirai_CSharp.Models
     /// </summary>
     public interface IApplyResponseArgs
     {
+        /// <summary>
+        /// 事件Id, 供 mirai-api-http 使用
+        /// </summary>
         [JsonPropertyName("eventId")]
         long EventId { get; }
 
+        /// <summary>
+        /// 申请人QQ号
+        /// </summary>
         [JsonPropertyName("fromId")]
         long FromQQ { get; }
 
+        /// <summary>
+        /// 申请来源群号
+        /// </summary>
+        /// <remarks>
+        /// 在好友添加事件中, 如果申请人通过某个群添加好友, 该项为该群群号, 否则为0
+        /// </remarks>
         [JsonPropertyName("groupId")]
         long FromGroup { get; }
     }
@@ -22,8 +34,17 @@ namespace Mirai_CSharp.Models
     /// </summary>
     public interface INewApplyEventArgs : IApplyResponseArgs
     {
+        /// <summary>
+        /// 申请人的昵称或群名片
+        /// </summary>
         [JsonPropertyName("nick")]
         string NickName { get; }
+
+        /// <summary>
+        /// 申请消息
+        /// </summary>
+        [JsonPropertyName("message")]
+        string Message { get; }
     }
 
     public abstract class NewApplyEventArgs : INewApplyEventArgs
@@ -39,6 +60,9 @@ namespace Mirai_CSharp.Models
 
         [JsonPropertyName("nick")]
         public string NickName { get; set; } = null!;
+
+        [JsonPropertyName("message")]
+        public string Message { get; set; } = null!;
 
         protected NewApplyEventArgs() { }
 
