@@ -159,7 +159,10 @@ namespace Mirai_CSharp
             };
             try
             {
-                await session.Client.PostAsJsonAsync($"{session.Options.BaseUrl}/release", payload, token).AsApiRespAsync(token);
+                if (session.Options != null)
+                {
+                    await session.Client.PostAsJsonAsync($"{session.Options.BaseUrl}/release", payload, token).AsApiRespAsync(token);
+                }
             }
             finally
             {
