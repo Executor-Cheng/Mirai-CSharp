@@ -84,8 +84,9 @@ namespace Mirai_CSharp
         /// <paramref name="imgStream"/> 会被读取至末尾
         /// </remarks>
         /// <returns>一个 <see cref="ImageMessage"/> 实例, 可用于以后的消息发送</returns>
-        private static async Task<ImageMessage> InternalUploadPictureAsync(InternalSessionInfo session, UploadTarget type, Stream imgStream)
+        private static async Task<ImageMessage> InternalUploadPictureAsync(InternalSessionInfo session, UploadTarget type, Stream imgStream, bool disposeStream)
         {
+            // 使用 disposeStream 目的是不使上层 caller 创建多余的状态机
             if (session.ApiVersion <= new Version(1, 7, 0))
             {
                 Guid guid = Guid.NewGuid();
@@ -170,11 +171,21 @@ namespace Mirai_CSharp
                     typeContent,
                     imageContent
             };
-            return await session.Client.PostAsync($"{session.Options.BaseUrl}/uploadImage", contents, session.Token)
+            try
+            {
+                return await session.Client.PostAsync($"{session.Options.BaseUrl}/uploadImage", contents, session.Token)
                 .AsApiRespAsync<ImageMessage>(session.Token)
                 .ContinueWith(t => t.IsFaulted && t.Exception!.InnerException is JsonException ? throw new NotSupportedException("当前版本的mirai-api-http无法发送图片。") : t, TaskContinuationOptions.ExecuteSynchronously).Unwrap();
-            //  ^-- 处理 JsonException 到 NotSupportedException, https://github.com/mamoe/mirai-api-http/issues/85
-            // internalStream 是 MemoryStream, 内部为全托管字段不需要 Dispose
+                //  ^-- 处理 JsonException 到 NotSupportedException, https://github.com/mamoe/mirai-api-http/issues/85
+                // internalStream 是 MemoryStream, 内部为全托管字段不需要 Dispose
+            }
+            finally
+            {
+                if (disposeStream)
+                {
+                    imgStream.Dispose();
+                }
+            }
         }
         /// <summary>
         /// 异步上传图片
@@ -186,18 +197,21 @@ namespace Mirai_CSharp
         public Task<ImageMessage> UploadPictureAsync(UploadTarget type, string imagePath)
         {
             InternalSessionInfo session = SafeGetSession();
-            return InternalUploadPictureAsync(session, type, new FileStream(imagePath, FileMode.Open, FileAccess.Read, FileShare.Read));
+            return InternalUploadPictureAsync(session, type, new FileStream(imagePath, FileMode.Open, FileAccess.Read, FileShare.Read), true);
         }
         /// <summary>
         /// 异步上传图片
         /// </summary>
         /// <exception cref="ArgumentException"/>
         /// <param name="image">图片流</param>
+        /// <remarks>
+        /// <paramref name="image"/> 会被读取至末尾
+        /// </remarks>
         /// <inheritdoc cref="InternalUploadPictureAsync"/>
         public Task<ImageMessage> UploadPictureAsync(UploadTarget type, Stream image)
         {
             InternalSessionInfo session = SafeGetSession();
-            return InternalUploadPictureAsync(session, type, image);
+            return InternalUploadPictureAsync(session, type, image, false);
         }
         /// <summary>
         /// 异步上传图片
@@ -210,19 +224,22 @@ namespace Mirai_CSharp
         public Task<ImageMessage> UploadPictureAsync(PictureTarget type, string imagePath)
         {
             InternalSessionInfo session = SafeGetSession();
-            return InternalUploadPictureAsync(session, (UploadTarget)(int)type, new FileStream(imagePath, FileMode.Open, FileAccess.Read, FileShare.Read));
+            return InternalUploadPictureAsync(session, (UploadTarget)(int)type, new FileStream(imagePath, FileMode.Open, FileAccess.Read, FileShare.Read), true);
         }
         /// <summary>
         /// 异步上传图片
         /// </summary>
         /// <exception cref="ArgumentException"/>
         /// <param name="image">图片流</param>
+        /// <remarks>
+        /// <paramref name="image"/> 会被读取至末尾
+        /// </remarks>
         /// <inheritdoc cref="InternalUploadPictureAsync"/>
         [Obsolete("请调用 UploadPictureAsync(UploadTarget, Stream)")]
         public Task<ImageMessage> UploadPictureAsync(PictureTarget type, Stream image)
         {
             InternalSessionInfo session = SafeGetSession();
-            return InternalUploadPictureAsync(session, (UploadTarget)(int)type, image);
+            return InternalUploadPictureAsync(session, (UploadTarget)(int)type, image, false);
         }
     }
 }
