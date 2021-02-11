@@ -133,20 +133,19 @@ namespace Mirai_CSharp
                         break;
                     default:
                         {
-                            if (!internalCreated)
+                            skstream.Seek(0);
+                            using (SKBitmap bitmap = SKBitmap.Decode(skstream))
                             {
-                                internalStream.Seek(pervious - internalStream.Position, SeekOrigin.Current);
-                                internalCreated = true;
-                            }
-                            else
-                            {
-                                internalStream.Seek(0, SeekOrigin.Begin);
-                            }
-                            using (SKBitmap bitmap = SKBitmap.Decode(internalStream))
-                            {
-                                MemoryStream ms = new MemoryStream();
-                                bitmap.Encode(ms, SKEncodedImageFormat.Png, 100);
-                                internalStream = ms;
+                                if (!internalCreated)
+                                {
+                                    internalStream = new MemoryStream(8192);
+                                    internalCreated = true;
+                                }
+                                else
+                                {
+                                    internalStream.Seek(0, SeekOrigin.Begin);
+                                }
+                                bitmap.Encode(internalStream, SKEncodedImageFormat.Png, 100);
                             }
                             format = "png";
                             break;
