@@ -120,10 +120,8 @@ namespace Mirai_CSharp
                 Name = "type"
             };
             string format;
-            using MemoryStream codecMemoryStream = new MemoryStream();
-            await internalStream.CopyToAsync(codecMemoryStream);
-            codecMemoryStream.Seek(0, SeekOrigin.Begin);
-            using (SKCodec codec = SKCodec.Create(codecMemoryStream)) // 已经把数据读到非托管内存里边了, 就不用管input的死活了
+            using SKManagedStream skstream = new SKManagedStream(internalStream, false);
+            using (SKCodec codec = SKCodec.Create(skstream)) // 已经把数据读到非托管内存里边了, 就不用管input的死活了
             {
                 var skformat = codec.EncodedFormat;
                 format = skformat.ToString().ToLower();
