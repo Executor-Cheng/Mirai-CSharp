@@ -3,13 +3,12 @@ using Mirai_CSharp.Extensions;
 using Mirai_CSharp.Models;
 using Mirai_CSharp.Utility;
 using System;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
+using SkiaSharp;
 #if NET5_0
 using System.Net.Http.Json;
 #endif
@@ -102,27 +101,26 @@ namespace Mirai_CSharp
                 Name = "type"
             };
             string format;
-            using (Image img = Image.FromStream(imgStream))
+            using (SKCodec codec = SKCodec.Create(imgStream))
             {
-                format = img.RawFormat.ToString();
-                switch (format)
+                
+                var skformat = codec.EncodedFormat;
+                format = skformat.ToString().ToLower();
+                switch (skformat)
                 {
-                    case nameof(ImageFormat.Jpeg):
-                    case nameof(ImageFormat.Png):
-                    case nameof(ImageFormat.Gif):
-                        {
-                            format = format.ToLower();
-                            break;
-                        }
-                    default: // 不是以上三种类型的图片就强转为Png
+                    case SKEncodedImageFormat.Gif:
+                    case SKEncodedImageFormat.Jpeg:
+                    case SKEncodedImageFormat.Png:
+                        break;
+                    default:
+                        using (SKBitmap bitmap = SKBitmap.Decode(imgStream))
                         {
                             MemoryStream ms = new MemoryStream();
-                            img.Save(ms, ImageFormat.Png);
-                            imgStream.Dispose();
+                            bitmap.Encode(ms, SKEncodedImageFormat.Png, 100);
                             imgStream = ms;
-                            format = "png";
-                            break;
+                            format = SKEncodedImageFormat.Png.ToString().ToLower();
                         }
+                        break;
                 }
             }
             imgStream.Seek(0, SeekOrigin.Begin);
