@@ -3,13 +3,12 @@ using Mirai_CSharp.Extensions;
 using Mirai_CSharp.Models;
 using Mirai_CSharp.Utility;
 using System;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
+using SkiaSharp;
 #if NET5_0
 using System.Net.Http.Json;
 #endif
@@ -121,30 +120,36 @@ namespace Mirai_CSharp
                 Name = "type"
             };
             string format;
-            using (Image img = Image.FromStream(internalStream)) // 已经把数据读到非托管内存里边了, 就不用管input的死活了
+            using MemoryStream codecMemoryStream = new MemoryStream();
+            await internalStream.CopyToAsync(codecMemoryStream);
+            codecMemoryStream.Seek(0, SeekOrigin.Begin);
+            using (SKCodec codec = SKCodec.Create(codecMemoryStream)) // 已经把数据读到非托管内存里边了, 就不用管input的死活了
             {
-                format = img.RawFormat.ToString();
-                switch (format)
+                var skformat = codec.EncodedFormat;
+                format = skformat.ToString().ToLower();
+                switch (skformat)
                 {
-                    case nameof(ImageFormat.Jpeg):
-                    case nameof(ImageFormat.Png):
-                    case nameof(ImageFormat.Gif):
-                        {
-                            format = format.ToLower();
-                            break;
-                        }
-                    default: // 不是以上三种类型的图片就强转为Png
+                    case SKEncodedImageFormat.Gif:
+                    case SKEncodedImageFormat.Jpeg:
+                    case SKEncodedImageFormat.Png:
+                        break;
+                    default:
                         {
                             if (!internalCreated)
                             {
-                                internalStream = new MemoryStream(8192);
+                                internalStream.Seek(pervious - internalStream.Position, SeekOrigin.Current);
                                 internalCreated = true;
                             }
                             else
                             {
                                 internalStream.Seek(0, SeekOrigin.Begin);
                             }
-                            img.Save(internalStream, ImageFormat.Png);
+                            using (SKBitmap bitmap = SKBitmap.Decode(internalStream))
+                            {
+                                MemoryStream ms = new MemoryStream();
+                                bitmap.Encode(ms, SKEncodedImageFormat.Png, 100);
+                                internalStream = ms;
+                            }
                             format = "png";
                             break;
                         }
