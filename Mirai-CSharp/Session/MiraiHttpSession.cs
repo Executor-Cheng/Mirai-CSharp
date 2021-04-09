@@ -23,13 +23,13 @@ namespace Mirai_CSharp
         /// </summary>
         public long? QQNumber => SessionInfo?.QQNumber;
 
-        private InternalSessionInfo? SessionInfo;
+        public InternalSessionInfo? SessionInfo;
 
         private ImmutableList<IPlugin> Plugins = Array.Empty<IPlugin>().ToImmutableList();
 
         private volatile bool _disposed;
 
-        private class InternalSessionInfo
+        public class InternalSessionInfo
         {
             public MiraiHttpSessionOptions Options = null!;
 

@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 
 namespace Mirai_CSharp.Models
 {
-    public interface IMessageBuilder
+    public interface IMessageBuilder : IEnumerable<IMessageBase>
     {
         int Count { get; }
 
@@ -11,9 +12,14 @@ namespace Mirai_CSharp.Models
         IMessageBuilder Add(IMessageBase message);
     }
 
-    public class MessageBuilder : IMessageBuilder
+    public class MessageBuilder : IMessageBuilder, IEnumerable<IMessageBase>
     {
         protected readonly List<IMessageBase> _list = new List<IMessageBase>();
+
+        public MessageBuilder() { }
+
+        public MessageBuilder(IEnumerable<IMessageBase> messages)
+            => _list.AddRange(messages);
 
         public virtual int Count => _list.Count;
 
@@ -24,6 +30,16 @@ namespace Mirai_CSharp.Models
         {
             _list.Add(message);
             return this;
+        }
+
+        IEnumerator<IMessageBase> IEnumerable<IMessageBase>.GetEnumerator()
+        {
+            return _list.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return _list.GetEnumerator();
         }
     }
 }

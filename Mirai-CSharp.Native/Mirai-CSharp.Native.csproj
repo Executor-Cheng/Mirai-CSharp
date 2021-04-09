@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <RootNamespace>Mirai_CSharp.Native</RootNamespace>
+    <RuntimeIdentifier>win-x86</RuntimeIdentifier>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <DnneWindowsExportsDef>$(MSBuildThisFileDirectory)\a.exp</DnneWindowsExportsDef>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DNNE" Version="1.0.19" />
+  </ItemGroup>
+
+</Project>
