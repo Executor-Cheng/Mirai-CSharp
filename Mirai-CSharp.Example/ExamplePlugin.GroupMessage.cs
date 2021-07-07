@@ -1,4 +1,4 @@
-﻿using Mirai_CSharp.Extensions;
+using Mirai_CSharp.Extensions;
 using Mirai_CSharp.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;

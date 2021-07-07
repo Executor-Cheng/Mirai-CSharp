@@ -1,32 +1,31 @@
-﻿using System;
-using System.Text.Json.Serialization;
+using System;
 
-namespace Mirai_CSharp.Models
+namespace Mirai_CSharp.Models.EventArgs
 {
     /// <summary>
     /// 提供入群申请/受邀入群相关信息的基接口。继承自 <see cref="INewApplyEventArgs"/>
     /// </summary>
     public interface ICommonGroupApplyEventArgs : INewApplyEventArgs
     {
-        [JsonPropertyName("groupName")]
+        /// <summary>
+        /// 来源群名称
+        /// </summary>
         string FromGroupName { get; }
     }
 
-    public class CommonGroupApplyEventArgs : NewApplyEventArgs, 
-                                       IGroupApplyEventArgs,
-                                       IBotInvitedJoinGroupEventArgs
+    public abstract class CommonGroupApplyEventArgs : NewApplyEventArgs, ICommonGroupApplyEventArgs
     {
-        [JsonPropertyName("groupName")]
+        /// <inheritdoc/>
         public string FromGroupName { get; set; } = null!;
 
         [Obsolete("此类不应由用户主动创建实例。")]
-        public CommonGroupApplyEventArgs()
+        protected CommonGroupApplyEventArgs()
         {
 
         }
 
         [Obsolete("此类不应由用户主动创建实例。")]
-        public CommonGroupApplyEventArgs(string fromGroupName, long eventId, long fromGroup, long fromQQ, string nickName) : base(eventId, fromGroup, fromQQ, nickName)
+        protected CommonGroupApplyEventArgs(string fromGroupName, long eventId, long fromGroup, long fromQQ, string nickName) : base(eventId, fromGroup, fromQQ, nickName)
         {
             FromGroupName = fromGroupName;
         }

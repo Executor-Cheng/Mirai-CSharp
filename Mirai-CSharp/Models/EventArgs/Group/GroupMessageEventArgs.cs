@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
-namespace Mirai_CSharp.Models
+namespace Mirai_CSharp.Models.EventArgs
 {
     /// <summary>
     /// 提供群消息的相关信息接口。继承自 <see cref="IGroupMessageBaseEventArgs"/>

@@ -1,4 +1,4 @@
-﻿using Mirai_CSharp.Models;
+﻿using Mirai_CSharp.Models.EventArgs;
 using System.Threading.Tasks;
 
 namespace Mirai_CSharp.Plugin.Interfaces
@@ -13,10 +13,10 @@ namespace Mirai_CSharp.Plugin.Interfaces
         /// </summary>
         /// <param name="session">调用此方法的Session</param>
         /// <param name="e">事件信息</param>
-        Task<bool> BotPositiveLeaveGroup(MiraiHttpSession session, IBotPositiveLeaveGroupEventArgs e);
+        Task BotPositiveLeaveGroup(IMiraiSession session, IBotPositiveLeaveGroupEventArgs e);
 
         /// <inheritdoc/>
-        Task<bool> IPlugin<IBotPositiveLeaveGroupEventArgs>.HandleEvent(MiraiHttpSession session, IBotPositiveLeaveGroupEventArgs e)
+        Task IPlugin<IBotPositiveLeaveGroupEventArgs>.HandleMessageAsync(IMiraiSession session, IBotPositiveLeaveGroupEventArgs e)
         {
             return BotPositiveLeaveGroup(session, e);
         }

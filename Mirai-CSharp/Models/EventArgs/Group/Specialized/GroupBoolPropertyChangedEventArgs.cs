@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace Mirai_CSharp.Models
+namespace Mirai_CSharp.Models.EventArgs
 {
     /// <summary>
     /// 提供全员禁言设置被改变相关信息的接口。继承自 <see cref="IGroupPropertyChangedEventArgs{TProperty}"/>

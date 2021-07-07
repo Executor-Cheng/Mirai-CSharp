@@ -1,4 +1,4 @@
-﻿using Mirai_CSharp.Models;
+﻿using Mirai_CSharp.Models.EventArgs;
 using System.Threading.Tasks;
 
 namespace Mirai_CSharp.Plugin.Interfaces
@@ -13,10 +13,10 @@ namespace Mirai_CSharp.Plugin.Interfaces
         /// </summary>
         /// <param name="session">调用此方法的Session</param>
         /// <param name="e">事件信息</param>
-        Task<bool> BotKickedOut(MiraiHttpSession session, IBotKickedOutEventArgs e);
+        Task BotKickedOut(IMiraiSession session, IBotKickedOutEventArgs e);
 
         /// <inheritdoc/>
-        Task<bool> IPlugin<IBotKickedOutEventArgs>.HandleEvent(MiraiHttpSession session, IBotKickedOutEventArgs e)
+        Task IPlugin<IBotKickedOutEventArgs>.HandleMessageAsync(IMiraiSession session, IBotKickedOutEventArgs e)
         {
             return BotKickedOut(session, e);
         }

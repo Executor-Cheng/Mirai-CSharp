@@ -1,4 +1,4 @@
-﻿using Mirai_CSharp.Models;
+﻿using Mirai_CSharp.Models.EventArgs;
 using System.Threading.Tasks;
 
 namespace Mirai_CSharp.Plugin.Interfaces
@@ -13,10 +13,10 @@ namespace Mirai_CSharp.Plugin.Interfaces
         /// </summary>
         /// <param name="session">调用此方法的Session</param>
         /// <param name="e">Bot的QQ号</param>
-        Task<bool> BotPositiveOffline(MiraiHttpSession session, IBotPositiveOfflineEventArgs e);
+        Task BotPositiveOffline(IMiraiSession session, IBotPositiveOfflineEventArgs e);
 
         /// <inheritdoc/>
-        Task<bool> IPlugin<IBotPositiveOfflineEventArgs>.HandleEvent(MiraiHttpSession session, IBotPositiveOfflineEventArgs e)
+        Task IPlugin<IBotPositiveOfflineEventArgs>.HandleMessageAsync(IMiraiSession session, IBotPositiveOfflineEventArgs e)
         {
             return BotPositiveOffline(session, e);
         }

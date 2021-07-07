@@ -1,4 +1,4 @@
-﻿using Mirai_CSharp.Models;
+﻿using Mirai_CSharp.Models.EventArgs;
 using System.Threading.Tasks;
 
 namespace Mirai_CSharp.Plugin.Interfaces
@@ -13,10 +13,10 @@ namespace Mirai_CSharp.Plugin.Interfaces
         /// </summary>
         /// <param name="session">调用此方法的Session</param>
         /// <param name="e">事件信息</param>
-        Task<bool> NewFriendApply(MiraiHttpSession session, INewFriendApplyEventArgs e);
+        Task NewFriendApply(IMiraiSession session, INewFriendApplyEventArgs e);
 
         /// <inheritdoc/>
-        Task<bool> IPlugin<INewFriendApplyEventArgs>.HandleEvent(MiraiHttpSession session, INewFriendApplyEventArgs e)
+        Task IPlugin<INewFriendApplyEventArgs>.HandleMessageAsync(IMiraiSession session, INewFriendApplyEventArgs e)
         {
             return NewFriendApply(session, e);
         }

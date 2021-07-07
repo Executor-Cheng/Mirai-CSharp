@@ -1,4 +1,4 @@
-﻿using Mirai_CSharp.Models;
+﻿using Mirai_CSharp.Models.EventArgs;
 using System.Threading.Tasks;
 
 namespace Mirai_CSharp.Plugin.Interfaces
@@ -13,10 +13,10 @@ namespace Mirai_CSharp.Plugin.Interfaces
         /// </summary>
         /// <param name="session">调用此方法的Session</param>
         /// <param name="e">Bot的QQ号</param>
-        Task<bool> BotKickedOffline(MiraiHttpSession session, IBotKickedOfflineEventArgs e);
+        Task BotKickedOffline(IMiraiSession session, IBotKickedOfflineEventArgs e);
 
         /// <inheritdoc/>
-        Task<bool> IPlugin<IBotKickedOfflineEventArgs>.HandleEvent(MiraiHttpSession session, IBotKickedOfflineEventArgs e)
+        Task IPlugin<IBotKickedOfflineEventArgs>.HandleMessageAsync(IMiraiSession session, IBotKickedOfflineEventArgs e)
         {
             return BotKickedOffline(session, e);
         }

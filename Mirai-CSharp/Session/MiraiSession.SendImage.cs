@@ -1,0 +1,20 @@
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+using Mirai_CSharp.Models;
+
+namespace Mirai_CSharp.Session
+{
+    public abstract partial class MiraiSession
+    {
+        public abstract Task<string[]> SendImageToFriendAsync(long qqNumber, string[] urls, CancellationToken token = default);
+
+        public abstract Task<string[]> SendImageToGroupAsync(long groupNumber, string[] urls, CancellationToken token = default);
+
+        public abstract Task<string[]> SendImageToTempAsync(long qqNumber, long groupNumber, string[] urls, CancellationToken token = default);
+
+        public abstract Task<ImageMessage> UploadPictureAsync(UploadTarget type, Stream image, CancellationToken token = default);
+
+        public abstract Task<ImageMessage> UploadPictureAsync(UploadTarget type, string imagePath, CancellationToken token = default);
+    }
+}

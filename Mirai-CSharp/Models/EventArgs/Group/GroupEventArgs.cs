@@ -1,33 +1,28 @@
-﻿using Mirai_CSharp.Utility.JsonConverters;
 using System;
-using System.Text.Json.Serialization;
 
-namespace Mirai_CSharp.Models
+namespace Mirai_CSharp.Models.EventArgs
 {
     /// <summary>
     /// 提供群事件的信息接口
     /// </summary>
-    public interface IGroupEventArgs
+    public interface IGroupEventArgs : IEventArgsBase
     {
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupInfo, IGroupInfo>))]
-        [JsonPropertyName("group")]
+        /// <summary>
+        /// 来源群信息
+        /// </summary>
         IGroupInfo Group { get; }
     }
 
-    public class GroupEventArgs : IGroupEventArgs,
-                                  IBotJoinedGroupEventArgs,
-                                  IBotPositiveLeaveGroupEventArgs,
-                                  IBotKickedOutEventArgs
+    public abstract class GroupEventArgs : EventArgsBase, IGroupEventArgs
     {
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupInfo, IGroupInfo>))]
-        [JsonPropertyName("group")]
+        /// <inheritdoc/>
         public IGroupInfo Group { get; set; } = null!;
 
         [Obsolete("此类不应由用户主动创建实例。")]
-        public GroupEventArgs() { }
+        protected GroupEventArgs() { }
 
         [Obsolete("此类不应由用户主动创建实例。")]
-        public GroupEventArgs(GroupInfo group)
+        protected GroupEventArgs(GroupInfo group)
         {
             Group = group;
         }
@@ -36,26 +31,20 @@ namespace Mirai_CSharp.Models
     /// <summary>
     /// 提供群成员信息的接口
     /// </summary>
-    public interface IMemberEventArgs
+    public interface IMemberEventArgs : IEventArgsBase
     {
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupMemberInfo, IGroupMemberInfo>))]
-        [JsonPropertyName("member")]
         IGroupMemberInfo Member { get; }
     }
 
-    public class MemberEventArgs : IMemberEventArgs,
-                                   IGroupMemberJoinedEventArgs,
-                                   IGroupMemberPositiveLeaveEventArgs
+    public abstract class MemberEventArgs : EventArgsBase, IMemberEventArgs
     {
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupMemberInfo, IGroupMemberInfo>))]
-        [JsonPropertyName("member")]
         public IGroupMemberInfo Member { get; set; } = null!;
 
         [Obsolete("此类不应由用户主动创建实例。")]
-        public MemberEventArgs() { }
+        protected MemberEventArgs() { }
 
         [Obsolete("此类不应由用户主动创建实例。")]
-        public MemberEventArgs(IGroupMemberInfo member)
+        protected MemberEventArgs(IGroupMemberInfo member)
         {
             Member = member;
         }
@@ -64,24 +53,20 @@ namespace Mirai_CSharp.Models
     /// <summary>
     /// 提供群内操作者信息的接口
     /// </summary>
-    public interface IOperatorEventArgs
+    public interface IOperatorEventArgs : IEventArgsBase
     {
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupMemberInfo, IGroupMemberInfo>))]
-        [JsonPropertyName("operator")]
         IGroupMemberInfo Operator { get; }
     }
 
-    public class OperatorEventArgs : IOperatorEventArgs
+    public abstract class OperatorEventArgs : EventArgsBase, IOperatorEventArgs
     {
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupMemberInfo, IGroupMemberInfo>))]
-        [JsonPropertyName("operator")]
         public virtual IGroupMemberInfo Operator { get; set; } = null!;
 
         [Obsolete("此类不应由用户主动创建实例。")]
-        public OperatorEventArgs() { }
+        protected OperatorEventArgs() { }
 
         [Obsolete("此类不应由用户主动创建实例。")]
-        public OperatorEventArgs(IGroupMemberInfo @operator)
+        protected OperatorEventArgs(IGroupMemberInfo @operator)
         {
             Operator = @operator;
         }
@@ -97,8 +82,6 @@ namespace Mirai_CSharp.Models
 
     public class GroupOperatingEventArgs : OperatorEventArgs, IGroupOperatingEventArgs // 没法继承多个类, 强转接口吧
     {
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupInfo, IGroupInfo>))]
-        [JsonPropertyName("group")]
         public IGroupInfo Group { get; set; } = null!;
 
         [Obsolete("此类不应由用户主动创建实例。")]
@@ -119,18 +102,15 @@ namespace Mirai_CSharp.Models
 
     }
 
-    public class MemberOperatingEventArgs : OperatorEventArgs, IMemberOperatingEventArgs,
-                                            IGroupMemberKickedEventArgs // 没法继承多个类, 强转接口吧
+    public abstract class MemberOperatingEventArgs : OperatorEventArgs, IMemberOperatingEventArgs
     {
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupMemberInfo, IGroupMemberInfo>))]
-        [JsonPropertyName("member")]
         public IGroupMemberInfo Member { get; set; } = null!;
 
         [Obsolete("此类不应由用户主动创建实例。")]
-        public MemberOperatingEventArgs() { }
+        protected MemberOperatingEventArgs() { }
 
         [Obsolete("此类不应由用户主动创建实例。")]
-        public MemberOperatingEventArgs(IGroupMemberInfo member, IGroupMemberInfo @operator) : base(@operator)
+        protected MemberOperatingEventArgs(IGroupMemberInfo member, IGroupMemberInfo @operator) : base(@operator)
         {
             Member = member;
         }

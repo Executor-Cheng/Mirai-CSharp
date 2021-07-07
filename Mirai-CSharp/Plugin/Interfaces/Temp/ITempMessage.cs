@@ -1,4 +1,4 @@
-﻿using Mirai_CSharp.Models;
+﻿using Mirai_CSharp.Models.EventArgs;
 using System.Threading.Tasks;
 
 namespace Mirai_CSharp.Plugin.Interfaces
@@ -13,10 +13,10 @@ namespace Mirai_CSharp.Plugin.Interfaces
         /// </summary>
         /// <param name="session">调用此方法的Session</param>
         /// <param name="e">事件信息</param>
-        Task<bool> TempMessage(MiraiHttpSession session, ITempMessageEventArgs e);
+        Task TempMessage(IMiraiSession session, ITempMessageEventArgs e);
 
         /// <inheritdoc/>
-        Task<bool> IPlugin<ITempMessageEventArgs>.HandleEvent(MiraiHttpSession session, ITempMessageEventArgs e)
+        Task IPlugin<ITempMessageEventArgs>.HandleMessageAsync(IMiraiSession session, ITempMessageEventArgs e)
         {
             return TempMessage(session, e);
         }

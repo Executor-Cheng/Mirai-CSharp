@@ -1,4 +1,4 @@
-﻿using Mirai_CSharp.Models;
+﻿using Mirai_CSharp.Models.EventArgs;
 using System.Threading.Tasks;
 
 namespace Mirai_CSharp.Plugin.Interfaces
@@ -13,10 +13,10 @@ namespace Mirai_CSharp.Plugin.Interfaces
         /// </summary>
         /// <param name="session">调用此方法的Session</param>
         /// <param name="e">事件信息</param>
-        Task<bool> GroupAnonymousChatChanged(MiraiHttpSession session, IGroupAnonymousChatChangedEventArgs e);
+        Task GroupAnonymousChatChanged(IMiraiSession session, IGroupAnonymousChatChangedEventArgs e);
 
         /// <inheritdoc/>
-        Task<bool> IPlugin<IGroupAnonymousChatChangedEventArgs>.HandleEvent(MiraiHttpSession session, IGroupAnonymousChatChangedEventArgs e)
+        Task IPlugin<IGroupAnonymousChatChangedEventArgs>.HandleMessageAsync(IMiraiSession session, IGroupAnonymousChatChangedEventArgs e)
         {
             return GroupAnonymousChatChanged(session, e);
         }

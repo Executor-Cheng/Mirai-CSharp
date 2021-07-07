@@ -1,4 +1,4 @@
-﻿using Mirai_CSharp.Models;
+﻿using Mirai_CSharp.Models.EventArgs;
 using System.Threading.Tasks;
 
 namespace Mirai_CSharp.Plugin.Interfaces
@@ -13,10 +13,10 @@ namespace Mirai_CSharp.Plugin.Interfaces
         /// </summary>
         /// <param name="session">调用此方法的Session</param>
         /// <param name="e">事件信息</param>
-        Task<bool> GroupMemberSpecialTitleChanged(MiraiHttpSession session, IGroupMemberSpecialTitleChangedEventArgs e);
+        Task GroupMemberSpecialTitleChanged(IMiraiSession session, IGroupMemberSpecialTitleChangedEventArgs e);
 
         /// <inheritdoc/>
-        Task<bool> IPlugin<IGroupMemberSpecialTitleChangedEventArgs>.HandleEvent(MiraiHttpSession session, IGroupMemberSpecialTitleChangedEventArgs e)
+        Task IPlugin<IGroupMemberSpecialTitleChangedEventArgs>.HandleMessageAsync(IMiraiSession session, IGroupMemberSpecialTitleChangedEventArgs e)
         {
             return GroupMemberSpecialTitleChanged(session, e);
         }

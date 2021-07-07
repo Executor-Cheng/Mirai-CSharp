@@ -1,0 +1,31 @@
+<Project>
+    <PropertyGroup>
+        <TargetFrameworks>net6.0;net5.0;netstandard2.1;netcoreapp3.1;netcoreapp3.0</TargetFrameworks>
+		<Nullable>enable</Nullable>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+    
+    <PropertyGroup>
+		<OutputType>Library</OutputType>
+		<NoWin32Manifest>true</NoWin32Manifest>
+		<Version>1.0.2.2</Version>
+		<AssemblyVersion>1.0.2.2</AssemblyVersion>
+		<FileVersion>1.0.2.2</FileVersion>
+		<PackageVersion>1.0.2.2-preview.3</PackageVersion>
+		<Nullable>enable</Nullable>
+		<LangVersion>9.0</LangVersion>
+		<Authors>Executor</Authors>
+		<Company>Executor</Company>
+		<Copyright>Copyright © Executor 2021</Copyright>
+		<PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
+		<PackageProjectUrl>https://github.com/Executor-Cheng/Mirai-CSharp</PackageProjectUrl>
+		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+		<RepositoryUrl>https://github.com/Executor-Cheng/Mirai-CSharp</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageReleaseNotes></PackageReleaseNotes>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<PublishDocumentationFile>true</PublishDocumentationFile>
+		<PublishReferencesDocumentationFiles>true</PublishReferencesDocumentationFiles>
+        <NoWarn>NETSDK1138;1701;1702;1591</NoWarn>
+    </PropertyGroup>
+</Project>

@@ -1,6 +1,6 @@
 ﻿namespace Mirai_CSharp.Models
 {
-    public class MiraiHttpSessionOptions
+    public class MiraiSessionOptions
     {
         /// <summary>
         /// 目标主机
@@ -19,7 +19,7 @@
         /// </summary>
         internal string BaseUrl { get; }
 
-        public MiraiHttpSessionOptions(string host, int port, string authKey)
+        public MiraiSessionOptions(string host, int port, string authKey)
         {
             Host = host;
             Port = port;

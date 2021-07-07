@@ -1,4 +1,4 @@
-﻿using Mirai_CSharp.Models;
+﻿using Mirai_CSharp.Models.EventArgs;
 using System.Threading.Tasks;
 
 namespace Mirai_CSharp.Plugin.Interfaces
@@ -13,10 +13,10 @@ namespace Mirai_CSharp.Plugin.Interfaces
         /// </summary>
         /// <param name="session">调用此方法的Session</param>
         /// <param name="e">事件信息</param>
-        Task<bool> BotMuted(MiraiHttpSession session, IBotMutedEventArgs e);
+        Task BotMuted(IMiraiSession session, IBotMutedEventArgs e);
 
         /// <inheritdoc/>
-        Task<bool> IPlugin<IBotMutedEventArgs>.HandleEvent(MiraiHttpSession session, IBotMutedEventArgs e)
+        Task IPlugin<IBotMutedEventArgs>.HandleMessageAsync(IMiraiSession session, IBotMutedEventArgs e)
         {
             return BotMuted(session, e);
         }

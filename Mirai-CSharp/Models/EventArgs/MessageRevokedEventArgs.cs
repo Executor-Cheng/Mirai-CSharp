@@ -1,13 +1,14 @@
-﻿using Mirai_CSharp.Utility.JsonConverters;
 using System;
 using System.Text.Json.Serialization;
+using Mirai_CSharp.Models.EventArgs;
+using Mirai_CSharp.Utility.JsonConverters;
 
 namespace Mirai_CSharp.Models
 {
     /// <summary>
     /// 提供撤回消息的通用信息接口
     /// </summary>
-    public interface IMessageRevokedEventArgs
+    public interface IMessageRevokedEventArgs : IEventArgsBase
     {
         /// <summary>
         /// 原消息发送者的QQ号
@@ -27,7 +28,7 @@ namespace Mirai_CSharp.Models
         DateTime SentTime { get; }
     }
 
-    public abstract class MessageRevokedEventArgs : IMessageRevokedEventArgs
+    public abstract class MessageRevokedEventArgs : EventArgsBase, IMessageRevokedEventArgs
     {
         /// <summary>
         /// 原消息发送者的QQ号
@@ -55,5 +56,4 @@ namespace Mirai_CSharp.Models
             SentTime = sentTime;
         }
     }
-
 }

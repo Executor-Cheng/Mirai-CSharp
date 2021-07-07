@@ -1,23 +1,19 @@
 ﻿using System;
-using System.Text.Json.Serialization;
 
-#pragma warning disable CA1819 // Properties should not return arrays
-namespace Mirai_CSharp.Models
+namespace Mirai_CSharp.Models.EventArgs
 {
     /// <summary>
     /// 提供已执行的指令相关信息的接口
     /// </summary>
-    public interface ICommandExecutedEventArgs
+    public interface ICommandExecutedEventArgs : IEventArgsBase
     {
         /// <summary>
         /// 指令名称
         /// </summary>
-        [JsonPropertyName("name")]
         string Name { get; }
         /// <summary>
         /// 指令参数
         /// </summary>
-        [JsonPropertyName("args")]
         string[] Args { get; }
         /// <summary>
         /// 指令发送者QQ号
@@ -29,7 +25,6 @@ namespace Mirai_CSharp.Models
         /// <item>当指令通过其他方式发送时为0</item>
         /// </list>
         /// </remarks>
-        [JsonPropertyName("sender")]
         long Sender { get; }
         /// <summary>
         /// 指令发送者所在的群号
@@ -41,22 +36,20 @@ namespace Mirai_CSharp.Models
         /// <item>当指令通过其他方式发送时为0</item>
         /// </list>
         /// </remarks>
-        [JsonPropertyName("group")]
         long Group { get; }
     }
 
-    public class CommandExecutedEventArgs : ICommandExecutedEventArgs
+    /// <summary>
+    /// 已执行的指令相关信息的消息类
+    /// </summary>
+    public class CommandExecutedEventArgs : EventArgsBase, ICommandExecutedEventArgs
     {
-        [JsonPropertyName("name")]
         public string Name { get; set; } = null!;
 
-        [JsonPropertyName("args")]
         public string[] Args { get; set; } = null!;
 
-        [JsonPropertyName("sender")]
         public long Sender { get; set; }
 
-        [JsonPropertyName("group")]
         public long Group { get; set; }
 
         [Obsolete("此类不应由用户主动创建实例。")]

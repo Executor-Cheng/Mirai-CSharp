@@ -1,4 +1,4 @@
-﻿using Mirai_CSharp.Models;
+﻿using Mirai_CSharp.Models.EventArgs;
 using System.Threading.Tasks;
 
 namespace Mirai_CSharp.Plugin.Interfaces
@@ -16,10 +16,10 @@ namespace Mirai_CSharp.Plugin.Interfaces
         /// </remarks>
         /// <param name="session">调用此方法的Session</param>
         /// <param name="e">事件信息</param>
-        Task<bool> GroupMemberKicked(MiraiHttpSession session, IGroupMemberKickedEventArgs e);
+        Task GroupMemberKicked(IMiraiSession session, IGroupMemberKickedEventArgs e);
 
         /// <inheritdoc/>
-        Task<bool> IPlugin<IGroupMemberKickedEventArgs>.HandleEvent(MiraiHttpSession session, IGroupMemberKickedEventArgs e)
+        Task IPlugin<IGroupMemberKickedEventArgs>.HandleMessageAsync(IMiraiSession session, IGroupMemberKickedEventArgs e)
         {
             return GroupMemberKicked(session, e);
         }

@@ -1,4 +1,4 @@
-﻿using Mirai_CSharp.Models;
+﻿using Mirai_CSharp.Models.EventArgs;
 using System.Threading.Tasks;
 
 namespace Mirai_CSharp.Plugin.Interfaces
@@ -16,10 +16,10 @@ namespace Mirai_CSharp.Plugin.Interfaces
         /// </remarks>
         /// <param name="session">调用此方法的Session</param>
         /// <param name="e">事件信息</param>
-        Task<bool> GroupMemberUnmuted(MiraiHttpSession session, IGroupMemberUnmutedEventArgs e);
+        Task GroupMemberUnmuted(IMiraiSession session, IGroupMemberUnmutedEventArgs e);
 
         /// <inheritdoc/>
-        Task<bool> IPlugin<IGroupMemberUnmutedEventArgs>.HandleEvent(MiraiHttpSession session, IGroupMemberUnmutedEventArgs e)
+        Task IPlugin<IGroupMemberUnmutedEventArgs>.HandleMessageAsync(IMiraiSession session, IGroupMemberUnmutedEventArgs e)
         {
             return GroupMemberUnmuted(session, e);
         }

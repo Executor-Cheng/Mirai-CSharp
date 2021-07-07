@@ -1,18 +1,15 @@
-﻿#if !NET5_0
+#if NETSTANDARD2_1
 using System;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Net.Http.Headers;
 
 #pragma warning disable CS1573 // 参数在 XML 注释中没有匹配的 param 标记(但其他参数有)
 namespace Mirai_CSharp.Extensions
 {
     public static partial class HttpClientExtensions
     {
-        private static readonly MediaTypeHeaderValue DefaultJsonMediaType = new MediaTypeHeaderValue("application/json") { CharSet = "utf-8" };
-
         /// <inheritdoc cref="PostAsJsonAsync{TValue}(HttpClient, Uri, TValue, JsonSerializerOptions?, CancellationToken)"/>
         public static Task<HttpResponseMessage> PostAsJsonAsync<TValue>(this HttpClient client, Uri uri, TValue value, CancellationToken token = default)
         {

@@ -1,15 +1,17 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.Mime;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-#if NET5_0
+#if NET5_0_OR_GREATER
 using System.Net.Http.Json;
 using System.Text;
 #endif
 
-#pragma warning disable CS1573 // 参数在 XML 注释中没有匹配的 param 标记(但其他参数有)
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
 namespace Mirai_CSharp.Extensions
 {
     /// <summary>
@@ -17,7 +19,9 @@ namespace Mirai_CSharp.Extensions
     /// </summary>
     public static partial class HttpClientExtensions
     {
-        private static Version DefaultHttpVersion { get; } = new Version(2, 0);
+        private static Version DefaultHttpVersion { get; } = new(2, 0);
+
+        private static readonly MediaTypeHeaderValue DefaultJsonMediaType = new(MediaTypeNames.Application.Json) { CharSet = "utf-8" };
 
         /// <summary>
         /// 异步发起一个 Http 请求
@@ -33,15 +37,13 @@ namespace Mirai_CSharp.Extensions
         /// <returns>表示此异步操作的 <see cref="Task"/></returns>
         public static async Task<HttpResponseMessage> SendAsync(this HttpClient client, HttpMethod method, Uri uri, HttpContent? content, CancellationToken token = default)
         {
-            using HttpRequestMessage request = new HttpRequestMessage(method, uri)
-            {
-                Content = content,
-                Version = DefaultHttpVersion
-            };
+            using HttpRequestMessage request = new HttpRequestMessage(method, uri);
+            request.Content = content;
+            request.Version = DefaultHttpVersion;
             return await client.SendAsync(request, token);
         }
 
-#if NET5_0
+#if NET5_0_OR_GREATER
         /// <summary>
         /// 将服务器响应正文异步序列化为 <see cref="byte"/>[]
         /// </summary>
@@ -95,11 +97,10 @@ namespace Mirai_CSharp.Extensions
 #pragma warning restore IDE0079
 #endif
 
-#if NET5_0
+#if NET5_0_OR_GREATER
         private static Encoding? GetEncoding(string? charset)
         {
             Encoding? encoding = null;
-
             if (charset != null)
             {
                 try
@@ -119,7 +120,6 @@ namespace Mirai_CSharp.Extensions
                     throw new InvalidOperationException("The character set provided in ContentType is invalid.", e);
                 }
             }
-
             return encoding;
         }
 
@@ -171,7 +171,7 @@ namespace Mirai_CSharp.Extensions
         public static async Task<JsonDocument> GetJsonAsync(this Task<HttpResponseMessage> responseTask, JsonDocumentOptions options, CancellationToken token = default)
         {
             using HttpResponseMessage response = await responseTask.ConfigureAwait(false);
-            Stream stream = response.Content.ReadAsStream(token); // Content.ReadAsStreamAsync 是同步操作
+            Stream stream = response.Content.ReadAsStream(token); // Since Content.ReadAsStreamAsync is returned synchronously.
             Encoding? encoding = GetEncoding(response.Content.Headers.ContentType?.CharSet);
             if (encoding != null && encoding != Encoding.UTF8)
             {
@@ -184,8 +184,8 @@ namespace Mirai_CSharp.Extensions
         }
 #else
         /// <inheritdoc cref="GetObjectAsync{T}(Task{HttpResponseMessage}, JsonSerializerOptions?, CancellationToken)"/>
-        public static Task<T> GetObjectAsync<T>(this Task<HttpResponseMessage> responseTask, CancellationToken token = default)
-            => responseTask.GetObjectAsync<T>(null, token);
+        public static Task<T?> GetObjectAsync<T>(this Task<HttpResponseMessage> responseTask, CancellationToken token = default)
+            => responseTask.GetObjectAsync<T?>(null, token);
 
         /// <summary>
         /// 将服务器响应正文异步序列化为 <typeparamref name="T"/> 的一个实例
@@ -197,11 +197,11 @@ namespace Mirai_CSharp.Extensions
         /// 请确保服务器响应的 Json 是以 UTF-8 编码的
         /// </remarks>
         /// <returns>表示此异步操作的 <see cref="Task"/></returns>
-        public static async Task<T> GetObjectAsync<T>(this Task<HttpResponseMessage> responseTask, JsonSerializerOptions? options, CancellationToken token = default)
+        public static async Task<T?> GetObjectAsync<T>(this Task<HttpResponseMessage> responseTask, JsonSerializerOptions? options, CancellationToken token = default)
         {
             using HttpResponseMessage response = await responseTask.ConfigureAwait(false);
             using Stream stream = await response.Content.ReadAsStreamAsync();
-            return await JsonSerializer.DeserializeAsync<T>(stream, options, token);
+            return await JsonSerializer.DeserializeAsync<T?>(stream, options, token);
         }
 
         /// <inheritdoc cref="GetObjectAsync(Task{HttpResponseMessage}, Type, JsonSerializerOptions?, CancellationToken)"/>
@@ -212,7 +212,6 @@ namespace Mirai_CSharp.Extensions
         /// 将服务器响应正文异步序列化为 <paramref name="returnType"/> 表示的一个实例
         /// </summary>
         /// <param name="returnType">用于转换和返回的 <see cref="Type"/></param>
-        /// <inheritdoc cref="GetObjectAsync{T}(Task{HttpResponseMessage}, JsonSerializerOptions?, CancellationToken)"/>
         public static async Task<object?> GetObjectAsync(this Task<HttpResponseMessage> responseTask, Type returnType, JsonSerializerOptions? options, CancellationToken token = default)
         {
             using HttpResponseMessage response = await responseTask.ConfigureAwait(false);
@@ -243,5 +242,60 @@ namespace Mirai_CSharp.Extensions
             return await JsonDocument.ParseAsync(stream, options, token);
         }
 #endif
+        /// <summary>
+        /// Sets Content-Type in response to application/json.
+        /// </summary>
+        /// <param name="responseTask">An asynchronous operation that represents the HTTP response.</param>
+        public static Task<HttpResponseMessage> ForceJson(this Task<HttpResponseMessage> responseTask)
+        {
+            return responseTask.ContinueWith(p =>
+            {
+                if (p.IsCompletedSuccessfully) // treats response as json
+                {
+                    HttpContentHeaders headers = p.Result.Content.Headers;
+                    if (headers.ContentType == null)
+                    {
+                        headers.ContentType = DefaultJsonMediaType;
+                    }
+                    else if (headers.ContentType.MediaType != "application/json")
+                    {
+                        headers.ContentType.MediaType = "application/json";
+                    }
+                }
+                return p;
+            }, TaskContinuationOptions.ExecuteSynchronously).Unwrap();
+        }
+
+        public static Task<HttpResponseMessage> EnsureSuccessStatusCode(this Task<HttpResponseMessage> responseTask)
+        {
+            return responseTask.ContinueWith(p =>
+            {
+                if (p.IsCompletedSuccessfully) // treats response as json
+                {
+                    p.Result.EnsureSuccessStatusCode();
+                }
+                return p;
+            }, TaskContinuationOptions.ExecuteSynchronously).Unwrap();
+        }
+
+        public static void SetUserAgent(this HttpClient client, string userAgent)
+        {
+            client.DefaultRequestHeaders.SetUserAgent(userAgent);
+        }
+
+        public static void SetAccept(this HttpClient client, string accept)
+        {
+            client.DefaultRequestHeaders.SetAccept(accept);
+        }
+
+        public static void SetAcceptLanguage(this HttpClient client, string acceptLanguage)
+        {
+            client.DefaultRequestHeaders.SetAcceptLanguage(acceptLanguage);
+        }
+
+        public static void SetSecPolicy(this HttpClient client, string? mode = "cors", string? site = "same-site", string? dest = "empty")
+        {
+            client.DefaultRequestHeaders.SetSecPolicy(mode, site, dest);
+        }
     }
 }
