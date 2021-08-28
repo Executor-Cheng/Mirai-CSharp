@@ -1,8 +1,8 @@
-﻿using Mirai_CSharp.Utility.JsonConverters;
+﻿using Mirai.CSharp.Utility.JsonConverters;
 using System.Text.Json.Serialization;
 
 #pragma warning disable CA1819 // Properties should not return arrays
-namespace Mirai_CSharp.Models
+namespace Mirai.CSharp.Models
 {
     /// <summary>
     /// 提供通用消息的相关信息接口

@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Mirai_CSharp.Extensions
+namespace Mirai.CSharp.Extensions
 {
     public static partial class HttpClientExtensions
     {

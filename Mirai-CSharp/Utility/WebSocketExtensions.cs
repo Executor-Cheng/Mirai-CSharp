@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Mirai_CSharp.Utility
+namespace Mirai.CSharp.Utility
 {
     public static class WebSocketExtensions
     {

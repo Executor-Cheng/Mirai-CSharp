@@ -1,6 +1,6 @@
-﻿using Mirai_CSharp.Exceptions;
-using Mirai_CSharp.Extensions;
-using Mirai_CSharp.Models;
+﻿using Mirai.CSharp.Exceptions;
+using Mirai.CSharp.Extensions;
+using Mirai.CSharp.Models;
 using System;
 using System.Net.Http;
 using System.Text.Json;
@@ -12,7 +12,7 @@ using System.Net.Http.Json;
 
 #pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable CA1031 // Do not catch general exception types
-namespace Mirai_CSharp
+namespace Mirai.CSharp
 {
     public partial class MiraiHttpSession
     {

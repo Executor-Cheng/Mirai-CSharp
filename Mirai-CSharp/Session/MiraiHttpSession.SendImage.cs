@@ -1,7 +1,7 @@
-﻿using Mirai_CSharp.Exceptions;
-using Mirai_CSharp.Extensions;
-using Mirai_CSharp.Models;
-using Mirai_CSharp.Utility;
+﻿using Mirai.CSharp.Exceptions;
+using Mirai.CSharp.Extensions;
+using Mirai.CSharp.Models;
+using Mirai.CSharp.Utility;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -15,7 +15,7 @@ using System.Net.Http.Json;
 #endif
 
 #pragma warning disable CS1573 // 参数在 XML 注释中没有匹配的 param 标记(但其他参数有) // 已经 inheritdocs, 警告无效
-namespace Mirai_CSharp
+namespace Mirai.CSharp
 {
     public partial class MiraiHttpSession
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Mirai_CSharp.Models
+namespace Mirai.CSharp.Models
 {
     public interface IMessageBuilder
     {

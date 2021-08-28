@@ -2,7 +2,7 @@
 using System.Text.Json.Serialization;
 
 #pragma warning disable CS0618 // 此警告是用户专用的
-namespace Mirai_CSharp.Models
+namespace Mirai.CSharp.Models
 {
     /// <summary>
     /// 表示语音消息。

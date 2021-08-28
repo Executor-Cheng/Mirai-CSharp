@@ -1,11 +1,11 @@
-﻿using Mirai_CSharp.Extensions;
-using Mirai_CSharp.Models;
+﻿using Mirai_CSharp_Test_efw561we5fwef65.Extensions;
+using Mirai_CSharp_Test_efw561we5fwef65.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 #pragma warning disable CA1822 // Mark members as static // 示例方法禁用Information
 #pragma warning disable IDE0059 // 不需要赋值 // 禁用+1
-namespace Mirai_CSharp.Example
+namespace Mirai_CSharp_Test_efw561we5fwef65.Example
 {
     public partial class ExamplePlugin
     {

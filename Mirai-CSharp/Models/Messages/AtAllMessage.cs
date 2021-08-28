@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 
 #pragma warning disable CS0618 // 此警告是用户专用的
-namespace Mirai_CSharp.Models
+namespace Mirai.CSharp.Models
 {
     /// <summary>
     /// 表示 @全体成员 消息

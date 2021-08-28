@@ -1,8 +1,8 @@
-﻿using Mirai_CSharp.Utility.JsonConverters;
+﻿using Mirai.CSharp.Utility.JsonConverters;
 using System;
 using System.Text.Json.Serialization;
 
-namespace Mirai_CSharp.Models
+namespace Mirai.CSharp.Models
 {
     /// <summary>
     /// 提供修改前和修改后的 <typeparamref name="TProperty"/> 信息接口

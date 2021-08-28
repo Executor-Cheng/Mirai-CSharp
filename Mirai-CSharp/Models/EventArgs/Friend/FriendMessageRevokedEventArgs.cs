@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 
-namespace Mirai_CSharp.Models
+namespace Mirai.CSharp.Models
 {
     /// <summary>
     /// 提供好友撤回消息的相关信息接口。继承自 <see cref="IMessageRevokedEventArgs"/>

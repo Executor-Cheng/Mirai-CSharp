@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Mirai_CSharp.Exceptions
+namespace Mirai.CSharp.Exceptions
 {
     /// <summary>
     /// 尝试使用被禁言的机器人QQ发送消息时引发的异常

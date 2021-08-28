@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Mirai_CSharp.Models
+namespace Mirai.CSharp.Models
 {
     /// <summary>
     /// 提供临时消息的相关信息接口。继承自 <see cref="IGroupMessageBaseEventArgs"/>

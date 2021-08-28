@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace Mirai_CSharp.Utility
+namespace Mirai.CSharp.Utility
 {
     public static class JsonSerializeOptionsFactory
     {

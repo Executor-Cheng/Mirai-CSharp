@@ -1,4 +1,4 @@
-﻿namespace Mirai_CSharp.Models
+﻿namespace Mirai.CSharp.Models
 {
     /// <summary>
     /// 群成员权限

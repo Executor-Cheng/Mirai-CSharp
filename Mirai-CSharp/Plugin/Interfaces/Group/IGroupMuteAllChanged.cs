@@ -1,7 +1,7 @@
-﻿using Mirai_CSharp.Models;
+﻿using Mirai.CSharp.Models;
 using System.Threading.Tasks;
 
-namespace Mirai_CSharp.Plugin.Interfaces
+namespace Mirai.CSharp.Plugin.Interfaces
 {
     /// <summary>
     /// 全员禁言设置被改变的接口

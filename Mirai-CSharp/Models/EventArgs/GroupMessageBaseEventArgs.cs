@@ -1,8 +1,8 @@
-﻿using Mirai_CSharp.Utility.JsonConverters;
+﻿using Mirai.CSharp.Utility.JsonConverters;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Mirai_CSharp.Models
+namespace Mirai.CSharp.Models
 {
     /// <summary>
     /// 提供群消息和临时消息的相关信息基接口。继承自 <see cref="ICommonMessageEventArgs"/>
