@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Mirai_CSharp.Plugin
+namespace Mirai.CSharp.Plugin
 {
     /// <summary>
     /// 表示处理mirai-api-http消息的接口

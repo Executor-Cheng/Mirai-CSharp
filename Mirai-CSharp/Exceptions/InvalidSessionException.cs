@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Mirai_CSharp.Exceptions
+namespace Mirai.CSharp.Exceptions
 {
     /// <summary>
     /// 操作一个失效, 不存在或未认证(未激活)的Session时引发的异常

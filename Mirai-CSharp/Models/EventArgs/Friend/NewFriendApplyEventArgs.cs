@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Mirai_CSharp.Models
+namespace Mirai.CSharp.Models
 {
     /// <summary>
     /// 提供好友申请相关信息的接口。继承自 <see cref="INewApplyEventArgs"/>

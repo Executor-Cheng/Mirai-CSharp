@@ -1,9 +1,9 @@
-﻿using Mirai_CSharp.Models;
+﻿using Mirai.CSharp.Models;
 using System;
 using System.Threading.Tasks;
 
 #pragma warning disable CA1031 // Do not catch general exception types
-namespace Mirai_CSharp.Example
+namespace Mirai.CSharp.Example
 {
     public partial class ExamplePlugin
     {

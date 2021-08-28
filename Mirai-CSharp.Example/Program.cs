@@ -1,8 +1,8 @@
-﻿using Mirai_CSharp.Models;
+﻿using Mirai.CSharp.Models;
 using System;
 using System.Threading.Tasks;
 
-namespace Mirai_CSharp.Example
+namespace Mirai.CSharp.Example
 {
     public static class Program // 前提: nuget Mirai-CSharp, 版本需要 >= 1.0.1.0
     {

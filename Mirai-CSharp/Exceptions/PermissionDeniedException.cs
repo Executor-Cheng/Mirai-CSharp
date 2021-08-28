@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Mirai_CSharp.Exceptions
+namespace Mirai.CSharp.Exceptions
 {
     /// <summary>
     /// 当给定的机器人QQ不具有对应操作的权限时引发的异常

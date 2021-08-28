@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Mirai_CSharp.Exceptions
+namespace Mirai.CSharp.Exceptions
 {
     /// <summary>
     /// 提供错误的AuthKey时引发的异常

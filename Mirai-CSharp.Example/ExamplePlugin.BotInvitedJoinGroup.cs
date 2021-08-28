@@ -1,7 +1,7 @@
-﻿using Mirai_CSharp.Models;
+﻿using Mirai.CSharp.Models;
 using System.Threading.Tasks;
 
-namespace Mirai_CSharp.Example
+namespace Mirai.CSharp.Example
 {
     public partial class ExamplePlugin
     {

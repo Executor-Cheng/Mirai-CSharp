@@ -1,4 +1,4 @@
-﻿namespace Mirai_CSharp.Models
+﻿namespace Mirai.CSharp.Models
 {
     /// <summary>
     /// 指示如何处理加群请求

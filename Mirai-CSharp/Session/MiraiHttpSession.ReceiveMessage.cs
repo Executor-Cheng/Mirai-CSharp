@@ -1,5 +1,5 @@
-﻿using Mirai_CSharp.Models;
-using Mirai_CSharp.Utility;
+﻿using Mirai.CSharp.Models;
+using Mirai.CSharp.Utility;
 using System;
 using System.IO;
 using System.Net.WebSockets;
@@ -7,7 +7,7 @@ using System.Text.Json;
 using System.Threading;
 
 #pragma warning disable CA1031 // Do not catch general exception types
-namespace Mirai_CSharp
+namespace Mirai.CSharp
 {
     public partial class MiraiHttpSession
     {

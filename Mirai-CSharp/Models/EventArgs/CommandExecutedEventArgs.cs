@@ -2,7 +2,7 @@
 using System.Text.Json.Serialization;
 
 #pragma warning disable CA1819 // Properties should not return arrays
-namespace Mirai_CSharp.Models
+namespace Mirai.CSharp.Models
 {
     /// <summary>
     /// 提供已执行的指令相关信息的接口

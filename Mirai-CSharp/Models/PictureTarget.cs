@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Mirai_CSharp.Models
+namespace Mirai.CSharp.Models
 {
     /// <summary>
     /// 图片的目标类型

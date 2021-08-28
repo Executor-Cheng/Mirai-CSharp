@@ -1,5 +1,5 @@
-﻿using Mirai_CSharp.Models;
-using Mirai_CSharp.Plugin;
+﻿using Mirai.CSharp.Models;
+using Mirai.CSharp.Plugin;
 using System;
 using System.Collections.Immutable;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Mirai_CSharp
+namespace Mirai.CSharp
 {
     public partial class MiraiHttpSession : IAsyncDisposable
     {

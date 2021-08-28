@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 
-namespace Mirai_CSharp.Models
+namespace Mirai.CSharp.Models
 {
     /// <summary>
     /// 提供断开连接相关信息的接口

@@ -1,9 +1,9 @@
-﻿using Mirai_CSharp.Utility.JsonConverters;
+﻿using Mirai.CSharp.Utility.JsonConverters;
 using System;
 using System.Text.Json.Serialization;
 
 #nullable enable
-namespace Mirai_CSharp.Models
+namespace Mirai.CSharp.Models
 {
     /// <summary>
     /// 提供禁言信息的接口

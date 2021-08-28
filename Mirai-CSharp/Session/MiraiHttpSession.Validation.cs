@@ -1,12 +1,12 @@
-﻿using Mirai_CSharp.Exceptions;
-using Mirai_CSharp.Models;
+﻿using Mirai.CSharp.Exceptions;
+using Mirai.CSharp.Models;
 using System;
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text.Json;
 
-namespace Mirai_CSharp
+namespace Mirai.CSharp
 {
     public partial class MiraiHttpSession
     {

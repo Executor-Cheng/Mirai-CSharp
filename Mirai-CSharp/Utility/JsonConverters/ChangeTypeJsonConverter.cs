@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Mirai_CSharp.Utility.JsonConverters
+namespace Mirai.CSharp.Utility.JsonConverters
 {
     public class ChangeTypeJsonConverter<TSrc, TDst> : JsonConverter<TDst> where TSrc : TDst
     {

@@ -1,11 +1,11 @@
-﻿using Mirai_CSharp.Plugin;
+﻿using Mirai.CSharp.Plugin;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
 #pragma warning disable IDE0038 // 使用模式匹配
-namespace Mirai_CSharp
+namespace Mirai.CSharp
 {
     public partial class MiraiHttpSession
     {

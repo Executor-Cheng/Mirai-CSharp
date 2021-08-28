@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Mirai_CSharp.Models
+namespace Mirai.CSharp.Models
 {
     /// <summary>
     /// 提供用于处理相关申请所需信息的接口

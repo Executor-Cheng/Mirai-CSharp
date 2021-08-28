@@ -1,7 +1,7 @@
-﻿using Mirai_CSharp.Models;
+﻿using Mirai.CSharp.Models;
 using System.Threading.Tasks;
 
-namespace Mirai_CSharp.Plugin.Interfaces
+namespace Mirai.CSharp.Plugin.Interfaces
 {
     /// <summary>
     /// Bot意外断开连接的接口

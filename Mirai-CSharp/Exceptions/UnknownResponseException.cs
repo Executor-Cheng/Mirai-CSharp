@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 
-namespace Mirai_CSharp.Exceptions
+namespace Mirai.CSharp.Exceptions
 {
     public sealed class UnknownResponseException : Exception
     {

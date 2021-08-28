@@ -1,8 +1,8 @@
-﻿using Mirai_CSharp.Utility.JsonConverters;
+﻿using Mirai.CSharp.Utility.JsonConverters;
 using System;
 using System.Text.Json.Serialization;
 
-namespace Mirai_CSharp.Models
+namespace Mirai.CSharp.Models
 {
     /// <summary>
     /// 提供撤回消息的通用信息接口

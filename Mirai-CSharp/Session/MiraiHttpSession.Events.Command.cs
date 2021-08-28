@@ -1,6 +1,6 @@
-﻿using Mirai_CSharp.Models;
+﻿using Mirai.CSharp.Models;
 
-namespace Mirai_CSharp
+namespace Mirai.CSharp
 {
     public partial class MiraiHttpSession
     {

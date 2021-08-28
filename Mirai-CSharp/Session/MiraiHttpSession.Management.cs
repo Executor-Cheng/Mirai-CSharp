@@ -1,14 +1,14 @@
-﻿using Mirai_CSharp.Exceptions;
-using Mirai_CSharp.Extensions;
-using Mirai_CSharp.Models;
-using Mirai_CSharp.Utility;
+﻿using Mirai.CSharp.Exceptions;
+using Mirai.CSharp.Extensions;
+using Mirai.CSharp.Models;
+using Mirai.CSharp.Utility;
 using System;
 using System.Threading.Tasks;
 #if NET5_0
 using System.Net.Http.Json;
 #endif
 
-namespace Mirai_CSharp
+namespace Mirai.CSharp
 {
     public partial class MiraiHttpSession
     {

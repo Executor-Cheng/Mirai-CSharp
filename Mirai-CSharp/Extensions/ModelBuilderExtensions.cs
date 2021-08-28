@@ -1,7 +1,7 @@
-﻿using Mirai_CSharp.Models;
+﻿using Mirai.CSharp.Models;
 using System;
 
-namespace Mirai_CSharp.Extensions
+namespace Mirai.CSharp.Extensions
 {
     public static class ModelBuilderExtensions
     {
