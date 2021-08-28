@@ -1,4 +1,4 @@
-﻿using Mirai.CSharp.Models;
+using Mirai.CSharp.Models;
 using System.Threading.Tasks;
 
 namespace Mirai.CSharp.Example

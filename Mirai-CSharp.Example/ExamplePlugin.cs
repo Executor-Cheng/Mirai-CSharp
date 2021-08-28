@@ -1,4 +1,4 @@
-﻿using Mirai.CSharp.Plugin.Interfaces;
+using Mirai.CSharp.Plugin.Interfaces;
 
 namespace Mirai.CSharp.Example
 {

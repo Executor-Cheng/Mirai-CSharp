@@ -1,4 +1,4 @@
-﻿using Mirai.CSharp.Models;
+using Mirai.CSharp.Models;
 using System.Threading.Tasks;
 
 #pragma warning disable IDE0051 // 删除未使用的私有成员
