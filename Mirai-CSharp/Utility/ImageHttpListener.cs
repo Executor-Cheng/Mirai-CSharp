@@ -5,7 +5,7 @@ using System.Net;
 
 #pragma warning disable CA1031 // Do not catch general exception types
 #pragma warning disable CA1810 // Initialize reference type static fields inline
-namespace Mirai_CSharp.Utility
+namespace Mirai.CSharp.Utility
 {
     internal static class ImageHttpListener // 对于 mirai-api-http v1.7.0及以下版本无法发图的临时解决方案
     {
@@ -55,7 +55,7 @@ namespace Mirai_CSharp.Utility
                 {
                     HttpListenerContext ctx = await Listener.GetContextAsync();
                     if (ctx.Request.HttpMethod == "GET" &&
-                        ctx.Request.Url.AbsolutePath == "/fetch" &&
+                        ctx.Request.Url?.AbsolutePath == "/fetch" &&
                         Guid.TryParse(ctx.Request.QueryString["guid"], out Guid guid) &&
                         Cache.TryRemove(guid, out Stream? imgStream))
                     {

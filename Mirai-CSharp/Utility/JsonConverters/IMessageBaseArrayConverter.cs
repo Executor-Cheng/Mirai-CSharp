@@ -1,11 +1,11 @@
-﻿using Mirai_CSharp.Models;
+﻿using Mirai.CSharp.Models;
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 #pragma warning disable CS0618 // 类型或成员已过时
-namespace Mirai_CSharp.Utility.JsonConverters
+namespace Mirai.CSharp.Utility.JsonConverters
 {
     public class IMessageBaseArrayConverter : JsonConverter<IMessageBase[]>
     {

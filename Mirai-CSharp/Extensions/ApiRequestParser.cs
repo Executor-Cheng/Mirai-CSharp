@@ -1,11 +1,11 @@
-﻿using Mirai_CSharp.Extensions;
-using Mirai_CSharp.Utility;
+﻿using Mirai.CSharp.Extensions;
+using Mirai.CSharp.Utility;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Mirai_CSharp.Extensions
+namespace Mirai.CSharp.Extensions
 {
     internal static class ApiResponseExtensions // internal 的 class, 以后再考虑加点 JsonDocumentOptions, JsonSerializerOptions 的重载
     {

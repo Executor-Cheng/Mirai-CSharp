@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 
-namespace Mirai_CSharp.Models
+namespace Mirai.CSharp.Models
 {
     /// <summary>
     /// 提供入群申请/受邀入群相关信息的基接口。继承自 <see cref="INewApplyEventArgs"/>

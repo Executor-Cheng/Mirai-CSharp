@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Mirai_CSharp.Exceptions
+namespace Mirai.CSharp.Exceptions
 {
     /// <summary>
     /// 当发送消息的对象(QQ/群号)不存在时引发的异常

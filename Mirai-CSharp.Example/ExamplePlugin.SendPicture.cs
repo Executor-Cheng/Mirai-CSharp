@@ -1,8 +1,8 @@
-﻿using Mirai_CSharp.Models;
+using Mirai.CSharp.Models;
 using System.Threading.Tasks;
 
 #pragma warning disable IDE0051 // 删除未使用的私有成员
-namespace Mirai_CSharp.Example
+namespace Mirai.CSharp.Example
 {
     public partial class ExamplePlugin
     {

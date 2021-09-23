@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace Mirai_CSharp.Models
+namespace Mirai.CSharp.Models
 {
     /// <summary>
     /// 提供未知消息相关信息的接口

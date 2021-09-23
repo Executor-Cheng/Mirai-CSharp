@@ -5,9 +5,9 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>Mirai_CSharp.Example</RootNamespace>
   </PropertyGroup>
-  
+
   <ItemGroup>
-    <PackageReference Include="Mirai-CSharp" Version="1.0.2.0" />  
+    <ProjectReference Include="..\Mirai-CSharp\Mirai-CSharp.csproj" />
   </ItemGroup>
   
 </Project>

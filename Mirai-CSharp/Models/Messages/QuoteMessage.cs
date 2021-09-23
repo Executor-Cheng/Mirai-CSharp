@@ -1,11 +1,11 @@
-﻿using Mirai_CSharp.Utility.JsonConverters;
+﻿using Mirai.CSharp.Utility.JsonConverters;
 using System;
 using System.Diagnostics;
 using System.Text.Json.Serialization;
 
 #pragma warning disable CS0618 // 此警告是用户专用的
 #pragma warning disable CA1819 // Properties should not return arrays
-namespace Mirai_CSharp.Models
+namespace Mirai.CSharp.Models
 {
     /// <summary>
     /// 表示引用消息

@@ -1,8 +1,8 @@
-﻿using Mirai_CSharp.Models;
+﻿using Mirai.CSharp.Models;
 using System;
 
 #pragma warning disable CA1819 // Properties should not return arrays
-namespace Mirai_CSharp.Exceptions
+namespace Mirai.CSharp.Exceptions
 {
     /// <summary>
     /// 尝试发送过长的消息时引发的异常

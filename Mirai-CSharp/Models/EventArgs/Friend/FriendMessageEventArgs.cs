@@ -1,9 +1,9 @@
-﻿using Mirai_CSharp.Utility.JsonConverters;
+﻿using Mirai.CSharp.Utility.JsonConverters;
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Mirai_CSharp.Models
+namespace Mirai.CSharp.Models
 {
     /// <summary>
     /// 提供好友消息的相关信息接口。继承自 <see cref="ICommonMessageEventArgs"/>

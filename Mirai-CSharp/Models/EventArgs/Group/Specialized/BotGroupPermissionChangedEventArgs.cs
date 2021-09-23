@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Mirai_CSharp.Models
+namespace Mirai.CSharp.Models
 {
     /// <summary>
     /// 提供Bot在群里的权限被改变相关信息的接口。继承自 <see cref="IBotGroupPropertyChangedEventArgs{TProperty}"/>

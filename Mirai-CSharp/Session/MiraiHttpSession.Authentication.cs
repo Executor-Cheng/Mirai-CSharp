@@ -1,6 +1,6 @@
-﻿using Mirai_CSharp.Exceptions;
-using Mirai_CSharp.Extensions;
-using Mirai_CSharp.Models;
+﻿using Mirai.CSharp.Exceptions;
+using Mirai.CSharp.Extensions;
+using Mirai.CSharp.Models;
 using System;
 using System.Net.Http;
 using System.Text.Json;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Net.Http.Json;
 #endif
 
-namespace Mirai_CSharp
+namespace Mirai.CSharp
 {
     public partial class MiraiHttpSession
     {
@@ -66,7 +66,7 @@ namespace Mirai_CSharp
                 }
                 catch
                 {
-                    Interlocked.CompareExchange(ref SessionInfo, null, session);
+                    Interlocked.CompareExchange(ref SessionInfo, default, session);
                     _ = InternalReleaseAsync(session);
                     throw;
                 }
