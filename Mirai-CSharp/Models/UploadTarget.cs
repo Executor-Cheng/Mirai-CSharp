@@ -1,4 +1,4 @@
-﻿namespace Mirai.CSharp.Models
+namespace Mirai.CSharp.Models
 {
     /// <summary>
     /// 上传对象的目标类型

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Mirai.CSharp.Models
+namespace Mirai.CSharp.Models.EventArgs
 {
     /// <summary>
     /// 提供好友申请相关信息的接口。继承自 <see cref="INewApplyEventArgs"/>
@@ -10,18 +8,11 @@ namespace Mirai.CSharp.Models
 
     }
 
-    public class NewFriendApplyEventArgs : NewApplyEventArgs, INewFriendApplyEventArgs
+    /// <summary>
+    /// 提供好友申请相关信息的接口。继承自 <see cref="INewFriendApplyEventArgs"/> 和 <see cref="INewApplyEventArgs{TRawdata}"/>
+    /// </summary>
+    public interface INewFriendApplyEventArgs<TRawdata> : INewFriendApplyEventArgs, INewApplyEventArgs<TRawdata>
     {
-        [Obsolete("此类不应由用户主动创建实例。")]
-        public NewFriendApplyEventArgs()
-        {
 
-        }
-
-        [Obsolete("此类不应由用户主动创建实例。")]
-        public NewFriendApplyEventArgs(long eventId, long fromGroup, long fromQQ, string nickName) : base(eventId, fromGroup, fromQQ, nickName)
-        {
-
-        }
     }
 }
