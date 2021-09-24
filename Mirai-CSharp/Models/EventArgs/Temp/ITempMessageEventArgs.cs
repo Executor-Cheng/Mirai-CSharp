@@ -1,28 +1,18 @@
-﻿using System.Collections.Generic;
-
-namespace Mirai.CSharp.Models
+namespace Mirai.CSharp.Models.EventArgs
 {
     /// <summary>
     /// 提供临时消息的相关信息接口。继承自 <see cref="IGroupMessageBaseEventArgs"/>
     /// </summary>
     public interface ITempMessageEventArgs : IGroupMessageBaseEventArgs
     {
-        
+
     }
 
-    public class TempMessageEventArgs : GroupMessageBaseEventArgs, ITempMessageEventArgs
+    /// <summary>
+    /// 提供临时消息的相关信息接口。继承自 <see cref="ITempMessageEventArgs"/> 和 <see cref="IGroupMessageBaseEventArgs{TRawdata}"/>
+    /// </summary>
+    public interface ITempMessageEventArgs<TRawdata> : ITempMessageEventArgs, IGroupMessageBaseEventArgs<TRawdata>
     {
-        public TempMessageEventArgs()
-        {
 
-        }
-
-        public TempMessageEventArgs(IMessageBase[] chain, IGroupMemberInfo sender) : base(chain, sender)
-        {
-
-        }
-
-        public override string ToString()
-            => $"[{Sender.Group.Name}({Sender.Group.Id})] {Sender.Name}(Temp {Sender.Id}) -> {string.Join("", (IEnumerable<Messages>)Chain)}";
     }
 }

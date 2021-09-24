@@ -1,0 +1,45 @@
+using System.Text.Json.Serialization;
+using Mirai.CSharp.HttpApi.Models.ChatMessages;
+using Mirai.CSharp.HttpApi.Parsers.Attributes;
+using ISharedJsonElementStrangerMessageEventArgs = Mirai.CSharp.Models.EventArgs.IStrangerMessageEventArgs<System.Text.Json.JsonElement>;
+using ISharedStrangerInfo = Mirai.CSharp.Models.IStrangerInfo;
+using ISharedStrangerMessageEventArgs = Mirai.CSharp.Models.EventArgs.IStrangerMessageEventArgs;
+
+namespace Mirai.CSharp.HttpApi.Models.EventArgs.Stranger
+{
+    /// <summary>
+    /// 提供临时消息的相关信息接口。继承自 <see cref="ISharedJsonElementStrangerMessageEventArgs"/> 和 <see cref="ICommonMessageEventArgs"/>
+    /// </summary>
+    [MappableMiraiHttpMessageKey("StrangerMessage")]
+    public interface IStrangerMessageEventArgs : ISharedJsonElementStrangerMessageEventArgs, ICommonMessageEventArgs
+    {
+        [JsonPropertyName("sender")]
+        new IStrangerInfo Sender { get; }
+
+#if !NETSTANDARD2_0
+        [JsonPropertyName("sender")]
+        ISharedStrangerInfo ISharedStrangerMessageEventArgs.Sender => Sender;
+#endif
+    }
+
+    public class StrangerMessageEventArgs : CommonMessageEventArgs, IStrangerMessageEventArgs
+    {
+        [JsonPropertyName("sender")]
+        public IStrangerInfo Sender { get; set; } = null!;
+
+        public StrangerMessageEventArgs()
+        {
+
+        }
+
+        public StrangerMessageEventArgs(IChatMessage[] chain, IStrangerInfo sender) : base(chain)
+        {
+            Sender = sender;
+        }
+
+#if NETSTANDARD2_0
+        [JsonPropertyName("sender")]
+        ISharedStrangerInfo ISharedStrangerMessageEventArgs.Sender => Sender;
+#endif
+    }
+}
