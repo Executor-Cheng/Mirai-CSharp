@@ -13,6 +13,10 @@ namespace Mirai.CSharp.Example
     {
         public static async Task Main()
         {
+            // 一套能用的框架, 必须要注册至少一个 Invoker, Parser, Client 和 Handler
+            // Invoker 负责消息调度
+            // Parser 负责解析消息到具体接口以便调度器调用相关 Handler 下的处理方法
+            // Client 负责收发原始数据
             IServiceProvider services = new ServiceCollection().AddMiraiBaseFramework()   // 表示使用基于基础框架的构建器
                                                                .AddHandler<MiraiPlugin>() // 虽然可以把 HttpApiPlugin 作为泛型参数塞入, 但不建议这么做
                                                                .Services
