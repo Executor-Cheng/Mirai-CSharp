@@ -1,7 +1,9 @@
 using System;
+#if !NET6_0_OR_GREATER
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
+#endif
 
 namespace Mirai.CSharp.HttpApi.Utility
 {
