@@ -3,13 +3,13 @@
 </div>
 <div align="center">
     <a href="https://www.nuget.org/packages/Mirai-CSharp">
-        <img src="https://img.shields.io/nuget/v/Mirai-CSharp"></a>
+        <img src="https://img.shields.io/nuget/v/Mirai-CSharp"/	></a>
     <a href="https://www.nuget.org/packages/Mirai-CSharp">
     	<img src="https://img.shields.io/nuget/vpre/Mirai-CSharp"></a>
     <a href="https://www.nuget.org/packages/Mirai-CSharp">
 	    <img src="https://img.shields.io/nuget/dt/Mirai-CSharp"></a>
     <img src="https://img.shields.io/github/last-commit/Executor-Cheng/Mirai-CSharp">
-    <img src="https://img.shields.io/github/stars/Executor-Cheng/Mirai-CSharp"
+    <img src="https://img.shields.io/github/stars/Executor-Cheng/Mirai-CSharp">
 </div>
 
 
