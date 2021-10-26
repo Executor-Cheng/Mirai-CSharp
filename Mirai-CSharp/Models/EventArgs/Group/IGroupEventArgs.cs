@@ -82,4 +82,24 @@ namespace Mirai.CSharp.Models.EventArgs
     {
 
     }
+
+    /// <summary>
+    /// 提供邀请人相关信息的接口。
+    /// </summary>
+    public interface IInviterEventArgs : IMiraiMessage
+    {
+        /// <summary>
+        /// 邀请人信息
+        /// </summary>
+        /// <remarks>
+        /// 仅当 mirai-api-http 版本至少为 2.3.0 时, 此属性可能不为 <see langword="null"/>
+        /// </remarks>
+        IGroupMemberInfo? Inviter { get; }
+    }
+
+    /// <inheritdoc/>
+    public interface IInviterEventArgs<TRawdata> : IInviterEventArgs, IMiraiMessage<TRawdata>
+    {
+
+    }
 }

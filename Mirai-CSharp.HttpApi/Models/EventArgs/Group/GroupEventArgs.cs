@@ -8,9 +8,11 @@ using ISharedGroupOperatingEventArgs = Mirai.CSharp.Models.EventArgs.IGroupOpera
 using ISharedJsonGroupEventArgs = Mirai.CSharp.Models.EventArgs.IGroupEventArgs<System.Text.Json.JsonElement>;
 using ISharedJsonMemberEventArgs = Mirai.CSharp.Models.EventArgs.IMemberEventArgs<System.Text.Json.JsonElement>;
 using ISharedJsonOperatorEventArgs = Mirai.CSharp.Models.EventArgs.IOperatorEventArgs<System.Text.Json.JsonElement>;
+using ISharedJsonInviterEventArgs = Mirai.CSharp.Models.EventArgs.IInviterEventArgs<System.Text.Json.JsonElement>;
 using ISharedMemberEventArgs = Mirai.CSharp.Models.EventArgs.IMemberEventArgs;
 using ISharedMemberOperatingEventArgs = Mirai.CSharp.Models.EventArgs.IMemberOperatingEventArgs;
 using ISharedOperatorEventArgs = Mirai.CSharp.Models.EventArgs.IOperatorEventArgs;
+using ISharedInviterEventArgs = Mirai.CSharp.Models.EventArgs.IInviterEventArgs;
 
 namespace Mirai.CSharp.HttpApi.Models.EventArgs
 {
@@ -104,7 +106,7 @@ namespace Mirai.CSharp.HttpApi.Models.EventArgs
 
 #if !NETSTANDARD2_0
         /// <inheritdoc/>
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupMemberInfo, IGroupMemberInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupMemberInfo, ISharedGroupMemberInfo>))]
         [JsonPropertyName("operator")]
         ISharedGroupMemberInfo ISharedOperatorEventArgs.Operator => Operator;
 #endif
@@ -128,7 +130,7 @@ namespace Mirai.CSharp.HttpApi.Models.EventArgs
 
 #if NETSTANDARD2_0
         /// <inheritdoc/>
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupMemberInfo, IGroupMemberInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupMemberInfo, ISharedGroupMemberInfo>))]
         [JsonPropertyName("operator")]
         ISharedGroupMemberInfo ISharedOperatorEventArgs.Operator => Operator;
 #endif
@@ -196,5 +198,34 @@ namespace Mirai.CSharp.HttpApi.Models.EventArgs
         [JsonPropertyName("member")]
         ISharedGroupMemberInfo ISharedMemberEventArgs.Member => Member;
 #endif
+    }
+
+    /// <summary>
+    /// 提供邀请人相关信息的接口。继承自 <see cref="ISharedInviterEventArgs"/> 和 <see cref="IMiraiHttpMessage"/>
+    /// </summary>
+    public interface IInviterEventArgs : ISharedInviterEventArgs, IMiraiHttpMessage
+    {
+        /// <summary>
+        /// 邀请人信息
+        /// </summary>
+        /// <remarks>
+        /// 仅当 mirai-api-http 版本至少为 2.3.0 时, 此属性可能不为 <see langword="null"/>
+        /// </remarks>
+        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupMemberInfo, IGroupMemberInfo>))]
+        [JsonPropertyName("invitor")]
+        new IGroupMemberInfo? Inviter { get; }
+
+#if !NETSTANDARD2_0
+        /// <inheritdoc/>
+        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupMemberInfo, ISharedGroupMemberInfo>))]
+        [JsonPropertyName("invitor")]
+        ISharedGroupMemberInfo? ISharedInviterEventArgs.Inviter => Inviter;
+#endif
+    }
+
+    /// <inheritdoc/>
+    public interface IInviterEventArgs<TRawdata> : IInviterEventArgs, ISharedJsonInviterEventArgs
+    {
+
     }
 }
