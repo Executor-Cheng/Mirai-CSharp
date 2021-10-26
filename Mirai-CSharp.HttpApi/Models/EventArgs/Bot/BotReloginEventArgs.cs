@@ -13,7 +13,7 @@ namespace Mirai.CSharp.HttpApi.Models.EventArgs
 
     }
 
-    public class BotReloginEventArgs : BotEventArgs, IBotOnlineEventArgs
+    public class BotReloginEventArgs : BotEventArgs, IBotReloginEventArgs
     {
         [Obsolete("此类不应由用户主动创建实例。")]
         public BotReloginEventArgs()
