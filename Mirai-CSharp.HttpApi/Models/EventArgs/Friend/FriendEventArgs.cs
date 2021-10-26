@@ -22,7 +22,7 @@ namespace Mirai.CSharp.HttpApi.Models.EventArgs
     public abstract class FriendEventArgs : MiraiHttpMessage, IFriendEventArgs
     {
         [JsonPropertyName("friend")]
-        [JsonConverter(typeof(ChangeTypeJsonConverter<FriendInfo, ISharedFriendInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<FriendInfo, IFriendInfo>))]
         public IFriendInfo Friend { get; set; } = null!;
 
         protected FriendEventArgs()
