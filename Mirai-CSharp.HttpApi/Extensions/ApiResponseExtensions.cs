@@ -67,13 +67,10 @@ namespace Mirai.CSharp.HttpApi.Extensions
             code = codeToken.GetInt32();
             return false;
         }
-#if NETSTANDARD2_0
-        public static void EnsureApiRespCode(this JsonElement root, out int? code)
-#else
-        public static void EnsureApiRespCode(this JsonElement root, [NotNullWhen(false)] out int? code)
-#endif
+
+        public static void EnsureApiRespCode(this JsonElement root)
         {
-            if (!root.CheckApiRespCode(out code))
+            if (!root.CheckApiRespCode(out int? code))
             {
                 throw GetCommonException(code!.Value, in root);
             }

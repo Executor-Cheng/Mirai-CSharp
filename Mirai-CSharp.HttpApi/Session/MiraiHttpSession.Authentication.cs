@@ -130,7 +130,7 @@ namespace Mirai.CSharp.HttpApi.Session
             };
             using JsonDocument j = await client.PostAsJsonAsync<object>(url, payload, token).GetJsonAsync(token).ConfigureAwait(false);
             JsonElement root = j.RootElement;
-            root.EnsureApiRespCode(out _);
+            root.EnsureApiRespCode();
             return root.GetProperty("session").GetString()!;
         }
 
@@ -152,7 +152,7 @@ namespace Mirai.CSharp.HttpApi.Session
         {
             using JsonDocument j = await client.GetAsync($"{options.BaseUrl}/about", token).GetJsonAsync(token).ConfigureAwait(false);
             JsonElement root = j.RootElement;
-            root.EnsureApiRespCode(out _);
+            root.EnsureApiRespCode();
             string version = root.GetProperty("data").GetProperty("version").GetString()!;
             int vIndex = version.IndexOf('v');
 #if NETSTANDARD2_0

@@ -39,7 +39,7 @@ namespace Mirai.CSharp.HttpApi.Session
             {
                 using JsonDocument j = JsonDocument.Parse(json);
                 JsonElement root = j.RootElement;
-                root.EnsureApiRespCode(out _);
+                root.EnsureApiRespCode();
             }
             catch (JsonException) // 返回值非json就是执行失败, 把响应正文重新抛出
             {
@@ -79,7 +79,7 @@ namespace Mirai.CSharp.HttpApi.Session
             {
                 using JsonDocument j = JsonDocument.Parse(json);
                 JsonElement root = j.RootElement;
-                root.EnsureApiRespCode(out _);
+                root.EnsureApiRespCode();
             }
             catch (JsonException) // 返回值非json就是执行失败, 把响应正文重新抛出
             {
