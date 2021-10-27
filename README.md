@@ -18,6 +18,8 @@
 这是一个帮助C#开发者与 [Mirai](https://github.com/mamoe/mirai) 交互的项目  
 它通过调用 [mirai-api-http](https://github.com/mamoe/mirai-api-http) 提供的 http-api 与其交互  
 
+
+
 ## 开始使用
 
 ### 安装
@@ -25,15 +27,15 @@
 
 > 在使用 nuget 安装包时, 如若要使用最新功能, 请勾选 "包括发行版"
 >
-> 注意, 最新版本已将包分离为 Mirai-CSharp 以及 Mirai-CSharp.HttpApi, 其中第一个中只包含程序接口之类的, 第二个中包含的是其实现
+> 注意, 最新版本已将包分离为 Mirai-CSharp 以及 Mirai-CSharp.HttpApi, 其中第一个中只包含程序接口之类的, 第二个中包含的是其实现, 并且在该预览版中, 与正式版发布的内容差异较大, 项目结构有巨大改变
+
+
 
 ### 示例
 
 下面以一个最简单的控制台程序为示例, 对 QQ 内的任何 at 自己了的群聊消息响应 "Hello world" 文本消息
 
-在目前的最新版本中, Mirai-CSharp 的常用核心组件位于 Mirai.CSharp 以及 Mirai.CSharp.Models 命名空间中.
-
-> 在已正式发布的最新版本中, 命名空间是 Mirai_CSharp 而不是 Mirai.CSharp
+在目前已正式发布的最新版本中, Mirai-CSharp 的常用核心组件位于 Mirai_CSharp 以及 Mirai_CSharp.Models 命名空间中.
 
 首先我们可以引用它, 下面是基础框架:
 
@@ -79,11 +81,19 @@ session.GroupMessageEvt += async (sender, e) =>      // Mirai-CSharp 的事件�
     if (e.Chain.Where(v => v is AtMessage atMsg && atMsg.Target == session.QQNumber).Any())       // 判断是否 at 自己
         await sender.SendGroupMessageAsync(e.Sender.Group.Id, new PlainMessage("Hello world"));   // 发送 "Hello world"
     
-    // PlainMessage 位于 Mirai.CSharp.Models 命名空间下, 基于 IMessage 
+    // PlainMessage 位于 Mirai_CSharp.Models 命名空间下, 基于 IMessage 
 
     return false;    // Task 的返回结果标识当前事件是否被阻断, 如果返回 true, 那么后面的事件订阅者将不会收到事件 (这里返回false表示不阻断)
 };
 ```
+
+
+
+### 改动
+
+在当前的最新版本(预览版)中, 包已经分离开来, 由旧的只有一个 "Mirai-CSharp" 就包含所有功能, 变更为 "Mirai-CSharp" 提供基本接口, "Mirai-CSharp.HttpApi" 提供接口实现.
+
+并且一些类型的命名空间也有所改动, 例如原来的 MiraiHttpSession 被移动到 Mirai.CSharp.HttpApi.Models 命名空间. 所以在使用最新预览版时应注意命名空间的更改.
 
 
 
@@ -92,11 +102,14 @@ session.GroupMessageEvt += async (sender, e) =>      // Mirai-CSharp 的事件�
 ## 注意事项  
 - 本项目使用`C# 9.0`编写, 你需要至少`.NET Core 2.0` 或 `.NET Framework 4.6.1`才能使用本项目, 其中所有的api均为**异步**方法  
 
+
+
 ## 使用例子
+
 - [基于任何实现框架的插件](https://github.com/Executor-Cheng/Mirai-CSharp/blob/master/Mirai-CSharp.Example/MiraiPlugin.cs)
 - [基于特定实现框架的插件](https://github.com/Executor-Cheng/Mirai-CSharp/blob/master/Mirai-CSharp.Example/HttpApiPlugin.cs)
 - [对动态增删的注释](https://github.com/Executor-Cheng/Mirai-CSharp/blob/master/Mirai-CSharp.Example/DynamicPlugin.cs)
-- [配置Session](https://github.com/Executor-Cheng/Mirai-CSharp/tree/master/Mirai-CSharp.Example/Program.cs)  
+- [配置Session](https://github.com/Executor-Cheng/Mirai-CSharp/tree/master/Mirai-CSharp.Example/Program.cs)
 - [处理好友消息](https://github.com/Executor-Cheng/Mirai-CSharp/blob/master/Mirai-CSharp.Example/ExamplePlugin.FriendMessage.cs) 
 - [处理群消息](https://github.com/Executor-Cheng/Mirai-CSharp/blob/master/Mirai-CSharp.Example/ExamplePlugin.GroupMessage.cs)  
 - [处理好友申请](https://github.com/Executor-Cheng/Mirai-CSharp/blob/master/Mirai-CSharp.Example/ExamplePlugin.NewFriendApply.cs)  
