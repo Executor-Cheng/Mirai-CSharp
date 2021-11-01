@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -12,6 +13,7 @@ using ISharedGroupFileInfo = Mirai.CSharp.Models.IGroupFileInfo;
 using System.Net.Http.Json;
 #endif
 
+#pragma warning disable CA2016 // Forward the 'CancellationToken' parameter to methods
 namespace Mirai.CSharp.HttpApi.Session
 {
     public partial class MiraiHttpSession
@@ -21,19 +23,19 @@ namespace Mirai.CSharp.HttpApi.Session
         {
             InternalSessionInfo session = SafeGetSession();
             CreateLinkedUserSessionToken(session.Token, token, out CancellationTokenSource? cts, out token);
-            var payload = new
+            KeyValuePair<string?, string?>[] payload = new KeyValuePair<string?, string?>[6]
             {
-                sessionKey = session.SessionKey,
-                id = id ?? "",
-                target = groupNumber,
-                group = groupNumber,
-                qq = groupNumber,
-                withDownloadInfo = true,
-                offset,
-                size
+                new KeyValuePair<string?, string?>("sessionKey", session.SessionKey),
+                new KeyValuePair<string?, string?>("id", id ?? null),
+                new KeyValuePair<string?, string?>("target", groupNumber.ToString()),
+                new KeyValuePair<string?, string?>("withDownloadInfo", fetchDownloadInfo.ToString().ToLower()),
+                new KeyValuePair<string?, string?>("offset", offset.ToString()),
+                new KeyValuePair<string?, string?>("size", size.ToString()),
             };
-            return _client.PostAsJsonAsync($"{_options.BaseUrl}/file/list", payload, token)
-                .AsApiRespAsync<ISharedGroupFileInfo[], GroupFileInfo[]>(token)
+            using HttpContent content = new FormUrlEncodedContent(payload);
+            string query = content.ReadAsStringAsync().GetAwaiter().GetResult();
+            return _client.GetAsync($"{_options.BaseUrl}/file/list?{query}", token)
+                .AsApiRespV2Async<ISharedGroupFileInfo[], GroupFileInfo[]>(token)
                 .DisposeWhenCompleted(cts);
         }
 
@@ -42,17 +44,17 @@ namespace Mirai.CSharp.HttpApi.Session
         {
             InternalSessionInfo session = SafeGetSession();
             CreateLinkedUserSessionToken(session.Token, token, out CancellationTokenSource? cts, out token);
-            var payload = new
+            KeyValuePair<string?, string?>[] payload = new KeyValuePair<string?, string?>[4]
             {
-                sessionKey = session.SessionKey,
-                id = id ?? "",
-                target = groupNumber,
-                group = groupNumber,
-                qq = groupNumber,
-                withDownloadInfo = true,
+                new KeyValuePair<string?, string?>("sessionKey", session.SessionKey),
+                new KeyValuePair<string?, string?>("id", id ?? null),
+                new KeyValuePair<string?, string?>("target", groupNumber.ToString()),
+                new KeyValuePair<string?, string?>("withDownloadInfo", fetchDownloadInfo.ToString().ToLower()),
             };
-            return _client.PostAsJsonAsync($"{_options.BaseUrl}/file/info", payload, token)
-                .AsApiRespAsync<ISharedGroupFileInfo, GroupFileInfo>(token)
+            using HttpContent content = new FormUrlEncodedContent(payload);
+            string query = content.ReadAsStringAsync().GetAwaiter().GetResult();
+            return _client.GetAsync($"{_options.BaseUrl}/file/info?{query}", token)
+                .AsApiRespV2Async<ISharedGroupFileInfo, GroupFileInfo>(token)
                 .DisposeWhenCompleted(cts);
         }
 
@@ -157,7 +159,7 @@ namespace Mirai.CSharp.HttpApi.Session
             payload.Add(pathContent);
             payload.Add(fsContent);
             return _client.PostAsync($"{_options.BaseUrl}/file/upload", payload, token)
-                .AsApiRespAsync<ISharedGroupFileInfo, GroupFileInfo>(token)
+                .AsApiRespV2Async<ISharedGroupFileInfo, GroupFileInfo>(token)
                 .DisposeWhenCompleted(cts);
         }
     }

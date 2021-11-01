@@ -1,3 +1,5 @@
+using System;
+
 namespace Mirai.CSharp.Models
 {
     /// <summary>
@@ -19,5 +21,20 @@ namespace Mirai.CSharp.Models
         /// 对象下载链接
         /// </summary>
         string? Url { get; }
+
+        /// <summary>
+        /// 对象被下载次数
+        /// </summary>
+        int DownloadedTimes { get; }
+
+        /// <summary>
+        /// 对象创建时间
+        /// </summary>
+        DateTime CreateTime { get; }
+
+        /// <summary>
+        /// 对象修改时间
+        /// </summary>
+        DateTime ModifyTime { get; }
     }
 }

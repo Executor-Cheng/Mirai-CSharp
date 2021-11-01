@@ -39,7 +39,7 @@ namespace Mirai.CSharp.HttpApi.Session
             };
             CreateLinkedUserSessionToken(session.Token, token, out CancellationTokenSource? cts, out token);
             return _client.PostAsJsonAsync($"{_options.BaseUrl}/sendImageMessage", payload, JsonSerializeOptionsFactory.IgnoreNulls, token)
-                .AsApiRespAsync<string[]>(token)
+                .AsApiRespV2Async<string[]>(token)
                 .DisposeWhenCompleted(cts);
         }
         /// <inheritdoc/>

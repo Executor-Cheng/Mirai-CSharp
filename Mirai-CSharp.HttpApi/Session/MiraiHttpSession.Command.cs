@@ -110,18 +110,26 @@ namespace Mirai.CSharp.HttpApi.Session
         /// <param name="client">要进行请求的 <see cref="HttpClient"/></param>
         /// <param name="options">连接信息</param>
         /// <inheritdoc cref="GetManagersAsync(long, CancellationToken)"/>
-        public static Task<long[]> GetManagersAsync(HttpClient client, MiraiHttpSessionOptions options, long qqNumber, CancellationToken token = default)
+        [Obsolete("新版本的 mirai-console 中已经没有管理员概念了, 参考: https://github.com/project-mirai/mirai-api-http/pull/265#discussion_r598428011")]
+        public static async Task<long[]> GetManagersAsync(HttpClient client, MiraiHttpSessionOptions options, long qqNumber, CancellationToken token = default)
         {
-            return client.GetAsync($"{options.BaseUrl}/managers?qq={qqNumber}", token).AsApiRespAsync<long[]>(token);
+            string json = await client.GetAsync($"{options.BaseUrl}/managers?qq={qqNumber}", token).GetStringAsync(token);
+            if (!string.IsNullOrEmpty(json))
+            {
+                return JsonSerializer.Deserialize<long[]>(json)!;
+            }
+            return Array.Empty<long>();
         }
 
         /// <inheritdoc cref="GetManagersAsync(HttpClient, MiraiHttpSessionOptions, long, CancellationToken)"/>
+        [Obsolete("新版本的 mirai-console 中已经没有管理员概念了, 参考: https://github.com/project-mirai/mirai-api-http/pull/265#discussion_r598428011")]
         public static Task<long[]> GetManagersAsync(MiraiHttpSessionOptions options, long qqNumber, CancellationToken token = default)
         {
             return GetManagersAsync(_globalClient, options, qqNumber, token);
         }
 
         /// <inheritdoc/>
+        [Obsolete("新版本的 mirai-console 中已经没有管理员概念了, 参考: https://github.com/project-mirai/mirai-api-http/pull/265#discussion_r598428011")]
         public override Task<long[]> GetManagersAsync(long qqNumber, CancellationToken token = default)
         {
             InternalSessionInfo session = SafeGetSession();

@@ -154,7 +154,7 @@ namespace Mirai.CSharp.Session
         /// <param name="groupNumber">该用户所在群号</param>
         /// <param name="token">用于取消此异步操作的 <see cref="CancellationToken"/></param>
         /// <returns>表示此异步操作的 <see cref="Task"/></returns>
-        Task<IGroupMemberCardInfo> GetGroupMemberInfoAsync(long memberId, long groupNumber, CancellationToken token = default);
+        Task<IGroupMemberInfo> GetGroupMemberInfoAsync(long memberId, long groupNumber, CancellationToken token = default);
 
         /// <summary>
         /// 异步获取群成员列表
