@@ -1,5 +1,8 @@
 using System;
 using System.Text.Json;
+#if NET6_0_OR_GREATER
+using System.Text.Json.Nodes;
+#endif
 
 namespace Mirai.CSharp.HttpApi.Exceptions
 {
@@ -18,6 +21,12 @@ namespace Mirai.CSharp.HttpApi.Exceptions
         public UnknownResponseException(in JsonElement root, Exception? innerException) : this(root.GetRawText(), innerException) { }
 
         public UnknownResponseException(in JsonElement root, string? message, Exception? innerException) : this(root.GetRawText(), message, innerException) { }
+
+#if NET6_0_OR_GREATER
+        public UnknownResponseException(JsonNode node) : this(node.ToJsonString()) { }
+
+        public UnknownResponseException(JsonNode node, string message) : this(node.ToJsonString(), message) { }
+#endif
 
         public UnknownResponseException(string? response) : this(response, DefaultMessage, null) { }
 

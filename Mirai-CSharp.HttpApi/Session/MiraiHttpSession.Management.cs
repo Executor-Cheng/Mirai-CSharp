@@ -24,7 +24,7 @@ namespace Mirai.CSharp.HttpApi.Session
             InternalSessionInfo session = SafeGetSession();
             CreateLinkedUserSessionToken(session.Token, token, out CancellationTokenSource? cts, out token);
             return _client.GetAsync($"{_options.BaseUrl}/friendList?sessionKey={session.SessionKey}", token)
-                .AsApiRespAsync<ISharedFriendInfo[], FriendInfo[]>(token)
+                .AsApiRespV2Async<ISharedFriendInfo[], FriendInfo[]>(token)
                 .DisposeWhenCompleted(cts);
         }
 
@@ -34,7 +34,7 @@ namespace Mirai.CSharp.HttpApi.Session
             InternalSessionInfo session = SafeGetSession();
             CreateLinkedUserSessionToken(session.Token, token, out CancellationTokenSource? cts, out token);
             return _client.GetAsync($"{_options.BaseUrl}/groupList?sessionKey={session.SessionKey}", token)
-                .AsApiRespAsync<ISharedGroupInfo[], GroupInfo[]>(token)
+                .AsApiRespV2Async<ISharedGroupInfo[], GroupInfo[]>(token)
                 .DisposeWhenCompleted(cts);
         }
 
@@ -44,7 +44,7 @@ namespace Mirai.CSharp.HttpApi.Session
             InternalSessionInfo session = SafeGetSession();
             CreateLinkedUserSessionToken(session.Token, token, out CancellationTokenSource? cts, out token);
             return _client.GetAsync($"{_options.BaseUrl}/memberList?sessionKey={session.SessionKey}&target={groupNumber}", token)
-                .AsApiRespAsync<ISharedGroupMemberInfo[], GroupMemberInfo[]>(token)
+                .AsApiRespV2Async<ISharedGroupMemberInfo[], GroupMemberInfo[]>(token)
                 .DisposeWhenCompleted(cts);
         }
 
@@ -220,12 +220,12 @@ namespace Mirai.CSharp.HttpApi.Session
         }
 
         /// <inheritdoc/>
-        public override Task<ISharedGroupMemberCardInfo> GetGroupMemberInfoAsync(long memberId, long groupNumber, CancellationToken token = default)
+        public override Task<ISharedGroupMemberInfo> GetGroupMemberInfoAsync(long memberId, long groupNumber, CancellationToken token = default)
         {
             InternalSessionInfo session = SafeGetSession();
             CreateLinkedUserSessionToken(session.Token, token, out CancellationTokenSource? cts, out token);
             return _client.GetAsync($"{_options.BaseUrl}/memberInfo?sessionKey={session.SessionKey}&target={groupNumber}&memberId={memberId}", token)
-                .AsApiRespAsync<ISharedGroupMemberCardInfo, GroupMemberCardInfo>(token)
+                .AsApiRespAsync<ISharedGroupMemberInfo, GroupMemberInfo>(token)
                 .DisposeWhenCompleted(cts);
         }
     }

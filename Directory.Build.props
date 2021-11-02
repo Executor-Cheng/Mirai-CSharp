@@ -12,7 +12,7 @@
         <Version>2.0.0.0</Version>
         <AssemblyVersion>2.0.0.0</AssemblyVersion>
         <FileVersion>2.0.0.0</FileVersion>
-        <PackageVersion>2.0.0.0-rc.1</PackageVersion>
+        <PackageVersion>2.0.0.0-rc.2</PackageVersion>
         <Nullable>enable</Nullable>
         <LangVersion>preview</LangVersion>
         <Authors>Executor</Authors>

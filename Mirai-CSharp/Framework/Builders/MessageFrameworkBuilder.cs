@@ -231,15 +231,15 @@ namespace Mirai.CSharp.Framework.Builders
             }
         }
 
-        protected virtual void ReplaceServiceLifetime(HashSet<ServiceDescriptor> adddedDescriptors, ServiceLifetime lifetime)
+        protected virtual void ReplaceServiceLifetime(ICollection<ServiceDescriptor> addedDescriptors, ServiceLifetime lifetime)
         {
-            for (int i = Services.Count; i >= 0; i--)
+            for (int i = Services.Count - 1; i >= 0; i--)
             {
                 ServiceDescriptor descriptor = Services[i];
-                if (adddedDescriptors.Contains(descriptor) && descriptor.ImplementationInstance == null)
+                if (addedDescriptors.Contains(descriptor) && descriptor.ImplementationInstance == null)
                 {
                     Services.RemoveAt(i);
-                    adddedDescriptors.Remove(descriptor);
+                    addedDescriptors.Remove(descriptor);
                     if (descriptor.ImplementationFactory != null)
                     {
                         descriptor = new ServiceDescriptor(descriptor.ServiceType, descriptor.ImplementationFactory, lifetime);
@@ -249,7 +249,7 @@ namespace Mirai.CSharp.Framework.Builders
                         descriptor = new ServiceDescriptor(descriptor.ServiceType, descriptor.ImplementationType!, lifetime);
                     }
                     Services.Add(descriptor);
-                    adddedDescriptors.Add(descriptor);
+                    addedDescriptors.Add(descriptor);
                 }
             }
         }

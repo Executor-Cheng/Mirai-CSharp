@@ -7,8 +7,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Mirai.CSharp.Exceptions;
 using Mirai.CSharp.HttpApi.Exceptions;
-using Mirai.CSharp.HttpApi.Session;
+#if !NET6_0
 using Mirai.CSharp.HttpApi.Utility;
+#endif
 
 namespace Mirai.CSharp.HttpApi.Extensions
 {
@@ -67,13 +68,10 @@ namespace Mirai.CSharp.HttpApi.Extensions
             code = codeToken.GetInt32();
             return false;
         }
-#if NETSTANDARD2_0
-        public static void EnsureApiRespCode(this JsonElement root, out int? code)
-#else
-        public static void EnsureApiRespCode(this JsonElement root, [NotNullWhen(false)] out int? code)
-#endif
+
+        public static void EnsureApiRespCode(this JsonElement root)
         {
-            if (!root.CheckApiRespCode(out code))
+            if (!root.CheckApiRespCode(out int? code))
             {
                 throw GetCommonException(code!.Value, in root);
             }
@@ -96,11 +94,33 @@ namespace Mirai.CSharp.HttpApi.Extensions
 
         public static async Task<TResult> AsApiRespAsync<TResult, TImpl>(this Task<HttpResponseMessage> responseTask, CancellationToken token = default) where TImpl : TResult
         {
-            using var j = await responseTask.GetJsonAsync(token);
+            //using var j = await responseTask.GetJsonAsync(token);
+            string json = await responseTask.GetStringAsync(token);
+            using var j = JsonDocument.Parse(json);
             var root = j.RootElement;
             if (root.CheckApiRespCode(out var code))
             {
                 return root.Deserialize<TImpl>()!;
+            }
+            throw GetCommonException(code!.Value, in root);
+        }
+
+        public static Task<TResult> AsApiRespV2Async<TResult>(this Task<HttpResponseMessage> responseTask, CancellationToken token = default)
+        {
+            return responseTask.AsApiRespV2Async<TResult, TResult>(token);
+        }
+
+        public static async Task<TResult> AsApiRespV2Async<TResult, TImpl>(this Task<HttpResponseMessage> responseTask, CancellationToken token = default) where TImpl : TResult
+        {
+            using var j = await responseTask.GetJsonAsync(token);
+            var root = j.RootElement;
+            if (root.CheckApiRespCode(out var code))
+            {
+                if (root.TryGetProperty("data", out JsonElement data))
+                {
+                    return data.Deserialize<TImpl>()!;
+                }
+                return root.Deserialize<TImpl>()!; // 向前兼容, 不确定 mirai-api-http v1.x 的行为如何
             }
             throw GetCommonException(code!.Value, in root);
         }

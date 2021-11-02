@@ -63,7 +63,7 @@ namespace Mirai.CSharp.HttpApi.Session
             };
             using JsonDocument j = await _client.PostAsJsonAsync($"{_options.BaseUrl}/{action}", payload, _chatMessageSerializingOptions, token).GetJsonAsync(token).DisposeWhenCompleted(cts).ConfigureAwait(false);
             JsonElement root = j.RootElement;
-            root.EnsureApiRespCode(out _);
+            root.EnsureApiRespCode();
             return root.GetProperty("messageId").GetInt32();
         }
 

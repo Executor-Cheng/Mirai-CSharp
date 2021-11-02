@@ -37,6 +37,7 @@ namespace Mirai.CSharp.Session
         /// <param name="qqNumber">机器人QQ号</param>
         /// <param name="token">用于取消此异步操作的 <see cref="CancellationToken"/></param>
         /// <returns>表示此异步操作的 <see cref="Task"/>, 其值为能够管理此机器人的QQ号数组</returns>
+        [Obsolete("新版本的 mirai-console 中已经没有管理员概念了, 参考: https://github.com/project-mirai/mirai-api-http/pull/265#discussion_r598428011")]
         Task<long[]> GetManagersAsync(long qqNumber, CancellationToken token = default);
     }
 }
