@@ -60,9 +60,9 @@ namespace Mirai.CSharp.HttpApi.Session
                     {
                         await _invoker.HandleRawdataAsync(this, root).ConfigureAwait(false);
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
-                        Console.WriteLine(ex.Message);
+                        
                     }
                 }
             }
