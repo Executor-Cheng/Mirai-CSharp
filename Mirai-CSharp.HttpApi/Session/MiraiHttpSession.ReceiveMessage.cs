@@ -62,7 +62,7 @@ namespace Mirai.CSharp.HttpApi.Session
                     }
                     catch (Exception)
                     {
-                        
+
                     }
                 }
             }
