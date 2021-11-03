@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using Mirai.CSharp.HttpApi.Models.ChatMessages;
 using Mirai.CSharp.HttpApi.Parsers.Attributes;
+using Mirai.CSharp.HttpApi.Utility.JsonConverters;
 using ISharedJsonElementStrangerMessageEventArgs = Mirai.CSharp.Models.EventArgs.IStrangerMessageEventArgs<System.Text.Json.JsonElement>;
 using ISharedStrangerInfo = Mirai.CSharp.Models.IStrangerInfo;
 using ISharedStrangerMessageEventArgs = Mirai.CSharp.Models.EventArgs.IStrangerMessageEventArgs;
@@ -13,10 +14,12 @@ namespace Mirai.CSharp.HttpApi.Models.EventArgs.Stranger
     [MappableMiraiHttpMessageKey("StrangerMessage")]
     public interface IStrangerMessageEventArgs : ISharedJsonElementStrangerMessageEventArgs, ICommonMessageEventArgs
     {
+        [JsonConverter(typeof(ChangeTypeJsonConverter<StrangerInfo, IStrangerInfo>))]
         [JsonPropertyName("sender")]
         new IStrangerInfo Sender { get; }
 
 #if !NETSTANDARD2_0
+        [JsonConverter(typeof(ChangeTypeJsonConverter<StrangerInfo, ISharedStrangerInfo>))]
         [JsonPropertyName("sender")]
         ISharedStrangerInfo ISharedStrangerMessageEventArgs.Sender => Sender;
 #endif
@@ -24,6 +27,7 @@ namespace Mirai.CSharp.HttpApi.Models.EventArgs.Stranger
 
     public class StrangerMessageEventArgs : CommonMessageEventArgs, IStrangerMessageEventArgs
     {
+        [JsonConverter(typeof(ChangeTypeJsonConverter<StrangerInfo, IStrangerInfo>))]
         [JsonPropertyName("sender")]
         public IStrangerInfo Sender { get; set; } = null!;
 
@@ -38,6 +42,7 @@ namespace Mirai.CSharp.HttpApi.Models.EventArgs.Stranger
         }
 
 #if NETSTANDARD2_0
+        [JsonConverter(typeof(ChangeTypeJsonConverter<StrangerInfo, ISharedStrangerInfo>))]
         [JsonPropertyName("sender")]
         ISharedStrangerInfo ISharedStrangerMessageEventArgs.Sender => Sender;
 #endif
