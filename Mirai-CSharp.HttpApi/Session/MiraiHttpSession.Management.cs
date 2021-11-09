@@ -228,5 +228,22 @@ namespace Mirai.CSharp.HttpApi.Session
                 .AsApiRespAsync<ISharedGroupMemberInfo, GroupMemberInfo>(token)
                 .DisposeWhenCompleted(cts);
         }
+
+        /// <inheritdoc/>
+        public override Task SetGroupAdminAsync(long memberId, long groupNumber, bool assign, CancellationToken token = default)
+        {
+            InternalSessionInfo session = SafeGetSession();
+            CreateLinkedUserSessionToken(session.Token, token, out CancellationTokenSource? cts, out token);
+            var payload = new
+            {
+                sessionKey = session.SessionKey,
+                target = groupNumber,
+                memberId,
+                assign
+            };
+            return _client.PostAsJsonAsync($"{_options.BaseUrl}/memberAdmin", payload, token)
+                .AsApiRespAsync(token)
+                .DisposeWhenCompleted(cts);
+        }
     }
 }

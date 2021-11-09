@@ -51,5 +51,8 @@ namespace Mirai.CSharp.Session
 
         /// <inheritdoc/>
         public abstract Task<IGroupMemberInfo[]> GetGroupMemberListAsync(long groupNumber, CancellationToken token = default);
+
+        /// <inheritdoc/>
+        public abstract Task SetGroupAdminAsync(long memberId, long groupNumber, bool assign, CancellationToken token = default);
     }
 }

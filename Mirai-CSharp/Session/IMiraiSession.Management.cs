@@ -165,5 +165,15 @@ namespace Mirai.CSharp.Session
         /// <param name="token">用于取消此异步操作的 <see cref="CancellationToken"/></param>
         /// <returns>表示此异步操作的 <see cref="Task"/></returns>
         Task<IGroupMemberInfo[]> GetGroupMemberListAsync(long groupNumber, CancellationToken token = default);
+
+        /// <summary>
+        /// 异步设置/取消群管理员
+        /// </summary>
+        /// <param name="memberId">目标群员QQ</param>
+        /// <param name="groupNumber">目标群号</param>
+        /// <param name="assign"><see langword="true"/> 时设置, <see langword="false"/> 时取消</param>
+        /// <param name="token">用于取消此异步操作的 <see cref="CancellationToken"/></param>
+        /// <returns>表示此异步操作的 <see cref="Task"/></returns>
+        Task SetGroupAdminAsync(long memberId, long groupNumber, bool assign, CancellationToken token = default);
     }
 }
