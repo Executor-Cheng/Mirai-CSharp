@@ -96,6 +96,8 @@ namespace Mirai.CSharp.Session
         /// <inheritdoc/>
         public abstract Task<IGroupFileInfo> UploadFileAsync(string? id, Stream fileStream, CancellationToken token = default);
 
+        public abstract Task<IGroupFileInfo> UploadFileAsync(string? id, long groupNumber, string FilePath, CancellationToken token = default);
+
         /// <inheritdoc/>
         public virtual Task<IGroupFileInfo> UploadFileAsync(IGroupFileInfo? directory, Stream fileStream, CancellationToken token = default)
         {

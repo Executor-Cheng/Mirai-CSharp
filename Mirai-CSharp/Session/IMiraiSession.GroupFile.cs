@@ -111,5 +111,9 @@ namespace Mirai.CSharp.Session
         /// <inheritdoc cref="UploadFileAsync(IGroupFileInfo?, byte[], CancellationToken)"/>
         /// <param name="fileStream">文件流。此流将会被读取至末尾</param>
         Task<IGroupFileInfo> UploadFileAsync(IGroupFileInfo? directory, Stream fileStream, CancellationToken token = default);
+
+        /// <inheritdoc cref="UploadFileAsync(string?, byte[], CancellationToken)"/>
+        /// <param name="fileStream">文件流。此流将会被读取至末尾</param>
+        Task<IGroupFileInfo> UploadFileAsync(string? id, long groupNumber, string FilePath, CancellationToken token = default);
     }
 }
