@@ -153,46 +153,5 @@ namespace Mirai.CSharp.HttpApi.Session
                 .AsApiRespV2Async<ISharedGroupFileInfo, GroupFileInfo>(token)
                 .DisposeWhenCompleted(cts);
         }
-
-        public override Task<ISharedGroupFileInfo> UploadFileAsync(string? id, long groupNumber, string FilePath, CancellationToken token = default)
-        {
-            InternalSessionInfo session = SafeGetSession();
-            CreateLinkedUserSessionToken(session.Token, token, out CancellationTokenSource? cts, out token);
-            MultipartFormDataContent payload = new MultipartFormDataContent(_multipartFormdataBoundary);
-
-            StringContent skContent = new StringContent(session.SessionKey);
-            skContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form");
-            skContent.Headers.ContentDisposition!.Name = "sessionKey";
-
-            StringContent typeContent = new StringContent("group");
-            typeContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form");
-            typeContent.Headers.ContentDisposition!.Name = "type";
-
-            StringContent targetContent = new StringContent(groupNumber.ToString());
-            targetContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form");
-            targetContent.Headers.ContentDisposition!.Name = "target";
-
-            StringContent pathContent = new StringContent(id ?? "");
-            pathContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form");
-            pathContent.Headers.ContentDisposition!.Name = "path";
-
-            Stream fileStream = new FileStream(FilePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-            string fileName = Path.GetFileName(FilePath);
-
-            StreamContent fsContent = new StreamContent(fileStream);
-            fsContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("file");
-            fsContent.Headers.ContentDisposition!.Name = "file";
-            fsContent.Headers.ContentDisposition.FileName = fileName;
-            fsContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-
-            payload.Add(skContent);
-            payload.Add(typeContent);
-            payload.Add(targetContent);
-            payload.Add(pathContent);
-            payload.Add(fsContent);
-            return _client.PostAsync($"{_options.BaseUrl}/file/upload", payload, token)
-                .AsApiRespV2Async<ISharedGroupFileInfo, GroupFileInfo>(token)
-                .DisposeWhenCompleted(cts);
-        }
     }
 }
