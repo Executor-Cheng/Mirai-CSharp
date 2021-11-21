@@ -1,14 +1,14 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using Mirai.CSharp.Extensions;
 using Mirai.CSharp.HttpApi.Extensions;
 using Mirai.CSharp.HttpApi.Models;
 using ISharedGroupFileInfo = Mirai.CSharp.Models.IGroupFileInfo;
+using System.Net.Http.Headers;
+using System.Net.Mime;
 #if NET5_0_OR_GREATER
 using System.Net.Http.Json;
 #endif
@@ -134,71 +134,21 @@ namespace Mirai.CSharp.HttpApi.Session
         }
 
         /// <inheritdoc/>
-        public override Task<ISharedGroupFileInfo> UploadFileAsync(string? id,Stream fileStream, CancellationToken token = default)
+        public override Task<ISharedGroupFileInfo> UploadFileAsync(long groupNumber, string? id, string fileName, Stream fileStream, CancellationToken token = default)
         {
             InternalSessionInfo session = SafeGetSession();
             CreateLinkedUserSessionToken(session.Token, token, out CancellationTokenSource? cts, out token);
             MultipartFormDataContent payload = new MultipartFormDataContent(_multipartFormdataBoundary);
 
-            StringContent skContent = new StringContent(session.SessionKey);
-            skContent.Headers.ContentDisposition!.Name = "sessionKey";
+            payload.Add(new StringContent(session.SessionKey), "sessionKey");
+            payload.Add(new StringContent("group"), "type");
+            payload.Add(new StringContent(groupNumber.ToString()), "target");
+            payload.Add(new StringContent(id ?? ""), "path");
 
-            StringContent typeContent = new StringContent("group");
-            typeContent.Headers.ContentDisposition!.Name = "type";
+            StreamContent sContent = new StreamContent(fileStream);
+            payload.Add(sContent, "file", fileName);
+            sContent.Headers.ContentType = new MediaTypeHeaderValue(MediaTypeNames.Application.Octet);
 
-            StringContent pathContent = new StringContent(id ?? "");
-            pathContent.Headers.ContentDisposition!.Name = "path";
-
-            StreamContent fsContent = new StreamContent(fileStream);
-            fsContent.Headers.ContentDisposition!.Name = "file";
-            fsContent.Headers.ContentDisposition.FileName = Guid.NewGuid().ToString("n");
-            fsContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-
-            payload.Add(skContent);
-            payload.Add(typeContent);
-            payload.Add(pathContent);
-            payload.Add(fsContent);
-            return _client.PostAsync($"{_options.BaseUrl}/file/upload", payload, token)
-                .AsApiRespV2Async<ISharedGroupFileInfo, GroupFileInfo>(token)
-                .DisposeWhenCompleted(cts);
-        }
-
-        public override Task<ISharedGroupFileInfo> UploadFileAsync(string? id, long groupNumber, string FilePath, CancellationToken token = default)
-        {
-            InternalSessionInfo session = SafeGetSession();
-            CreateLinkedUserSessionToken(session.Token, token, out CancellationTokenSource? cts, out token);
-            MultipartFormDataContent payload = new MultipartFormDataContent(_multipartFormdataBoundary);
-
-            StringContent skContent = new StringContent(session.SessionKey);
-            skContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form");
-            skContent.Headers.ContentDisposition!.Name = "sessionKey";
-
-            StringContent typeContent = new StringContent("group");
-            typeContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form");
-            typeContent.Headers.ContentDisposition!.Name = "type";
-
-            StringContent targetContent = new StringContent(groupNumber.ToString());
-            targetContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form");
-            targetContent.Headers.ContentDisposition!.Name = "target";
-
-            StringContent pathContent = new StringContent(id ?? "");
-            pathContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form");
-            pathContent.Headers.ContentDisposition!.Name = "path";
-
-            Stream fileStream = new FileStream(FilePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-            string fileName = Path.GetFileName(FilePath);
-
-            StreamContent fsContent = new StreamContent(fileStream);
-            fsContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("file");
-            fsContent.Headers.ContentDisposition!.Name = "file";
-            fsContent.Headers.ContentDisposition.FileName = fileName;
-            fsContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-
-            payload.Add(skContent);
-            payload.Add(typeContent);
-            payload.Add(targetContent);
-            payload.Add(pathContent);
-            payload.Add(fsContent);
             return _client.PostAsync($"{_options.BaseUrl}/file/upload", payload, token)
                 .AsApiRespV2Async<ISharedGroupFileInfo, GroupFileInfo>(token)
                 .DisposeWhenCompleted(cts);
