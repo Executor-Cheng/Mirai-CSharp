@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Mirai.CSharp.Extensions;
+using Mirai.CSharp.HttpApi.Exceptions;
 using Mirai.CSharp.HttpApi.Extensions;
 using Mirai.CSharp.HttpApi.Models.ChatMessages;
 using Mirai.CSharp.Models;
@@ -50,40 +51,40 @@ namespace Mirai.CSharp.HttpApi.Session
         /// <summary>
         /// 内部使用
         /// </summary>
-        private unsafe Task<ISharedVoiceMessage> InternalUploadVoiceAsync(InternalSessionInfo session, UploadTarget type, byte[] silkData, CancellationToken token)
+        private unsafe Task<ISharedVoiceMessage> InternalUploadVoiceAsync(InternalSessionInfo session, UploadTarget type, byte[] voice, CancellationToken token)
         {
-            if (silkData.Length <= 10)
+            if (voice.Length <= 10)
             {
-                throw new ArgumentException("输入的音频数据无效", nameof(silkData));
+                throw new ArgumentException("输入的音频数据无效", nameof(voice));
             }
-            Span<byte> silkSpan = silkData.AsSpan();
+            Span<byte> silkSpan = voice.AsSpan();
             if (silkSpan.Slice(0, 9).SequenceEqual(_silkHeader.Slice(1)))
             {
-                byte[] copied = new byte[silkData.Length + 1];
+                byte[] copied = new byte[voice.Length + 1];
                 copied[0] = 2;
 #if NET5_0_OR_GREATER
-                Unsafe.CopyBlock(ref Unsafe.AddByteOffset(ref MemoryMarshal.GetArrayDataReference(copied), new IntPtr(1)), ref MemoryMarshal.GetReference(silkSpan), (uint)silkData.Length);
+                Unsafe.CopyBlock(ref Unsafe.AddByteOffset(ref MemoryMarshal.GetArrayDataReference(copied), new IntPtr(1)), ref MemoryMarshal.GetReference(silkSpan), (uint)voice.Length);
 #else
-                Unsafe.CopyBlock(ref copied[1], ref MemoryMarshal.GetReference(silkSpan), (uint)silkData.Length);
+                Unsafe.CopyBlock(ref copied[1], ref MemoryMarshal.GetReference(silkSpan), (uint)voice.Length);
 #endif
-                silkData = copied;
+                voice = copied;
             }
             else if (!silkSpan.SequenceEqual(_silkHeader))
             {
                 if (_coder == null)
                 {
-                    throw new InvalidOperationException("由于未注册 ISilkLameCoder 服务, 无法发送非silk格式的音频");
+                    throw new MissingVoiceCoderException();
                 }
-                if (_coder.TryEncodeMp3ToSilk(silkSpan, out silkData!) != 0)
+                if (_coder.TryEncodeMp3ToSilk(silkSpan, out voice!) != 0)
                 {
-                    throw new InvalidOperationException("输入的音频格式不为mp3, 因此无法将其转为silk格式进行发送");
+                    throw new ArgumentException("输入的音频格式不为mp3, 因此无法将其转为silk格式进行发送", nameof(voice));
                 }
             }
             MultipartFormDataContent payload = new MultipartFormDataContent(HttpClientExtensions.DefaultBoundary);
             payload.Add(new StringContent(session.SessionKey), "sessionKey");
             payload.Add(new StringContent(type.ToString().ToLower()), "type");
             payload.Add(new StringContent(type.ToString().ToLower()), "type");
-            payload.Add(new ByteArrayContent(silkData), "voice", $"{Guid.NewGuid():n}.silk");
+            payload.Add(new ByteArrayContent(voice), "voice", $"{Guid.NewGuid():n}.silk");
             CreateLinkedUserSessionToken(session.Token, token, out CancellationTokenSource? cts, out token);
             return _client.PostAsync($"{_options.BaseUrl}/uploadVoice", payload, token)
                 .AsApiRespAsync<ISharedVoiceMessage, VoiceMessage>(token)
