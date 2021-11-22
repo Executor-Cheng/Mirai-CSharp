@@ -15,6 +15,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="SkiaSharp" Version="2.80.2" />
+    <PackageReference Include="SkiaSharp" Version="2.80.3" />
   </ItemGroup>
+
+  <ItemGroup Condition="'$(NETCoreSdkRuntimeIdentifier)' == 'win-x86' or '$(NETCoreSdkRuntimeIdentifier)' == 'win-x64'">
+    <PackageReference Include="Mirai-CSharp.NativeAssets.Win32" Version="1.*"/>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(NETCoreSdkRuntimeIdentifier)' == 'linux-x64'">
+    <PackageReference Include="Mirai-CSharp.NativeAssets.Linux" Version="1.*"/>
+  </ItemGroup>
+
 </Project>

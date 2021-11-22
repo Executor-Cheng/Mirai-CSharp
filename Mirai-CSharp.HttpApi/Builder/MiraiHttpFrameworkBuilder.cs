@@ -11,6 +11,7 @@ using Mirai.CSharp.HttpApi.Models.ChatMessages;
 using Mirai.CSharp.HttpApi.Parsers;
 using Mirai.CSharp.HttpApi.Parsers.Attributes;
 using Mirai.CSharp.HttpApi.Session;
+using Mirai.CSharp.HttpApi.Utility;
 using Mirai.CSharp.HttpApi.Utility.JsonConverters;
 
 namespace Mirai.CSharp.HttpApi.Builder
@@ -155,6 +156,7 @@ namespace Mirai.CSharp.HttpApi.Builder
         {
             var builder = new MiraiHttpFrameworkBuilder(services);
             builder.Services.TryAddSingleton<ChatMessageJsonConverter>();
+            builder.Services.TryAddSingleton<ISilkLameCoder, SilkLameCoder>();
             builder.AddInvoker<MiraiHttpMessageHandlerInvoker>();
             builder.AddDefaultParsers();
             builder.AddDefaultChatParsers();

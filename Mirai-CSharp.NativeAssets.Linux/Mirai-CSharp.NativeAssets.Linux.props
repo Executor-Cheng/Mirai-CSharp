@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+    <ItemGroup Condition="'$(Platform)' == 'AnyCPU'">
+        <_NativeSilkLameFile Include="$(MSBuildThisFileDirectory)..\..\runtimes\linux-x64\native\libsilklame*.so"/>
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(Platform)' == 'x64'">
+        <_NativeSilkLameFile Include="$(MSBuildThisFileDirectory)..\..\runtimes\linux-x64\native\libsilklame*.so"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="@(_NativeSilkLameFile)" Link="%(Dir)%(Filename)%(Extension)" Visible="False" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+</Project>
