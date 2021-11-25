@@ -15,15 +15,6 @@ namespace Mirai.CSharp.HttpApi.Utility.JsonConverters
             _converter = new TConverter();
         }
 
-        public override bool CanConvert(Type typeToConvert)
-        {
-            if (typeToConvert.IsGenericType && typeToConvert.GetGenericTypeDefinition() == typeof(Nullable<>))
-            {
-                return _converter.CanConvert(typeToConvert.GetGenericArguments()[0]);
-            }
-            return _converter.CanConvert(typeToConvert);
-        }
-
         public override T? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             if (reader.TokenType == JsonTokenType.Null)
