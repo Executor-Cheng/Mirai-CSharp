@@ -86,7 +86,7 @@ namespace Mirai.CSharp.HttpApi.Session
         public MiraiHttpSession(IServiceProvider services, IOptions<MiraiHttpSessionOptions> options, IMiraiHttpMessageHandlerInvoker invoker, ChatMessageJsonConverter jsonConverter, HttpClient? client = null, ISilkLameCoder? coder = null)
             : this(services, options.Value, invoker, jsonConverter, client ?? new HttpClient(), coder)
         {
-            
+           
         }
 
         /// <summary>

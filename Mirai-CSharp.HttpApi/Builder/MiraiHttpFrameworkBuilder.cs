@@ -114,13 +114,13 @@ namespace Mirai.CSharp.HttpApi.Builder
 
         }
 
-        public MiraiHttpFrameworkBuilder AddDefaultParsers()
+        public virtual MiraiHttpFrameworkBuilder AddDefaultParsers()
         {
             AddParser<UnknownMessageParser>();
             return this;
         }
 
-        public MiraiHttpFrameworkBuilder AddDefaultChatParsers()
+        public virtual MiraiHttpFrameworkBuilder AddDefaultChatParsers()
         {
             TryAddService(typeof(IMiraiHttpMessageJsonOptionsFactory), typeof(MiraiHttpMessageJsonOptionsFactory), ServiceLifetime.Singleton, out _); // 解析消息链所必须的服务
             TryAddService(typeof(IMiraiHttpMessageJsonOptions<>), typeof(MiraiHttpMessageJsonOptions<>), ServiceLifetime.Singleton, out _); // 同上
@@ -155,6 +155,15 @@ namespace Mirai.CSharp.HttpApi.Builder
         public static MiraiHttpFrameworkBuilder AddDefaultMiraiHttpFramework(this IServiceCollection services)
         {
             var builder = new MiraiHttpFrameworkBuilder(services);
+            builder.AddDefaultServices();
+            return builder;
+        }
+    }
+
+    public static class MiraiHttpFrameworkBuilderExtensions
+    {
+        public static MiraiHttpFrameworkBuilder AddDefaultServices(this MiraiHttpFrameworkBuilder builder)
+        {
             builder.Services.TryAddSingleton<ChatMessageJsonConverter>();
             builder.Services.TryAddSingleton<ISilkLameCoder, SilkLameCoder>();
             builder.AddInvoker<MiraiHttpMessageHandlerInvoker>();
