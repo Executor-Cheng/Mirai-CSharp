@@ -10,7 +10,7 @@ namespace Mirai.CSharp.Session
 {
     public partial interface IMiraiSession
     {
-        /// <param name="voice">语音流</param>
+        /// <param name="voice">语音流。此流将被读取至末尾</param>
         /// <inheritdoc cref="UploadVoiceAsync(UploadTarget, string, CancellationToken)"/>
         Task<IVoiceMessage> UploadVoiceAsync(UploadTarget type, Stream voice, CancellationToken token = default);
 

@@ -15,6 +15,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mirai-CSharp.NativeAssets.Win32", "Mirai-CSharp.NativeAssets.Win32", "{D1ADF344-9729-4804-9889-BBB10B64846C}"
+	ProjectSection(SolutionItems) = preProject
+		Mirai-CSharp.NativeAssets.Win32\Mirai-CSharp.NativeAssets.Win32.nuspec = Mirai-CSharp.NativeAssets.Win32\Mirai-CSharp.NativeAssets.Win32.nuspec
+		Mirai-CSharp.NativeAssets.Win32\Mirai-CSharp.NativeAssets.Win32.props = Mirai-CSharp.NativeAssets.Win32\Mirai-CSharp.NativeAssets.Win32.props
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mirai-CSharp.NativeAssets.Linux", "Mirai-CSharp.NativeAssets.Linux", "{E8B34348-8A08-4ECB-9CAE-B54C256D1520}"
+	ProjectSection(SolutionItems) = preProject
+		Mirai-CSharp.NativeAssets.Linux\Mirai-CSharp.NativeAssets.Linux.nuspec = Mirai-CSharp.NativeAssets.Linux\Mirai-CSharp.NativeAssets.Linux.nuspec
+		Mirai-CSharp.NativeAssets.Linux\Mirai-CSharp.NativeAssets.Linux.props = Mirai-CSharp.NativeAssets.Linux\Mirai-CSharp.NativeAssets.Linux.props
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

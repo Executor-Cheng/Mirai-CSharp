@@ -11,6 +11,7 @@ using Mirai.CSharp.HttpApi.Builders;
 using Mirai.CSharp.HttpApi.Handlers;
 using Mirai.CSharp.HttpApi.Invoking;
 using Mirai.CSharp.HttpApi.Options;
+using Mirai.CSharp.HttpApi.Utility;
 using Mirai.CSharp.HttpApi.Utility.JsonConverters;
 using Mirai.CSharp.Session;
 using ISharedMessageChainBuilder = Mirai.CSharp.Builders.IMessageChainBuilder;
@@ -21,9 +22,9 @@ namespace Mirai.CSharp.HttpApi.Session
 {
     public partial class MiraiHttpSession : MiraiSession, IMiraiHttpSession, IAsyncDisposable
     {
-        private static readonly HttpClient _globalClient = new HttpClient();
+        protected static readonly HttpClient _globalClient = new HttpClient();
 
-        private static readonly string _multipartFormdataBoundary = $"Mirai.CSharp.HttpApi/{Assembly.GetExecutingAssembly().GetName().Version}";
+        protected static readonly string _multipartFormdataBoundary = $"Mirai.CSharp.HttpApi/{Assembly.GetExecutingAssembly().GetName().Version}";
 
         /// <inheritdoc/>
         public bool Connected => _currentSession?.Connected ?? false;
@@ -31,7 +32,7 @@ namespace Mirai.CSharp.HttpApi.Session
         /// <inheritdoc/>
         public long? QQNumber => _currentSession?.QQNumber;
 
-        private sealed class InternalSessionInfo : IDisposable
+        protected sealed class InternalSessionInfo : IDisposable
         {
             public Version ApiVersion { get; set; } = null!;
 
@@ -63,24 +64,27 @@ namespace Mirai.CSharp.HttpApi.Session
             }
         }
 
-        private readonly IServiceProvider _services;
+        protected readonly IServiceProvider _services;
 
-        private readonly HttpClient _client;
+        protected readonly HttpClient _client;
 
-        private readonly MiraiHttpSessionOptions _options;
+        protected readonly MiraiHttpSessionOptions _options;
 
-        private readonly IMiraiHttpMessageHandlerInvoker _invoker;
+        protected readonly IMiraiHttpMessageHandlerInvoker _invoker;
 
-        private readonly JsonSerializerOptions _chatMessageSerializingOptions; // 缓存一份
+        protected readonly JsonSerializerOptions _chatMessageSerializingOptions; // 缓存一份
 
-        private CancellationTokenSource? _instanceCts;
+        protected readonly ISilkLameCoder? _coder;
 
-        private InternalSessionInfo? _currentSession;
+        protected CancellationTokenSource? _instanceCts;
+
+        protected InternalSessionInfo? _currentSession;
 
         /// <summary>
         /// 初始化 <see cref="MiraiHttpSession"/> 类的新实例
         /// </summary>
-        public MiraiHttpSession(IServiceProvider services, IOptions<MiraiHttpSessionOptions> options, IMiraiHttpMessageHandlerInvoker invoker) : this(services, options.Value, new HttpClient(), invoker)
+        public MiraiHttpSession(IServiceProvider services, IOptions<MiraiHttpSessionOptions> options, IMiraiHttpMessageHandlerInvoker invoker, ChatMessageJsonConverter jsonConverter, HttpClient? client = null, ISilkLameCoder? coder = null)
+            : this(services, options.Value, invoker, jsonConverter, client ?? new HttpClient(), coder)
         {
             
         }
@@ -88,18 +92,17 @@ namespace Mirai.CSharp.HttpApi.Session
         /// <summary>
         /// 初始化 <see cref="MiraiHttpSession"/> 类的新实例
         /// </summary>
-        protected MiraiHttpSession(IServiceProvider services, MiraiHttpSessionOptions options, HttpClient client, IMiraiHttpMessageHandlerInvoker invoker)
+        protected MiraiHttpSession(IServiceProvider services, MiraiHttpSessionOptions options, IMiraiHttpMessageHandlerInvoker invoker, ChatMessageJsonConverter jsonConverter, HttpClient client, ISilkLameCoder? coder = null)
         {
             _services = services;
             _options = options;
             _client = client;
-            _instanceCts = new CancellationTokenSource();
             _invoker = invoker;
-
-            ChatMessageJsonConverter converter = services.GetRequiredService<ChatMessageJsonConverter>();
+            _coder = coder;
             JsonSerializerOptions chatMessageSerializingOptions = new JsonSerializerOptions();
-            chatMessageSerializingOptions.Converters.Add(converter);
+            chatMessageSerializingOptions.Converters.Add(jsonConverter);
             _chatMessageSerializingOptions = chatMessageSerializingOptions;
+            _instanceCts = new CancellationTokenSource();
         }
 
         public override ISharedMessageChainBuilder GetMessageChainBuilder()
