@@ -19,11 +19,11 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(NETCoreSdkRuntimeIdentifier)' == 'win-x86' or '$(NETCoreSdkRuntimeIdentifier)' == 'win-x64'">
-    <PackageReference Include="Mirai-CSharp.NativeAssets.Win32" Version="1.*"/>
+    <PackageReference Include="Mirai-CSharp.NativeAssets.Win32" Version="1.0.2"/>
   </ItemGroup>
 
   <ItemGroup Condition="'$(NETCoreSdkRuntimeIdentifier)' == 'linux-x64'">
-    <PackageReference Include="Mirai-CSharp.NativeAssets.Linux" Version="1.*"/>
+    <PackageReference Include="Mirai-CSharp.NativeAssets.Linux" Version="1.0.2"/>
   </ItemGroup>
 
 </Project>
