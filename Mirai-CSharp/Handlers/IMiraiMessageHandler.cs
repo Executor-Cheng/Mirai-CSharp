@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Mirai.CSharp.Framework.Handlers;
 using Mirai.CSharp.Models.EventArgs;
@@ -16,7 +17,7 @@ namespace Mirai.CSharp.Handlers
 #if !NETSTANDARD2_0
         Task HandleMessageAsync(IMiraiSession session, IMiraiMessage message)
         {
-            return _DefaultImplTask;
+            throw new NotSupportedException("请使用泛型接口中的 HandleMessageAsync 方法。");
         }
 
         Task IMessageHandler.HandleMessageAsync(Framework.Clients.IMessageClient client, Framework.Models.General.IMessage message)

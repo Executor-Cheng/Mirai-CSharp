@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Reflection;
@@ -7,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Mirai.CSharp.Framework.Invoking;
 using Mirai.CSharp.HttpApi.Builders;
 using Mirai.CSharp.HttpApi.Handlers;
 using Mirai.CSharp.HttpApi.Invoking;
@@ -130,25 +132,24 @@ namespace Mirai.CSharp.HttpApi.Session
         }
 
         /// <inheritdoc/>
-        public void AddPlugin(IMiraiHttpMessageHandler plugin)
+        public PluginResistration AddPlugin(IMiraiHttpMessageHandler plugin)
         {
             CheckDisposed();
+            PluginResistration registration = default;
+            LinkedList<DynamicHandlerRegistration> registrations = new LinkedList<DynamicHandlerRegistration>();
             IMiraiHttpMessageSubscriptionResolver resolver = _services.GetRequiredService<IMiraiHttpMessageSubscriptionResolver>();
             foreach (IMiraiHttpMessageSubscription? subscription in resolver.ResolveByHandler(plugin.GetType()))
             {
-                subscription.AddHandler(plugin);
+                registrations.AddLast(subscription.AddHandler(plugin));
             }
+            return registration;
         }
 
         /// <inheritdoc/>
+        [Obsolete("请调用 AddPlugin 返回的 PluginResistration.Dispose 方法来移除先前注册的插件。预计于 2.2.0 版本移除此方法", true)]
         public void RemovePlugin(IMiraiHttpMessageHandler plugin)
         {
-            CheckDisposed();
-            IMiraiHttpMessageSubscriptionResolver resolver = _services.GetRequiredService<IMiraiHttpMessageSubscriptionResolver>();
-            foreach (IMiraiHttpMessageSubscription? subscription in resolver.ResolveByHandler(plugin.GetType()))
-            {
-                subscription.RemoveHandler(plugin);
-            }
+            throw new NotSupportedException("请调用 AddPlugin 返回的 PluginResistration.Dispose 方法来移除先前注册的插件。预计于 2.2.0 版本移除此方法");
         }
 
         public override void Dispose(bool disposing)
