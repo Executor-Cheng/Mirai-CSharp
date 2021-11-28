@@ -1,8 +1,10 @@
 using System;
 using System.IO;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using Mirai.CSharp.HttpApi.Models;
+#if NET5_0_OR_GREATER
+using System.Runtime.InteropServices;
+#endif
 
 namespace Mirai.CSharp.HttpApi.Utility
 {
@@ -30,8 +32,15 @@ namespace Mirai.CSharp.HttpApi.Utility
     {
         protected readonly void* _globalLameFlag;
 
+#if NETSTANDARD2_0
+        protected readonly void* _loadedSilkLame;
+#endif
+
         public SilkLameCoder()
         {
+#if NETSTANDARD2_0
+            _loadedSilkLame = LoadSilklame();
+#endif
             NativeHelper.InitializeLameDecoder();
             void* glf = NativeHelper.CreateDefaultLameFlag();
             if (glf == null)
@@ -45,6 +54,27 @@ namespace Mirai.CSharp.HttpApi.Utility
         {
             Dispose(false);
         }
+
+#if NETSTANDARD2_0
+        private void* LoadSilklame()
+        {
+            if (Environment.Version is not { Major: 4, Minor: 0, Build: 30319 })
+            {
+                return null;
+            }
+            string path = IntPtr.Size == 4 ? $@"x86\{NativeHelper.SilklameName}.dll" : $@"x64\{NativeHelper.SilklameName}.dll";
+            if (!File.Exists(path))
+            {
+                throw new FileNotFoundException("Unable to find native asset.", path);
+            }
+            void* ptr;
+            if ((ptr = NativeHelper.Win32.LoadLibrary(path)) == default)
+            {
+                throw new BadImageFormatException("Format of the executable (.exe) or library (.dll) is invalid.");
+            }
+            return ptr;
+        }
+#endif
 
         protected static byte[] CreateManagedBuffer(byte* ptr, int size)
         {
@@ -217,6 +247,12 @@ fail:
 
         protected virtual void Dispose(bool disposing)
         {
+#if NETSTANDARD2_0
+            if (_loadedSilkLame != null)
+            {
+                NativeHelper.Win32.FreeLibrary(_loadedSilkLame);
+            }
+#endif
             NativeHelper.CloseLameDecoder();
             NativeHelper.Free(_globalLameFlag);
         }
