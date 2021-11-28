@@ -1,3 +1,4 @@
+using System;
 using Mirai.CSharp.HttpApi.Handlers;
 using Mirai.CSharp.Session;
 
@@ -18,11 +19,12 @@ namespace Mirai.CSharp.HttpApi.Session
         /// <summary>
         /// 添加一个用于处理消息的 <see cref="IMiraiHttpMessageHandler"/>
         /// </summary>
-        void AddPlugin(IMiraiHttpMessageHandler plugin);
+        PluginResistration AddPlugin(IMiraiHttpMessageHandler plugin);
 
         /// <summary>
         /// 移除一个用于处理消息的 <see cref="IMiraiHttpMessageHandler"/>。 <paramref name="plugin"/> 必须在之前通过 <see cref="AddPlugin(IMiraiHttpMessageHandler)"/> 添加过
         /// </summary>
+        [Obsolete("请调用 AddPlugin 返回的 PluginResistration.Dispose 方法来移除先前注册的插件。预计于 2.2.0 版本移除此方法", true)]
         void RemovePlugin(IMiraiHttpMessageHandler plugin);
     }
 }

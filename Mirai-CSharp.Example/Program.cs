@@ -46,13 +46,13 @@ namespace Mirai.CSharp.Example
             services = scope.ServiceProvider;
             IMiraiHttpSession session = services.GetRequiredService<IMiraiHttpSession>(); // 大部分服务都基于接口注册, 请使用接口作为类型解析
             DynamicPlugin plugin = new DynamicPlugin();
-            session.AddPlugin(plugin); // 实时添加
+            PluginResistration resistration = session.AddPlugin(plugin); // 实时添加
             await session.ConnectAsync(0); // 填入期望连接到的机器人QQ号
             while (true)
             {
                 if (Console.ReadLine() == "exit")
                 {
-                    session.RemovePlugin(plugin); // 实时移除
+                    resistration.Dispose(); // 实时移除
                     break;
                 }
             }

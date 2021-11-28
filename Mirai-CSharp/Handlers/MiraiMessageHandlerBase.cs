@@ -27,7 +27,7 @@ namespace Mirai.CSharp.Handlers
 
         public virtual Task HandleMessageAsync(IMiraiSession client, IMiraiMessage message)
         {
-            return Task.FromException(new NotSupportedException("请使用泛型接口中的HandleMessageAsync方法。"));
+            throw new NotSupportedException("请使用泛型接口中的 HandleMessageAsync 方法。");
         }
     }
 }

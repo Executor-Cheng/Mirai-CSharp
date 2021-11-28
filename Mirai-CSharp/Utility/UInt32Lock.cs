@@ -39,12 +39,7 @@ namespace Mirai.CSharp.Utility
 
         public void ExitWriteLock()
         {
-            uint lastLock;
-            do
-            {
-                lastLock = _lock;
-            }
-            while (CompareExchange(ref _lock, 0, lastLock) != lastLock);
+            Volatile.Write(ref _lock, 0u);
         }
 
         public void EnterReadLock()

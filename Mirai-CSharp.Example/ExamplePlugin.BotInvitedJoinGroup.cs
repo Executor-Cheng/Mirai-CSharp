@@ -9,9 +9,9 @@ using Mirai.CSharp.Models;
 namespace Mirai.CSharp.Example
 {
     [RegisterMiraiHttpParser(typeof(DefaultMappableMiraiHttpMessageParser<IBotInvitedJoinGroupEventArgs, BotInvitedJoinGroupEventArgs>))]
-    public partial class ExamplePlugin : IMiraiHttpMessageHandler<IBotInvitedJoinGroupEventArgs>
+    public partial class ExamplePlugin : MiraiHttpMessageHandler<IBotInvitedJoinGroupEventArgs>
     {
-        public async Task HandleMessageAsync(IMiraiHttpSession session, IBotInvitedJoinGroupEventArgs e)
+        public override async Task HandleMessageAsync(IMiraiHttpSession session, IBotInvitedJoinGroupEventArgs e)
         {
             await session.HandleBotInvitedJoinGroupAsync(e, GroupApplyActions.Allow, "略略略"); // 在这个事件下, 只有 GroupApplyActions.Allow 和
                                                                                                //                 GroupApplyActions.Deny 有效
