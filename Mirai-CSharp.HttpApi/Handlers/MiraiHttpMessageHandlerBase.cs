@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Mirai.CSharp.Handlers;
 using Mirai.CSharp.HttpApi.Models;
@@ -18,7 +19,7 @@ namespace Mirai.CSharp.HttpApi.Handlers
 #if !NETSTANDARD2_0
         Task HandleMessageAsync(IMiraiHttpSession client, IMiraiHttpMessage message)
         {
-            return _DefaultImplTask;
+            throw new NotSupportedException("请使用泛型接口中的 HandleMessageAsync 方法。");
         }
 
         Task IMiraiMessageHandler.HandleMessageAsync(IMiraiSession session, IMiraiMessage message)
@@ -48,7 +49,7 @@ namespace Mirai.CSharp.HttpApi.Handlers
 #if NETSTANDARD2_0
         public virtual Task HandleMessageAsync(IMiraiHttpSession client, IMiraiHttpMessage message)
         {
-            return Task.FromException(new System.NotSupportedException("请使用泛型接口中的HandleMessageAsync方法。"));
+            throw new NotSupportedException("请使用泛型接口中的 HandleMessageAsync 方法。");
         }
 #endif
     }

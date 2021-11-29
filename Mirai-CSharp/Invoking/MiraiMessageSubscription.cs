@@ -22,7 +22,7 @@ namespace Mirai.CSharp.Invoking
 
         }
 
-        protected override IMessageHandler<TClient, TMessage>[] ResolveStaticHandlers(LinkedList<IMessageHandler> handlers, List<IMessageHandler<TClient, TMessage>> filtered)
+        protected override IMessageHandler[] ResolveStaticHandlers(LinkedList<IMessageHandler> handlers, List<IMessageHandler> filtered)
         {
             if (handlers.Count != 0)
             {
@@ -34,7 +34,7 @@ namespace Mirai.CSharp.Invoking
                     if (expectedHandler.IsAssignableFrom(handler.GetType()) ||
                         expectedInvarianceHandler.IsAssignableFrom(handler.GetType()))
                     {
-                        filtered.Add((IMiraiMessageHandlerBase<TClient, TMessage>)handler);
+                        filtered.Add(handler);
                         handlers.Remove(handlerNode);
                     }
                 }

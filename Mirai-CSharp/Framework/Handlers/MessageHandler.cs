@@ -8,11 +8,9 @@ namespace Mirai.CSharp.Framework.Handlers
     public interface IMessageHandler
     {
 #if !NETSTANDARD2_0
-        protected static readonly Task _DefaultImplTask = Task.FromException(new NotSupportedException("请使用泛型接口中的HandleMessageAsync方法。"));
-
         Task HandleMessageAsync(IMessageClient client, IMessage message)
         {
-            return _DefaultImplTask;
+            throw new NotSupportedException("请使用泛型接口中的 HandleMessageAsync 方法。");
         }
 #else
         Task HandleMessageAsync(IMessageClient client, IMessage message);
@@ -32,7 +30,7 @@ namespace Mirai.CSharp.Framework.Handlers
 
         public virtual Task HandleMessageAsync(IMessageClient client, IMessage message)
         {
-            return Task.FromException(new NotSupportedException("请使用泛型接口中的HandleMessageAsync方法。"));
+            throw new NotSupportedException("请使用泛型接口中的 HandleMessageAsync 方法。");
         }
     }
 }

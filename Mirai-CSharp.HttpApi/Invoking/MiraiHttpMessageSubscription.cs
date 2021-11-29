@@ -1,12 +1,14 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Mirai.CSharp.Framework.Handlers;
 using Mirai.CSharp.Handlers;
 using Mirai.CSharp.HttpApi.Handlers;
 using Mirai.CSharp.HttpApi.Models;
 using Mirai.CSharp.HttpApi.Session;
 using Mirai.CSharp.Invoking;
+#if NETSTANDARD2_0
+using System.Threading.Tasks;
+#endif
 
 namespace Mirai.CSharp.HttpApi.Invoking
 {
@@ -19,10 +21,10 @@ namespace Mirai.CSharp.HttpApi.Invoking
 
         public MiraiHttpMessageSubscription(IEnumerable<IMessageHandler> handlers) : base(handlers)
         {
-
+            
         }
 
-        protected override IMessageHandler<IMiraiHttpSession, TMessage>[] ResolveStaticHandlers(LinkedList<IMessageHandler> handlers, List<IMessageHandler<IMiraiHttpSession, TMessage>> filtered)
+        protected override IMessageHandler[] ResolveStaticHandlers(LinkedList<IMessageHandler> handlers, List<IMessageHandler> filtered)
         {
             if (handlers.Count != 0)
             {
@@ -34,7 +36,7 @@ namespace Mirai.CSharp.HttpApi.Invoking
                     if (expectedHandler.IsAssignableFrom(handler.GetType()) ||
                         expectedInvarianceHandler.IsAssignableFrom(handler.GetType()))
                     {
-                        filtered.Add((IMiraiHttpMessageHandlerBase<TMessage>)handler);
+                        filtered.Add(handler);
                         handlers.Remove(handlerNode);
                     }
                 }

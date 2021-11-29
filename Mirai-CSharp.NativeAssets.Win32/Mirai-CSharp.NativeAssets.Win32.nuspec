@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package>
+    <metadata>
+        <id>Mirai-CSharp.NativeAssets.Win32</id>
+        <title>Mirai-CSharp - Native Assets for Win32</title>
+        <version>1.0.2</version>
+        <description>提供silk和lame的相互转换</description>
+        <summary>提供silk和lame的相互转换</summary>
+        <authors>Executor</authors>
+        <copyright>Copyright © Executor 2021</copyright>
+        <projectUrl>https://github.com/Executor-Cheng/Mirai-CSharp</projectUrl>
+        <requireLicenseAcceptance>true</requireLicenseAcceptance>
+        <license type="expression">AGPL-3.0-or-later</license>
+
+        <dependencies>
+            <group targetFramework="net461"/>
+            <group targetFramework="net462"/>
+            <group targetFramework="netstandard2.0"/>
+        </dependencies>
+    </metadata>
+    
+    <files>
+        <file src="runtimes/win-x64/native/libsilklame.dll" target="runtimes/win-x64/native/"/>
+        <file src="runtimes/win-x86/native/libsilklame.dll" target="runtimes/win-x86/native/"/>
+        <file src="Mirai-CSharp.NativeAssets.Win32.props" target="build/net461/"/>
+        <file src="Mirai-CSharp.NativeAssets.Win32.props" target="buildTransitive/net461/"/>
+        <file src="Mirai-CSharp.NativeAssets.Win32.props" target="build/net462/"/>
+        <file src="Mirai-CSharp.NativeAssets.Win32.props" target="buildTransitive/net462/"/>
+
+        <file src="_._" target="lib/net461/_._" />
+        <file src="_._" target="lib/net462/_._" />
+        <file src="_._" target="lib/netstandard2.0/_._" />
+    </files>
+</package>

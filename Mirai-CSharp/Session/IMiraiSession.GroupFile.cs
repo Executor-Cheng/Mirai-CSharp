@@ -94,22 +94,28 @@ namespace Mirai.CSharp.Session
         /// <summary>
         /// 异步上传文件
         /// </summary>
+        /// <param name="groupNumber">目标群号</param>
         /// <param name="id">目标文件夹Id。为 <see langword="null"/> 时将上传到根目录</param>
+        /// <param name="fileName">文件名</param>
         /// <param name="data">文件二进制数组</param>
         /// <param name="token">用于取消此异步操作的 <see cref="CancellationToken"/></param>
         /// <returns>表示此异步操作的 <see cref="Task"/>, 其值为上传后的文件信息</returns>
-        Task<IGroupFileInfo> UploadFileAsync(string? id, byte[] data, CancellationToken token = default);
+        Task<IGroupFileInfo> UploadFileAsync(long groupNumber, string? id, string fileName, byte[] data, CancellationToken token = default);
 
-        /// <inheritdoc cref="UploadFileAsync(string?, byte[], CancellationToken)"/>
+        /// <inheritdoc cref="UploadFileAsync(long, string?, string, byte[], CancellationToken)"/>
         /// <param name="directory">文件夹信息。为 <see langword="null"/> 时将上传到根目录</param>
-        Task<IGroupFileInfo> UploadFileAsync(IGroupFileInfo? directory, byte[] data, CancellationToken token = default);
+        Task<IGroupFileInfo> UploadFileAsync(long groupNumber, IGroupFileInfo? directory, string fileName, byte[] data, CancellationToken token = default);
 
-        /// <inheritdoc cref="UploadFileAsync(string?, byte[], CancellationToken)"/>
+        /// <inheritdoc cref="UploadFileAsync(long, string?, string, byte[], CancellationToken)"/>
         /// <param name="fileStream">文件流。此流将会被读取至末尾</param>
-        Task<IGroupFileInfo> UploadFileAsync(string? id, Stream fileStream, CancellationToken token = default);
+        Task<IGroupFileInfo> UploadFileAsync(long groupNumber, string? id, string fileName, Stream fileStream, CancellationToken token = default);
 
-        /// <inheritdoc cref="UploadFileAsync(IGroupFileInfo?, byte[], CancellationToken)"/>
+        /// <inheritdoc cref="UploadFileAsync(long, IGroupFileInfo?, string, byte[], CancellationToken)"/>
         /// <param name="fileStream">文件流。此流将会被读取至末尾</param>
-        Task<IGroupFileInfo> UploadFileAsync(IGroupFileInfo? directory, Stream fileStream, CancellationToken token = default);
+        Task<IGroupFileInfo> UploadFileAsync(long groupNumber, IGroupFileInfo? directory, string fileName, Stream fileStream, CancellationToken token = default);
+
+        /// <inheritdoc cref="UploadFileAsync(long, string?, string, byte[], CancellationToken)"/>
+        /// <param name="filePath">文件路径</param>
+        Task<IGroupFileInfo> UploadFileAsync(long groupNumber, string? id, string filePath, CancellationToken token = default);
     }
 }

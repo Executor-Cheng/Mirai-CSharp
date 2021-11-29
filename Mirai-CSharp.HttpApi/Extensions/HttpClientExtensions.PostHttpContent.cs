@@ -10,7 +10,7 @@ namespace Mirai.CSharp.HttpApi.Extensions
 {
     public static partial class HttpClientExtensions
     {
-        private static readonly string DefaultBoundary = $"MiraiCSharp/{Assembly.GetExecutingAssembly().GetName().Version}";
+        internal static readonly string DefaultBoundary = $"MiraiCSharp/{Assembly.GetExecutingAssembly().GetName().Version}";
 
         /// <summary>
         /// 异步发起一个 HttpPost 请求

@@ -80,26 +80,33 @@ namespace Mirai.CSharp.Session
         }
 
         /// <inheritdoc/>
-        public virtual Task<IGroupFileInfo> UploadFileAsync(string? id, byte[] data, CancellationToken token = default)
+        public virtual Task<IGroupFileInfo> UploadFileAsync(long groupNumber, string? id, string fileName, byte[] data, CancellationToken token = default)
         {
             MemoryStream ms = new MemoryStream(data);
-            return UploadFileAsync(id, ms, token).DisposeWhenCompleted(ms);
+            return UploadFileAsync(groupNumber, id, fileName, ms, token).DisposeWhenCompleted(ms);
         }
 
         /// <inheritdoc/>
-        public virtual Task<IGroupFileInfo> UploadFileAsync(IGroupFileInfo? directory, byte[] data, CancellationToken token = default)
+        public virtual Task<IGroupFileInfo> UploadFileAsync(long groupNumber, IGroupFileInfo? directory, string fileName, byte[] data, CancellationToken token = default)
         {
             MemoryStream ms = new MemoryStream(data);
-            return UploadFileAsync(directory?.Id, ms, token).DisposeWhenCompleted(ms);
+            return UploadFileAsync(groupNumber, directory?.Id, fileName, ms, token).DisposeWhenCompleted(ms);
         }
 
         /// <inheritdoc/>
-        public abstract Task<IGroupFileInfo> UploadFileAsync(string? id, Stream fileStream, CancellationToken token = default);
+        public abstract Task<IGroupFileInfo> UploadFileAsync(long groupNumber, string? id, string fileName, Stream fileStream, CancellationToken token = default);
 
         /// <inheritdoc/>
-        public virtual Task<IGroupFileInfo> UploadFileAsync(IGroupFileInfo? directory, Stream fileStream, CancellationToken token = default)
+        public virtual Task<IGroupFileInfo> UploadFileAsync(long groupNumber, string? id, string filePath, CancellationToken token = default)
         {
-            return UploadFileAsync(directory?.Id, fileStream, token);
+            Stream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+            return UploadFileAsync(groupNumber, id, Path.GetFileName(filePath), fileStream, token);
+        }
+
+        /// <inheritdoc/>
+        public virtual Task<IGroupFileInfo> UploadFileAsync(long groupNumber, IGroupFileInfo? directory, string fileName, Stream fileStream, CancellationToken token = default)
+        {
+            return UploadFileAsync(groupNumber, directory?.Id, fileName, fileStream, token);
         }
     }
 }

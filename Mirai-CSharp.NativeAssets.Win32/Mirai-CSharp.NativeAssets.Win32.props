@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+    <PropertyGroup>
+        <ShouldIncludeSilklame Condition=" '$(ShouldIncludeSilklame)' == '' ">True</ShouldIncludeSilklame>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(ShouldIncludeSilklame)' != 'False'">
+        <_NativeSilkLameFile Include="$(MSBuildThisFileDirectory)..\..\runtimes\win-x86\native\libsilklame*.dll" Dir="x86\"/>
+        <_NativeSilkLameFile Include="$(MSBuildThisFileDirectory)..\..\runtimes\win-x64\native\libsilklame*.dll" Dir="x64\"/>
+        <Content Include="@(_NativeSilkLameFile)" Link="%(Dir)%(Filename)%(Extension)" Visible="False" CopyToOutputDirectory="PreserveNewest"/>
+    </ItemGroup>
+</Project>
