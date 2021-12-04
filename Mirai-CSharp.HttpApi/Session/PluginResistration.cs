@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using Mirai.CSharp.Framework.Invoking;
 
 namespace Mirai.CSharp.HttpApi.Session
 {
-    public struct PluginResistration
+    public struct PluginResistration : IDisposable
     {
         internal LinkedList<DynamicHandlerRegistration>? _registrations;
 
