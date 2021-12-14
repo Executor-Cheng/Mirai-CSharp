@@ -8,10 +8,10 @@ namespace Mirai.CSharp.Models
         /// <summary>
         /// 群名片
         /// </summary>
-        string Name { get; }
+        string? Name { get; }
         /// <summary>
         /// 专属头衔
         /// </summary>
-        string SpecialTitle { get; }
+        string? SpecialTitle { get; }
     }
 }

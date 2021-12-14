@@ -135,14 +135,13 @@ namespace Mirai.CSharp.HttpApi.Session
         public PluginResistration AddPlugin(IMiraiHttpMessageHandler plugin)
         {
             CheckDisposed();
-            PluginResistration registration = default;
             LinkedList<DynamicHandlerRegistration> registrations = new LinkedList<DynamicHandlerRegistration>();
             IMiraiHttpMessageSubscriptionResolver resolver = _services.GetRequiredService<IMiraiHttpMessageSubscriptionResolver>();
             foreach (IMiraiHttpMessageSubscription? subscription in resolver.ResolveByHandler(plugin.GetType()))
             {
                 registrations.AddLast(subscription.AddHandler(plugin));
             }
-            return registration;
+            return new PluginResistration(registrations);
         }
 
         /// <inheritdoc/>

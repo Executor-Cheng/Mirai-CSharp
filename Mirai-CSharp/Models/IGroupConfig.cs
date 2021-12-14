@@ -8,11 +8,11 @@ namespace Mirai.CSharp.Models
         /// <summary>
         /// 群名
         /// </summary>
-        string Name { get; }
+        string? Name { get; }
         /// <summary>
         /// 群公告
         /// </summary>
-        string Announcement { get; }
+        string? Announcement { get; }
         /// <summary>
         /// 是否允许坦白说
         /// </summary>

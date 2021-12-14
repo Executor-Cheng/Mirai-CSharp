@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Mirai.CSharp.Extensions;
@@ -185,7 +186,7 @@ namespace Mirai.CSharp.HttpApi.Session
             {
                 sessionKey = session.SessionKey,
                 target = groupNumber,
-                config
+                config = (object)config
             };
             return _client.PostAsJsonAsync($"{_options.BaseUrl}/groupConfig", payload, JsonSerializeOptionsFactory.IgnoreNulls, token)
                 .AsApiRespAsync(token)
@@ -212,9 +213,9 @@ namespace Mirai.CSharp.HttpApi.Session
                 sessionKey = session.SessionKey,
                 target = groupNumber,
                 memberId,
-                info
+                info = (object)info
             };
-            return _client.PostAsJsonAsync($"{_options.BaseUrl}/memberInfo", payload, token)
+            return _client.PostAsJsonAsync($"{_options.BaseUrl}/memberInfo", payload, JsonSerializeOptionsFactory.IgnoreNulls, token)
                 .AsApiRespAsync(token)
                 .DisposeWhenCompleted(cts);
         }
