@@ -10,10 +10,10 @@ namespace Mirai.CSharp.HttpApi.Models
 #if NETSTANDARD2_0
         /// <inheritdoc cref="ISharedGroupConfig.Name"/>
         [JsonPropertyName("name")]
-        new string Name { get; }
+        new string? Name { get; }
         /// <inheritdoc cref="ISharedGroupConfig.Announcement"/>
         [JsonPropertyName("announcement")]
-        new string Announcement { get; }
+        new string? Announcement { get; }
         /// <inheritdoc cref="ISharedGroupConfig.ConfessTalk"/>
         [JsonPropertyName("confessTalk")]
         new bool? ConfessTalk { get; }
@@ -29,10 +29,10 @@ namespace Mirai.CSharp.HttpApi.Models
 #else
         /// <inheritdoc/>
         [JsonPropertyName("name")]
-        abstract string ISharedGroupConfig.Name { get; }
+        abstract string? ISharedGroupConfig.Name { get; }
         /// <inheritdoc/>
         [JsonPropertyName("announcement")]
-        abstract string ISharedGroupConfig.Announcement { get; }
+        abstract string? ISharedGroupConfig.Announcement { get; }
         /// <inheritdoc/>
         [JsonPropertyName("confessTalk")]
         abstract bool? ISharedGroupConfig.ConfessTalk { get; }
@@ -52,10 +52,10 @@ namespace Mirai.CSharp.HttpApi.Models
     {
         /// <inheritdoc/>
         [JsonPropertyName("name")]
-        public string Name { get; set; } = null!;
+        public string? Name { get; set; }
         /// <inheritdoc/>
         [JsonPropertyName("announcement")]
-        public string Announcement { get; set; } = null!;
+        public string? Announcement { get; set; }
         /// <inheritdoc/>
         [JsonPropertyName("confessTalk")]
         public bool? ConfessTalk { get; set; }
@@ -75,7 +75,7 @@ namespace Mirai.CSharp.HttpApi.Models
 
         }
 
-        public GroupConfig(string name, string announcement, bool? confessTalk, bool? memberInvite, bool? autoApprove, bool? anonymousChat)
+        public GroupConfig(string? name, string? announcement, bool? confessTalk, bool? memberInvite, bool? autoApprove, bool? anonymousChat)
         {
             Name = name;
             Announcement = announcement;
@@ -87,10 +87,10 @@ namespace Mirai.CSharp.HttpApi.Models
 
 #if NETSTANDARD2_0
         [JsonPropertyName("name")]
-        string ISharedGroupConfig.Name => Name;
+        string? ISharedGroupConfig.Name => Name;
 
         [JsonPropertyName("announcement")]
-        string ISharedGroupConfig.Announcement => Announcement;
+        string? ISharedGroupConfig.Announcement => Announcement;
 
         [JsonPropertyName("confessTalk")]
         bool? ISharedGroupConfig.ConfessTalk => ConfessTalk;

@@ -8,6 +8,11 @@ namespace Mirai.CSharp.HttpApi.Session
     {
         internal LinkedList<DynamicHandlerRegistration>? _registrations;
 
+        public PluginResistration(LinkedList<DynamicHandlerRegistration> registrations)
+        {
+            _registrations = registrations;
+        }
+
         public void Dispose()
         {
             if (_registrations is LinkedList<DynamicHandlerRegistration> registrations)

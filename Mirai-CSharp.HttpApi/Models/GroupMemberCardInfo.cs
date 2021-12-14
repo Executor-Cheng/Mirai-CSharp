@@ -10,17 +10,17 @@ namespace Mirai.CSharp.HttpApi.Models
 #if NETSTANDARD2_0
         /// <inheritdoc cref="ISharedGroupMemberCardInfo.Name"/>
         [JsonPropertyName("name")]
-        new string Name { get; }
+        new string? Name { get; }
         /// <inheritdoc cref="ISharedGroupMemberCardInfo.SpecialTitle"/>
         [JsonPropertyName("specialTitle")]
-        new string SpecialTitle { get; }
+        new string? SpecialTitle { get; }
 #else
         /// <inheritdoc/>
         [JsonPropertyName("name")]
-        abstract string ISharedGroupMemberCardInfo.Name { get; }
+        abstract string? ISharedGroupMemberCardInfo.Name { get; }
         /// <inheritdoc/>
         [JsonPropertyName("specialTitle")]
-        abstract string ISharedGroupMemberCardInfo.SpecialTitle { get; }
+        abstract string? ISharedGroupMemberCardInfo.SpecialTitle { get; }
 #endif
     }
 
@@ -30,12 +30,12 @@ namespace Mirai.CSharp.HttpApi.Models
         /// 群名片
         /// </summary>
         [JsonPropertyName("name")]
-        public string Name { get; set; } = null!;
+        public string? Name { get; set; }
         /// <summary>
         /// 专属头衔
         /// </summary>
         [JsonPropertyName("specialTitle")]
-        public string SpecialTitle { get; set; } = null!;
+        public string? SpecialTitle { get; set; }
 
         [Obsolete("此类不应由用户主动创建实例。")]
         public GroupMemberCardInfo()
@@ -43,18 +43,18 @@ namespace Mirai.CSharp.HttpApi.Models
 
         }
 
-        [Obsolete("此类不应由用户主动创建实例。")]
-        public GroupMemberCardInfo(string name, string specialTitle)
+        public GroupMemberCardInfo(string? name, string? specialTitle)
         {
-            
+            Name = name;
+            SpecialTitle = specialTitle;
         }
 
 #if NETSTANDARD2_0
         [JsonPropertyName("name")]
-        string ISharedGroupMemberCardInfo.Name => Name;
+        string? ISharedGroupMemberCardInfo.Name => Name;
 
         [JsonPropertyName("specialTitle")]
-        string ISharedGroupMemberCardInfo.SpecialTitle => SpecialTitle;
+        string? ISharedGroupMemberCardInfo.SpecialTitle => SpecialTitle;
 #endif
     }
 }
