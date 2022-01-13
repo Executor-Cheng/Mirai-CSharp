@@ -101,7 +101,7 @@ namespace Mirai.CSharp.HttpApi.Session
             _client = client;
             _invoker = invoker;
             _coder = coder;
-            JsonSerializerOptions chatMessageSerializingOptions = new JsonSerializerOptions();
+            JsonSerializerOptions chatMessageSerializingOptions = JsonSerializeOptionsFactory.IgnoreNulls;
             chatMessageSerializingOptions.Converters.Add(jsonConverter);
             _chatMessageSerializingOptions = chatMessageSerializingOptions;
             _instanceCts = new CancellationTokenSource();
