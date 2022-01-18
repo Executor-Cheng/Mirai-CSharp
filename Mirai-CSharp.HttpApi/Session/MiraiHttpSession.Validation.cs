@@ -5,7 +5,7 @@ namespace Mirai.CSharp.HttpApi.Session
 {
     public partial class MiraiHttpSession
     {
-        private void CheckDisposed()
+        protected void CheckDisposed()
         {
             if (Volatile.Read(ref _instanceCts) == null)
             {
@@ -13,11 +13,15 @@ namespace Mirai.CSharp.HttpApi.Session
             }
         }
 
-        private InternalSessionInfo SafeGetSession()
+        protected InternalSessionInfo SafeGetSession()
         {
             CheckDisposed();
             InternalSessionInfo? session = _currentSession;
-            return session ?? throw new InvalidOperationException("请先连接到一个Session。");
+            if (session == null || !session.Connected)
+            {
+                throw new InvalidOperationException("请先连接到一个Session。");
+            }
+            return session;
         }
     }
 }
