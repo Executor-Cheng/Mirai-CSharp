@@ -1,3 +1,5 @@
+using Mirai.CSharp.HttpApi.Invoking;
+
 namespace Mirai.CSharp.HttpApi.Options
 {
     public class MiraiHttpSessionOptions
@@ -14,6 +16,13 @@ namespace Mirai.CSharp.HttpApi.Options
         /// 配置mirai-api-http时的AuthKey
         /// </summary>
         public string AuthKey { get; set; } = null!;
+        /// <summary>
+        /// 指示不要异步等待消息被 <see cref="IMiraiHttpMessageHandlerInvoker"/> 处理完毕
+        /// </summary>
+        /// <remarks>
+        /// 若此属性值为 <see langword="true"/>, 将不保证消息进入相应处理器的先后顺序
+        /// </remarks>
+        public bool SuppressAwaitMessageInvoker { get; set; }
         /// <summary>
         /// 内部使用。
         /// </summary>
