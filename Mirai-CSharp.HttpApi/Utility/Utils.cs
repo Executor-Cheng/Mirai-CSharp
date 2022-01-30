@@ -30,19 +30,38 @@ namespace Mirai.CSharp.HttpApi.Utility
             return JsonSerializer.Deserialize<T>(memory.Span, options)!;
         }
 
-        private static readonly unsafe delegate*<JsonDocument, void*, int, bool, ref ReadOnlyMemory<byte>> _jsonDocumentGetRawdataPtr = (delegate*<JsonDocument, void*, int, bool, ref ReadOnlyMemory<byte>>)(IntPtr)typeof(Delegate).GetField("_methodPtr", BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(typeof(JsonDocument).GetMethod("GetRawValue", BindingFlags.NonPublic | BindingFlags.Instance)!.CreateDelegate(typeof(Func<int, bool, ReadOnlyMemory<byte>>), null))!;
+        private static readonly unsafe delegate*<JsonDocument, void*, int, bool, ref ReadOnlyMemory<byte>> _jsonDocumentGetRawdataWinPtr;
         //                                            ^          ^     ^     ^            ^
         //                                            |          |     |     |            \-- ret
         //                                            |          |     |     \-- includeQuotes
         //                                            |          |     \-- idx
-        //                                            \-- this   \-- &j
-        // 751.1ns -> 577.1ns (-174ns, 76.83%) Alloc: -120B per invocation
+        //                                            \-- this   \-- &this
+        // 751.1ns -> 577.1ns (-174ns, 76.83%) Alloc: -120B per invocation, this = JsonDocument
         // (调用实例方法, 且不用什么MethodInfo.Invoke, 还有什么Delegate。不同方法会有不同的参数列表, 请结合实际) 
+
+        private static readonly unsafe delegate*<JsonDocument, int, bool, ReadOnlyMemory<byte>> _jsonDocumentGetRawdataUnixPtr;
+        //                                            ^          ^     ^            ^
+        //                                            |          |     |            \-- ret
+        //                                            |          |     \-- includeQuotes
+        //                                            |          \-- idx
+        //                                            \-- this
+        // this = JsonDocument
+
+        static unsafe Utils()
+        {
+            IntPtr methodPtr = (IntPtr)typeof(Delegate).GetField("_methodPtr", BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(typeof(JsonDocument).GetMethod("GetRawValue", BindingFlags.NonPublic | BindingFlags.Instance)!.CreateDelegate(typeof(Func<int, bool, ReadOnlyMemory<byte>>), null))!;
+            _jsonDocumentGetRawdataWinPtr = (delegate*<JsonDocument, void*, int, bool, ref ReadOnlyMemory<byte>>)methodPtr;
+            _jsonDocumentGetRawdataUnixPtr = (delegate*<JsonDocument, int, bool, ReadOnlyMemory<byte>>)methodPtr;
+        }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static unsafe ReadOnlyMemory<byte> GetRawdata(JsonDocument j, int idx, bool includeQuotes)
         {
-            return _jsonDocumentGetRawdataPtr(j, Unsafe.AsPointer(ref j), idx, true);
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+            {
+                return _jsonDocumentGetRawdataWinPtr(j, Unsafe.AsPointer(ref j), idx, includeQuotes);
+            }
+            return _jsonDocumentGetRawdataUnixPtr(j, idx, includeQuotes);
         }
 #endif
     }
