@@ -33,7 +33,7 @@ namespace Mirai.CSharp.HttpApi.Extensions
         /// <item><term><see cref="UnknownResponseException"/></term><description>其它情况</description></item>
         /// </list>
         /// </returns>
-        internal static Exception GetCommonException(int code, in JsonElement root)
+        public static Exception GetCommonException(int code, in JsonElement root)
         {
             return code switch
             {
@@ -116,7 +116,7 @@ namespace Mirai.CSharp.HttpApi.Extensions
             var root = j.RootElement;
             if (root.CheckApiRespCode(out var code))
             {
-                if (root.TryGetProperty("data", out JsonElement data))
+                if (root.ValueKind == JsonValueKind.Object && root.TryGetProperty("data", out JsonElement data))
                 {
                     return data.Deserialize<TImpl>()!;
                 }
