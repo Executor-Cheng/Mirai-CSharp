@@ -58,7 +58,11 @@ namespace Mirai.CSharp.HttpApi.Session
                     }
                     try
                     {
-                        await _invoker.HandleRawdataAsync(this, root).ConfigureAwait(false);
+                        Task handleTask = _invoker.HandleRawdataAsync(this, root);
+                        if (!_options.SuppressAwaitMessageInvoker)
+                        {
+                            await handleTask.ConfigureAwait(false);
+                        }
                     }
                     catch (Exception)
                     {
