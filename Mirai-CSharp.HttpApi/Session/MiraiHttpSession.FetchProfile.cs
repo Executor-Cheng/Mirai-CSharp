@@ -37,6 +37,10 @@ namespace Mirai.CSharp.HttpApi.Session
         {
             InternalSessionInfo session = SafeGetSession();
             CreateLinkedUserSessionToken(session.Token, token, out CancellationTokenSource? cts, out token);
+            if (session.ApiVersion < new System.Version(2, 4))
+            {
+                throw new System.NotSupportedException("本接口仅在 mirai-api-http v2.4.0 及以上版本提供");
+            }
             return _client.GetAsync($"{_options.BaseUrl}/userProfile?sessionKey={session.SessionKey}&userId={qqNumber}", token)
                 .AsApiRespAsync<ISharedUserProfile, UserProfile>(token)
                 .DisposeWhenCompleted(cts);
