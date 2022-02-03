@@ -14,5 +14,8 @@ namespace Mirai.CSharp.Session
 
         /// <inheritdoc/>
         public abstract Task<IGroupMemberProfile> GetGroupMemberProfileAsync(long groupMember, long qqNumber, CancellationToken token = default);
+
+        /// <inheritdoc/>
+        public abstract Task<IUserProfile> GetUserProfileAsync(long qqNumber, CancellationToken token = default);
     }
 }
