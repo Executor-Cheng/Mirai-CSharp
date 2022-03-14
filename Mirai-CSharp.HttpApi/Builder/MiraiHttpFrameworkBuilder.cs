@@ -140,6 +140,7 @@ namespace Mirai.CSharp.HttpApi.Builder
             AddChatParser<DefaultMappableMiraiHttpChatMessageParser<IForwardMessage, ForwardMessage>>().
             AddChatParser<DefaultMappableMiraiHttpChatMessageParser<IDiceMessage, DiceMessage>>().
             AddChatParser<DefaultMappableMiraiHttpChatMessageParser<ISharedMusicMessage, SharedMusicMessage>>().
+            AddChatParser<DefaultMappableMiraiHttpChatMessageParser<IMarketFaceMessage, MarketFaceMessage>>().
             AddChatParser<UnknownChatMessageParser>();
             return this;
         }

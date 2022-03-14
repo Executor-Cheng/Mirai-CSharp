@@ -22,6 +22,17 @@ namespace Mirai.CSharp.Session
         Task<IFriendProfile> GetFriendProfileAsync(long qqNumber, CancellationToken token = default);
 
         /// <summary>
+        /// 异步获取给定QQ的资料
+        /// </summary>
+        /// <param name="qqNumber">QQ号</param>
+        /// <param name="token">用于取消此异步操作的 <see cref="CancellationToken"/></param>
+        /// <remarks>
+        /// 需要mirai-api-http版本大于2.4.0
+        /// </remarks>
+        /// <returns>给定QQ的资料</returns>
+        Task<IUserProfile> GetUserProfileAsync(long qqNumber, CancellationToken token = default);
+
+        /// <summary>
         /// 异步获取给定群员的资料
         /// </summary>
         /// <param name="groupMember">群员所在群号</param>

@@ -16,8 +16,13 @@ namespace Mirai.CSharp.Example
             {
                 try
                 {
-                    await session.ConnectAsync(0); // 连到成功为止, QQ号自填, 你也可以另行处理重连的 behaviour
+                    await session.ConnectAsync(e.LastConnectedQQNumber);
                     e.BlockRemainingHandlers = true;
+                    break;
+                }
+                catch (ObjectDisposedException) // session 已被释放
+                {
+                    break;
                 }
                 catch (Exception)
                 {

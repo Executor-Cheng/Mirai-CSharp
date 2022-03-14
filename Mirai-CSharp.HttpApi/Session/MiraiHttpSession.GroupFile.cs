@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
 using Mirai.CSharp.Extensions;
 using Mirai.CSharp.HttpApi.Extensions;
 using Mirai.CSharp.HttpApi.Models;
 using ISharedGroupFileInfo = Mirai.CSharp.Models.IGroupFileInfo;
-using System.Net.Http.Headers;
-using System.Net.Mime;
 #if NET5_0_OR_GREATER
 using System.Net.Http.Json;
 #endif

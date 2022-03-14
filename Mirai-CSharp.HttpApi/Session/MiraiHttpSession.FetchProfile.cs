@@ -4,6 +4,7 @@ using Mirai.CSharp.Extensions;
 using Mirai.CSharp.HttpApi.Extensions;
 using Mirai.CSharp.HttpApi.Models;
 using ISharedBotProfile = Mirai.CSharp.Models.IBotProfile;
+using ISharedUserProfile = Mirai.CSharp.Models.IUserProfile;
 using ISharedFriendProfile = Mirai.CSharp.Models.IFriendProfile;
 using ISharedGroupMemberProfile = Mirai.CSharp.Models.IGroupMemberProfile;
 
@@ -28,6 +29,20 @@ namespace Mirai.CSharp.HttpApi.Session
             CreateLinkedUserSessionToken(session.Token, token, out CancellationTokenSource? cts, out token);
             return _client.GetAsync($"{_options.BaseUrl}/friendProfile?sessionKey={session.SessionKey}&target={qqNumber}", token)
                 .AsApiRespAsync<ISharedFriendProfile, FriendProfile>(token)
+                .DisposeWhenCompleted(cts);
+        }
+
+        /// <inheritdoc/>
+        public override Task<ISharedUserProfile> GetUserProfileAsync(long qqNumber, CancellationToken token = default)
+        {
+            InternalSessionInfo session = SafeGetSession();
+            CreateLinkedUserSessionToken(session.Token, token, out CancellationTokenSource? cts, out token);
+            if (session.ApiVersion < new System.Version(2, 4))
+            {
+                throw new System.NotSupportedException("本接口仅在 mirai-api-http v2.4.0 及以上版本提供");
+            }
+            return _client.GetAsync($"{_options.BaseUrl}/userProfile?sessionKey={session.SessionKey}&userId={qqNumber}", token)
+                .AsApiRespAsync<ISharedUserProfile, UserProfile>(token)
                 .DisposeWhenCompleted(cts);
         }
 
