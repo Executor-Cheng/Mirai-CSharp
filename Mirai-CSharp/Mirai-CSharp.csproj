@@ -38,4 +38,9 @@
     <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0-*" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0-*" />
+  </ItemGroup>
+
 </Project>
