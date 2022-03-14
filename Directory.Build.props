@@ -9,15 +9,15 @@
     <PropertyGroup>
         <OutputType>Library</OutputType>
         <NoWin32Manifest>true</NoWin32Manifest>
-        <Version>2.1.4.0</Version>
-        <AssemblyVersion>2.1.4.0</AssemblyVersion>
-        <FileVersion>2.1.4.0</FileVersion>
-        <PackageVersion>2.1.4.0</PackageVersion>
+        <Version>2.1.5.0</Version>
+        <AssemblyVersion>2.1.5.0</AssemblyVersion>
+        <FileVersion>2.1.5.0</FileVersion>
+        <PackageVersion>2.1.5.0</PackageVersion>
         <Nullable>enable</Nullable>
         <LangVersion>preview</LangVersion>
         <Authors>Executor</Authors>
         <Company>Executor</Company>
-        <Copyright>Copyright © Executor 2021</Copyright>
+        <Copyright>Copyright © Executor 2022</Copyright>
         <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
         <PackageProjectUrl>https://github.com/Executor-Cheng/Mirai-CSharp</PackageProjectUrl>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
