@@ -60,13 +60,13 @@ namespace Mirai.CSharp.Session
         /// <inheritdoc/>
         public virtual Task<int> SendTempMessageAsync(long qqNumber, long groupNumber, params IChatMessage[] chain)
         {
-            return SendTempMessageAsync(qqNumber, qqNumber, chain, default);
+            return SendTempMessageAsync(qqNumber, groupNumber, chain, default);
         }
 
         /// <inheritdoc/>
         public virtual Task<int> SendTempMessageAsync(long qqNumber, long groupNumber, IChatMessage[] chain, CancellationToken token = default)
         {
-            return SendTempMessageAsync(qqNumber, qqNumber, chain, null, default);
+            return SendTempMessageAsync(qqNumber, groupNumber, chain, null, default);
         }
 
         /// <inheritdoc/>
@@ -75,7 +75,7 @@ namespace Mirai.CSharp.Session
         /// <inheritdoc/>
         public virtual Task<int> SendTempMessageAsync(long qqNumber, long groupNumber, IMessageChainBuilder builder, CancellationToken token = default)
         {
-            return SendTempMessageAsync(qqNumber, qqNumber, builder, null, default);
+            return SendTempMessageAsync(qqNumber, groupNumber, builder, null, default);
         }
 
         /// <inheritdoc/>
