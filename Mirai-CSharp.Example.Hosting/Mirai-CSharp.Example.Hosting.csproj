@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <TargetFrameworks>net7.0</TargetFrameworks>
+    <RootNamespace>Mirai.CSharp.Example.Hosting</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mirai-CSharp.HttpApi\Mirai-CSharp.HttpApi.csproj" />
+  </ItemGroup>
+
+</Project>
