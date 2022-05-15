@@ -27,6 +27,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mirai-CSharp.NativeAssets.L
 		Mirai-CSharp.NativeAssets.Linux\Mirai-CSharp.NativeAssets.Linux.props = Mirai-CSharp.NativeAssets.Linux\Mirai-CSharp.NativeAssets.Linux.props
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mirai-CSharp.Example.Hosting", "Mirai-CSharp.Example.Hosting\Mirai-CSharp.Example.Hosting.csproj", "{5679DB58-8369-408C-A607-8C7BC1A76D69}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{5CE67FE5-11C0-4A0F-9736-9311383B66D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5CE67FE5-11C0-4A0F-9736-9311383B66D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5CE67FE5-11C0-4A0F-9736-9311383B66D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5679DB58-8369-408C-A607-8C7BC1A76D69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5679DB58-8369-408C-A607-8C7BC1A76D69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5679DB58-8369-408C-A607-8C7BC1A76D69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5679DB58-8369-408C-A607-8C7BC1A76D69}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
