@@ -80,6 +80,7 @@ namespace Mirai.CSharp.HttpApi.Session
                 internalStream = new MemoryStream(8192);
                 internalCreated = true;
                 await imgStream.CopyToAsync(internalStream, 81920, token);
+                internalStream.Seek(0, SeekOrigin.Begin);
             }
             else // 否则不创建副本, 避免多余的堆分配
             {
