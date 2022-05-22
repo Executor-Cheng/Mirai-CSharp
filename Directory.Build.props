@@ -9,10 +9,10 @@
     <PropertyGroup>
         <OutputType>Library</OutputType>
         <NoWin32Manifest>true</NoWin32Manifest>
-        <Version>2.1.6.0</Version>
-        <AssemblyVersion>2.1.6.0</AssemblyVersion>
-        <FileVersion>2.1.6.0</FileVersion>
-        <PackageVersion>2.1.6.0</PackageVersion>
+        <Version>2.1.7.0</Version>
+        <AssemblyVersion>2.1.7.0</AssemblyVersion>
+        <FileVersion>2.1.7.0</FileVersion>
+        <PackageVersion>2.1.7.0</PackageVersion>
         <Nullable>enable</Nullable>
         <LangVersion>preview</LangVersion>
         <Authors>Executor</Authors>

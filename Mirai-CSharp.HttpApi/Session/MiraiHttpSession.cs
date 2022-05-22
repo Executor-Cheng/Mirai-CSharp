@@ -151,30 +151,15 @@ namespace Mirai.CSharp.HttpApi.Session
             throw new NotSupportedException("请调用 AddPlugin 返回的 PluginResistration.Dispose 方法来移除先前注册的插件。预计于 2.2.0 版本移除此方法");
         }
 
-        public override void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
         {
-            DisposeAsync().AsTask().GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// 异步释放当前会话, 并清理相关资源。
-        /// </summary>
-        /// <remarks>
-        /// 本方法线程安全。
-        /// </remarks>
-        /// <returns>表示此异步操作的 <see cref="ValueTask"/></returns>
-        public ValueTask DisposeAsync()
-        {
-            CancellationTokenSource? previousCts = Volatile.Read(ref _instanceCts);
-            if (previousCts != null && Interlocked.CompareExchange(ref _instanceCts, null, previousCts) == previousCts)
+            if (disposing)
             {
-                GC.SuppressFinalize(this);
-                return DisposeAsync(previousCts);
+                DisposeAsyncCore().AsTask().GetAwaiter().GetResult();
             }
-            return default;
         }
 
-        private async ValueTask DisposeAsync(CancellationTokenSource cts)
+        protected async ValueTask DisposeAsyncCore(CancellationTokenSource cts)
         {
             InternalSessionInfo? session = Volatile.Read(ref _currentSession);
             if (session != null)
@@ -191,6 +176,30 @@ namespace Mirai.CSharp.HttpApi.Session
             cts.Cancel();
             cts.Dispose();
             _client.Dispose();
+        }
+
+        /// <summary>
+        /// 异步释放当前会话, 并清理相关资源。
+        /// </summary>
+        /// <remarks>
+        /// 本方法线程安全。
+        /// </remarks>
+        /// <returns>表示此异步操作的 <see cref="ValueTask"/></returns>
+        public async ValueTask DisposeAsync()
+        {
+            await DisposeAsyncCore().ConfigureAwait(false);
+            Dispose(false);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual ValueTask DisposeAsyncCore()
+        {
+            CancellationTokenSource? previousCts = Volatile.Read(ref _instanceCts);
+            if (previousCts != null && Interlocked.CompareExchange(ref _instanceCts, null, previousCts) == previousCts)
+            {
+                return DisposeAsyncCore(previousCts);
+            }
+            return default;
         }
     }
 }

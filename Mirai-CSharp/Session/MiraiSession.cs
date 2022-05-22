@@ -8,9 +8,15 @@ namespace Mirai.CSharp.Session
         /// <inheritdoc/>
         public abstract IMessageChainBuilder GetMessageChainBuilder();
 
-        public abstract void Dispose(bool disposing);
+        protected virtual void Dispose(bool disposing)
+        {
+            
+        }
 
-        public virtual void Dispose()
+        /// <summary>
+        /// 释放当前会话所用资源
+        /// </summary>
+        public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
