@@ -4,16 +4,21 @@ using System.Text.Json.Serialization;
 
 namespace Mirai.CSharp.HttpApi.Utility.JsonConverters
 {
-    public class ChangeTypeJsonConverter<TSrc, TDst> : JsonConverter<TDst> where TSrc : TDst
+    public class ChangeTypeJsonConverter<TFrom, TTo> : ChangeTypeJsonConverter<TFrom, object, TTo> where TFrom : notnull where TTo : TFrom
     {
-        public override TDst Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        
+    }
+
+    public class ChangeTypeJsonConverter<TFrom, TSerializeTo, TDeserializeTo> : JsonConverter<TFrom> where TDeserializeTo : TFrom where TFrom : notnull, TSerializeTo
+    {
+        public override TFrom Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            return JsonSerializer.Deserialize<TSrc>(ref reader, options)!;
+            return JsonSerializer.Deserialize<TDeserializeTo>(ref reader, options)!;
         }
 
-        public override void Write(Utf8JsonWriter writer, TDst value, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, TFrom value, JsonSerializerOptions options)
         {
-            JsonSerializer.Serialize<object>(writer, value!, options); // TDst : interface 时, 不使用object的泛型参数将导致基接口成员不会被序列化
+            JsonSerializer.Serialize<TSerializeTo>(writer, value!, options);
         }
     }
 }

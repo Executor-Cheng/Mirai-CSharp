@@ -23,7 +23,7 @@ namespace Mirai.CSharp.HttpApi.Models.EventArgs
         /// <summary>
         /// 被操作者信息
         /// </summary>
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupMemberInfo, IGroupMemberInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<IGroupMemberInfo, GroupMemberInfo>))]
         [JsonPropertyName("member")]
         public IGroupMemberInfo Member { get; set; } = null!;
 
@@ -38,7 +38,7 @@ namespace Mirai.CSharp.HttpApi.Models.EventArgs
 
 #if NETSTANDARD2_0
         /// <inheritdoc/>
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupMemberInfo, ISharedGroupMemberInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<ISharedGroupMemberInfo, GroupMemberInfo>))]
         [JsonPropertyName("member")]
         ISharedGroupMemberInfo ISharedMemberEventArgs.Member => Member;
 #endif

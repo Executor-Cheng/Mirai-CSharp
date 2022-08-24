@@ -65,12 +65,12 @@ namespace Mirai.CSharp.HttpApi.Models
 #endif
 
         /// <inheritdoc cref="ISharedGroupMemberInfo.Group"/>
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupInfo, IGroupInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<IGroupInfo, GroupInfo>))]
         [JsonPropertyName("group")]
         new IGroupInfo Group { get; }
 
 #if !NETSTANDARD2_0
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupInfo, ISharedGroupInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<ISharedGroupInfo, GroupInfo>))]
         [JsonPropertyName("group")]
         ISharedGroupInfo ISharedGroupMemberInfo.Group => Group;
 #endif
@@ -83,7 +83,7 @@ namespace Mirai.CSharp.HttpApi.Models
         public override string Name { get; set; } = null!;
 
         /// <inheritdoc/>
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupInfo, IGroupInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<IGroupInfo, GroupInfo>))]
         [JsonPropertyName("group")]
         public IGroupInfo Group { get; set; } = null!;
 
@@ -124,7 +124,7 @@ namespace Mirai.CSharp.HttpApi.Models
             MuteTimeRemaining = muteTimeRemaining;
         }
 #if NETSTANDARD2_0
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupInfo, ISharedGroupInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<ISharedGroupInfo, GroupInfo>))]
         [JsonPropertyName("group")]
         ISharedGroupInfo ISharedGroupMemberInfo.Group => Group;
 #endif

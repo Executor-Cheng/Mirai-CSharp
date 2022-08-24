@@ -22,7 +22,7 @@ namespace Mirai.CSharp.HttpApi.Models.EventArgs
     public class GroupMemberJoinedEventArgs : MemberEventArgs, IGroupMemberJoinedEventArgs
     {
         /// <inheritdoc/>
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupMemberInfo, IGroupMemberInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<IGroupMemberInfo, GroupMemberInfo>))]
         [JsonPropertyName("invitor")]
         public IGroupMemberInfo? Inviter { get; set; }
 
@@ -40,7 +40,7 @@ namespace Mirai.CSharp.HttpApi.Models.EventArgs
 
 #if NETSTANDARD2_0
         /// <inheritdoc/>
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupMemberInfo, ISharedGroupMemberInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<ISharedGroupMemberInfo, GroupMemberInfo>))]
         [JsonPropertyName("invitor")]
         ISharedGroupMemberInfo? ISharedInviterEventArgs.Inviter => Inviter;
 #endif

@@ -9,12 +9,12 @@ namespace Mirai.CSharp.HttpApi.Models.EventArgs
     public interface IFriendEventArgs : ISharedJsonFriendEventArgs, IMiraiHttpMessage
     {
         [JsonPropertyName("friend")]
-        [JsonConverter(typeof(ChangeTypeJsonConverter<FriendInfo, IFriendInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<IFriendInfo, FriendInfo>))]
         new IFriendInfo Friend { get; }
 
 #if !NETSTANDARD2_0
         [JsonPropertyName("friend")]
-        [JsonConverter(typeof(ChangeTypeJsonConverter<FriendInfo, ISharedFriendInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<ISharedFriendInfo, FriendInfo>))]
         ISharedFriendInfo ISharedFriendEventArgs.Friend => Friend;
 #endif
     }
@@ -22,7 +22,7 @@ namespace Mirai.CSharp.HttpApi.Models.EventArgs
     public abstract class FriendEventArgs : MiraiHttpMessage, IFriendEventArgs
     {
         [JsonPropertyName("friend")]
-        [JsonConverter(typeof(ChangeTypeJsonConverter<FriendInfo, IFriendInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<IFriendInfo, FriendInfo>))]
         public IFriendInfo Friend { get; set; } = null!;
 
         protected FriendEventArgs()
@@ -37,7 +37,7 @@ namespace Mirai.CSharp.HttpApi.Models.EventArgs
 
 #if NETSTANDARD2_0
         [JsonPropertyName("friend")]
-        [JsonConverter(typeof(ChangeTypeJsonConverter<FriendInfo, ISharedFriendInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<ISharedFriendInfo, FriendInfo>))]
         ISharedFriendInfo ISharedFriendEventArgs.Friend => Friend;
 #endif
     }

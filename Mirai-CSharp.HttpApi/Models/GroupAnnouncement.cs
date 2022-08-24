@@ -56,12 +56,12 @@ namespace Mirai.CSharp.HttpApi.Models
         abstract DateTime ISharedGroupAnnouncement.CreateTime { get; }
 #endif
         /// <inheritdoc cref="ISharedGroupAnnouncement.Group"/>
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupInfo, IGroupInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<IGroupInfo, GroupInfo>))]
         [JsonPropertyName("group")]
         new IGroupInfo Group { get; }
 
 #if !NETSTANDARD2_0
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupInfo, ISharedGroupInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<ISharedGroupInfo, GroupInfo>))]
         [JsonPropertyName("group")]
         ISharedGroupInfo ISharedGroupAnnouncement.Group => Group;
 #endif
@@ -139,7 +139,7 @@ namespace Mirai.CSharp.HttpApi.Models
         [JsonPropertyName("publicationTime")]
         DateTime ISharedGroupAnnouncement.CreateTime => CreateTime;
         /// <inheritdoc/>
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupInfo, ISharedGroupInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<ISharedGroupInfo, GroupInfo>))]
         [JsonPropertyName("group")]
         ISharedGroupInfo ISharedGroupAnnouncement.Group => Group;
 #endif

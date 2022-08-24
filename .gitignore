@@ -339,3 +339,4 @@ ASALocalRun/
 # BeatPulse healthcheck temp database
 healthchecksdb
 /Mirai-CSharp/Mirai-CSharp.xml
+*.wakatime-project

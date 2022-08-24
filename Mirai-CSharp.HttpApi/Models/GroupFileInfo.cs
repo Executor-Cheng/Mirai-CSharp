@@ -10,17 +10,17 @@ namespace Mirai.CSharp.HttpApi.Models
     public interface IGroupFileInfo : ISharedGroupFileInfo
     {
         /// <inheritdoc cref="ISharedGroupFileInfo.Parent"/>
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupFileInfo, IGroupFileInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<IGroupFileInfo, GroupFileInfo>))]
         [JsonPropertyName("parent")]
         new IGroupFileInfo? Parent { get; }
 
         /// <inheritdoc cref="ISharedGroupFileInfo.Group"/>
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupInfo, IGroupInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<IGroupInfo, GroupInfo>))]
         [JsonPropertyName("contact")]
         new IGroupInfo Group { get; }
 
         /// <inheritdoc cref="ISharedGroupFileInfo.DownloadInfo"/>
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupFileDownloadInfo, IGroupFileDownloadInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<IGroupFileDownloadInfo, GroupFileDownloadInfo>))]
         [JsonPropertyName("parent")]
         new IGroupFileDownloadInfo? DownloadInfo { get; }
 
@@ -60,15 +60,15 @@ namespace Mirai.CSharp.HttpApi.Models
         [JsonPropertyName("isDirectory")]
         abstract bool ISharedGroupFileInfo.IsDirectory { get; }
 
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupFileInfo, ISharedGroupFileInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<ISharedGroupFileInfo, GroupFileInfo>))]
         [JsonPropertyName("parent")]
         ISharedGroupFileInfo? ISharedGroupFileInfo.Parent => Parent;
 
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupInfo, ISharedGroupInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<ISharedGroupInfo, GroupInfo>))]
         [JsonPropertyName("contact")]
         ISharedGroupInfo ISharedGroupFileInfo.Group => Group;
 
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupFileDownloadInfo, ISharedGroupFileDownloadInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<ISharedGroupFileDownloadInfo, GroupFileDownloadInfo>))]
         [JsonPropertyName("downloadInfo")]
         ISharedGroupFileDownloadInfo? ISharedGroupFileInfo.DownloadInfo => DownloadInfo;
 #endif
@@ -89,12 +89,12 @@ namespace Mirai.CSharp.HttpApi.Models
         public string Path { get; set; } = null!;
 
         /// <inheritdoc/>
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupFileInfo, IGroupFileInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<IGroupFileInfo, GroupFileInfo>))]
         [JsonPropertyName("parent")]
         public IGroupFileInfo? Parent { get; set; }
 
         /// <inheritdoc/>
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupInfo, IGroupInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<IGroupInfo, GroupInfo>))]
         [JsonPropertyName("contact")]
         public IGroupInfo Group { get; set; } = null!;
 
@@ -107,7 +107,7 @@ namespace Mirai.CSharp.HttpApi.Models
         public bool IsDirectory { get; set; }
 
         /// <inheritdoc/>
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupFileDownloadInfo, IGroupFileDownloadInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<IGroupFileDownloadInfo, GroupFileDownloadInfo>))]
         [JsonPropertyName("downloadInfo")]
         public IGroupFileDownloadInfo? DownloadInfo { get; set; }
 
@@ -129,15 +129,15 @@ namespace Mirai.CSharp.HttpApi.Models
         }
 
 #if NETSTANDARD2_0
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupFileInfo, ISharedGroupFileInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<ISharedGroupFileInfo, GroupFileInfo>))]
         [JsonPropertyName("parent")]
         ISharedGroupFileInfo? ISharedGroupFileInfo.Parent => Parent;
 
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupInfo, ISharedGroupInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<ISharedGroupInfo, GroupInfo>))]
         [JsonPropertyName("contact")]
         ISharedGroupInfo ISharedGroupFileInfo.Group => Group;
 
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupFileDownloadInfo, ISharedGroupFileDownloadInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<ISharedGroupFileDownloadInfo, GroupFileDownloadInfo>))]
         [JsonPropertyName("downloadInfo")]
         ISharedGroupFileDownloadInfo? ISharedGroupFileInfo.DownloadInfo => DownloadInfo;
 #endif
