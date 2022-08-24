@@ -61,6 +61,24 @@ namespace Mirai.CSharp.HttpApi.Models.ChatMessages
         [JsonPropertyName("messageChain")]
         public IChatMessage[] Chain { get; set; } = null!;
 
+        public ForwardMessageNode()
+        {
+
+        }
+
+        public ForwardMessageNode(int id)
+        {
+            Id = id;
+        }
+
+        public ForwardMessageNode(string name, long qQNumber, DateTime time, IChatMessage[] chain)
+        {
+            Name = name;
+            QQNumber = qQNumber;
+            Time = time;
+            Chain = chain;
+        }
+
         public override string ToString()
         {
             return $"[mirai:forward:{Chain.Length} nodes]";

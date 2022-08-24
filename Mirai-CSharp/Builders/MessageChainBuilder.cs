@@ -13,13 +13,30 @@ namespace Mirai.CSharp.Builders
     /// </remarks>
     public interface IMessageChainBuilder : IEnumerable<IChatMessage>
     {
+        /// <summary>
+        /// 已添加的消息计数
+        /// </summary>
         int Count { get; }
 
+        /// <summary>
+        /// 使用已添加的所有消息节点创建一个 <see cref="IChatMessage"/>[] 实例
+        /// </summary>
+        /// <returns>一个 <see cref="IChatMessage"/>[] 实例, 可用于消息发送</returns>
         IChatMessage[] Build();
 
+        /// <summary>
+        /// 为当前的 <see cref="IMessageChainBuilder"/> 添加一条现有的 <see cref="IChatMessage"/>
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns>传入的 <see cref="IMessageChainBuilder"/> 实例, 可继续用于链式调用</returns>
         IMessageChainBuilder Add(IChatMessage message);
 
-        IMessageChainBuilder AddRange(IEnumerable<IChatMessage> message);
+        /// <summary>
+        /// 为当前的 <see cref="IMessageChainBuilder"/> 添加一些现有的 <see cref="IChatMessage"/>
+        /// </summary>
+        /// <param name="messages">一个 <see cref="IChatMessage"/> 集合, 其中所有的实例都将添加进本构建器</param>
+        /// <returns>传入的 <see cref="IMessageChainBuilder"/> 实例, 可继续用于链式调用</returns>
+        IMessageChainBuilder AddRange(IEnumerable<IChatMessage> messages);
 
         /// <summary>
         /// 为给定的 <see cref="IMessageChainBuilder"/> 添加一条 <see cref="IPlainMessage"/>
@@ -93,6 +110,13 @@ namespace Mirai.CSharp.Builders
         IMessageChainBuilder AddFaceMessage(int id, string? name = null);
 
         /// <summary>
+        /// 为给定的 <see cref="IMessageChainBuilder"/> 添加一条 <see cref="IForwardMessage"/>
+        /// </summary>
+        /// <param name="builder">用于构建 <see cref="IForwardMessage"/> 的构建器实例</param>
+        /// <returns>传入的 <see cref="IMessageChainBuilder"/>, 可继续用于链式调用</returns>
+        IMessageChainBuilder AddForwardMessage(IForwardMessageBuilder builder);
+
+        /// <summary>
         /// 为给定的 <see cref="IMessageChainBuilder"/> 添加一条 <see cref="IXmlMessage"/>
         /// </summary>
         /// <param name="xml">xml原始字符串</param>
@@ -143,6 +167,12 @@ namespace Mirai.CSharp.Builders
         /// </remarks>
         /// <returns>传入的 <see cref="IMessageChainBuilder"/>, 可继续用于链式调用</returns>
         IMessageChainBuilder AddVoiceMessage(string? voiceId = null, string? url = null, string? path = null);
+
+        /// <summary>
+        /// 获取用于创建适用于本实例的 <see cref="IForwardMessage"/> 构建器实例
+        /// </summary>
+        /// <returns>一个合适的 <see cref="IForwardMessageBuilder"/> 实例</returns>
+        IForwardMessageBuilder GetForwardMessageBuilder();
     }
 
     /// <summary>
@@ -152,23 +182,28 @@ namespace Mirai.CSharp.Builders
     {
         protected readonly List<IChatMessage> _list = new List<IChatMessage>();
 
+        /// <inheritdoc/>
         public virtual int Count => _list.Count;
 
+        /// <inheritdoc/>
         public virtual IChatMessage[] Build()
             => _list.ToArray();
 
+        /// <inheritdoc/>
         public virtual IMessageChainBuilder Add(IChatMessage message)
         {
             _list.Add(message);
             return this;
         }
 
-        public virtual IMessageChainBuilder AddRange(IEnumerable<IChatMessage> message)
+        /// <inheritdoc/>
+        public virtual IMessageChainBuilder AddRange(IEnumerable<IChatMessage> messages)
         {
-            _list.AddRange(message);
+            _list.AddRange(messages);
             return this;
         }
 
+        /// <inheritdoc/>
         public virtual IEnumerator<IChatMessage> GetEnumerator()
         {
             return _list.GetEnumerator();
@@ -193,6 +228,9 @@ namespace Mirai.CSharp.Builders
         public abstract IMessageChainBuilder AddFaceMessage(int id, string? name = null);
 
         /// <inheritdoc/>
+        public abstract IMessageChainBuilder AddForwardMessage(IForwardMessageBuilder builder);
+
+        /// <inheritdoc/>
         public abstract IMessageChainBuilder AddXmlMessage(string xml);
 
         /// <inheritdoc/>
@@ -207,6 +245,10 @@ namespace Mirai.CSharp.Builders
         /// <inheritdoc/>
         public abstract IMessageChainBuilder AddVoiceMessage(string? voiceId = null, string? url = null, string? path = null);
 
+        /// <inheritdoc/>
+        public abstract IForwardMessageBuilder GetForwardMessageBuilder();
+
+        /// <inheritdoc/>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
