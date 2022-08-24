@@ -12,10 +12,10 @@ namespace Mirai.CSharp.HttpApi.Models.ChatMessages
     public interface IMarketFaceMessage : ISharedMarketFaceMessage, IChatMessage
     {
 #if NETSTANDARD2_0
-        /// <inheritdoc cref="ISharedMarketFaceMessaage.Id"/>
+        /// <inheritdoc cref="ISharedMarketFaceMessage.Id"/>
         [JsonPropertyName("id")]
         new int Id { get; }
-        /// <inheritdoc cref="ISharedMarketFaceMessaage.Name"/>
+        /// <inheritdoc cref="ISharedMarketFaceMessage.Name"/>
         [JsonPropertyName("name")]
         new string Name { get; }
 #else

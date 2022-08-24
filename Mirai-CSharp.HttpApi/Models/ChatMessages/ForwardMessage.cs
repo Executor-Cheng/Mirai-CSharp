@@ -13,11 +13,11 @@ namespace Mirai.CSharp.HttpApi.Models.ChatMessages
     public interface IForwardMessage : ISharedForwardMessage, IChatMessage
     {
         [JsonPropertyName("nodeList")]
-        [JsonConverter(typeof(ChangeTypeJsonConverter<ForwardMessageNode[], IForwardMessageNode[]>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<IForwardMessageNode[], object[], ForwardMessageNode[]>))]
         new IForwardMessageNode[] Nodes { get; }
 
 #if !NETSTANDARD2_0
-        [JsonConverter(typeof(ChangeTypeJsonConverter<ForwardMessageNode[], ISharedForwardMessageNode[]>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<ISharedForwardMessageNode[], object[], ForwardMessageNode[]>))]
         [JsonPropertyName("nodeList")]
         ISharedForwardMessageNode[] ISharedForwardMessage.Nodes => Nodes;
 #endif
@@ -36,7 +36,7 @@ namespace Mirai.CSharp.HttpApi.Models.ChatMessages
         /// <summary>
         /// 转发的消息数组
         /// </summary>
-        [JsonConverter(typeof(ChangeTypeJsonConverter<ForwardMessageNode[], IForwardMessageNode[]>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<IForwardMessageNode[], object[], ForwardMessageNode[]>))]
         [JsonPropertyName("nodeList")]
         public IForwardMessageNode[] Nodes { get; set; } = null!;
 
@@ -57,7 +57,7 @@ namespace Mirai.CSharp.HttpApi.Models.ChatMessages
         }
 
 #if NETSTANDARD2_0
-        [JsonConverter(typeof(ChangeTypeJsonConverter<ForwardMessageNode[], ISharedForwardMessageNode[]>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<ISharedForwardMessageNode[], object[], ForwardMessageNode[]>))]
         [JsonPropertyName("nodeList")]
         ISharedForwardMessageNode[] ISharedForwardMessage.Nodes => Nodes;
 #endif

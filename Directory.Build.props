@@ -10,9 +10,9 @@
         <OutputType>Library</OutputType>
         <NoWin32Manifest>true</NoWin32Manifest>
         <Version>2.1.7.0</Version>
-        <AssemblyVersion>2.1.7.0</AssemblyVersion>
-        <FileVersion>2.1.7.0</FileVersion>
-        <PackageVersion>2.1.7.0</PackageVersion>
+        <AssemblyVersion>2.1.8.0</AssemblyVersion>
+        <FileVersion>2.1.8.0</FileVersion>
+        <PackageVersion>2.1.8</PackageVersion>
         <Nullable>enable</Nullable>
         <LangVersion>preview</LangVersion>
         <Authors>Executor</Authors>

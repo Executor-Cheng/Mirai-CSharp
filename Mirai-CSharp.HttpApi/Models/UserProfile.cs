@@ -3,7 +3,7 @@ using ISharedUserProfile = Mirai.CSharp.Models.IUserProfile;
 
 namespace Mirai.CSharp.HttpApi.Models
 {
-    /// <inheritdoc cref="ISharedFriendProfile"/>
+    /// <inheritdoc cref="ISharedUserProfile"/>
     public interface IUserProfile : ISharedUserProfile, ICommonProfile
     {
 

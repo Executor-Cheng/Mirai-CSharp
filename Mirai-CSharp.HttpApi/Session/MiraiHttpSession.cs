@@ -114,11 +114,7 @@ namespace Mirai.CSharp.HttpApi.Session
 
         private static void CreateLinkedUserSessionToken(CancellationToken sessionToken,
                                                          CancellationToken userToken,
-#if NETSTANDARD2_0
                                                          out CancellationTokenSource? cts,
-#else
-                                                         [NotNullWhen(true)]out CancellationTokenSource? cts,
-#endif
                                                          out CancellationToken finalToken)
         {
             if (userToken == default)

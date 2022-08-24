@@ -17,7 +17,7 @@ namespace Mirai.CSharp.HttpApi.Models.EventArgs
     public interface IFriendMessageEventArgs : ISharedJsonFriendMessageEventArgs, ICommonMessageEventArgs
     {
         /// <inheritdoc cref="ISharedFriendMessageEventArgs.Sender"/>
-        [JsonConverter(typeof(ChangeTypeJsonConverter<FriendInfo, IFriendInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<IFriendInfo, FriendInfo>))]
         [JsonPropertyName("sender")]
         new IFriendInfo Sender { get; }
 
@@ -29,7 +29,7 @@ namespace Mirai.CSharp.HttpApi.Models.EventArgs
     public class FriendMessageEventArgs : CommonMessageEventArgs, IFriendMessageEventArgs
     {
         /// <inheritdoc/>
-        [JsonConverter(typeof(ChangeTypeJsonConverter<FriendInfo, IFriendInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<IFriendInfo, FriendInfo>))]
         [JsonPropertyName("sender")]
         public IFriendInfo Sender { get; set; } = null!;
 

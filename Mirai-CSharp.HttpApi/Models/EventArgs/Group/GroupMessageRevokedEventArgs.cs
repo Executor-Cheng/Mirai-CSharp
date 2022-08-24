@@ -2,11 +2,13 @@ using System;
 using System.Text.Json.Serialization;
 using Mirai.CSharp.HttpApi.Parsers.Attributes;
 using Mirai.CSharp.HttpApi.Utility.JsonConverters;
+using ISharedGroupMessageRevokedEventArgs = Mirai.CSharp.Models.EventArgs.IGroupMessageRevokedEventArgs<System.Text.Json.JsonElement>;
+#if NETSTANDARD2_0
 using ISharedGroupEventArgs = Mirai.CSharp.Models.EventArgs.IGroupEventArgs;
 using ISharedGroupInfo = Mirai.CSharp.Models.IGroupInfo;
 using ISharedGroupMemberInfo = Mirai.CSharp.Models.IGroupMemberInfo;
-using ISharedGroupMessageRevokedEventArgs = Mirai.CSharp.Models.EventArgs.IGroupMessageRevokedEventArgs<System.Text.Json.JsonElement>;
 using ISharedOperatorEventArgs = Mirai.CSharp.Models.EventArgs.IOperatorEventArgs;
+#endif
 
 namespace Mirai.CSharp.HttpApi.Models.EventArgs
 {
@@ -24,11 +26,11 @@ namespace Mirai.CSharp.HttpApi.Models.EventArgs
         /// <summary>
         /// 被撤回消息所在群信息
         /// </summary>
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupInfo, IGroupInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<IGroupInfo, GroupInfo>))]
         [JsonPropertyName("group")]
         public IGroupInfo Group { get; set; } = null!;
         /// <inheritdoc/>
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupMemberInfo, IGroupMemberInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<IGroupMemberInfo, GroupMemberInfo>))]
         [JsonPropertyName("operator")]
         public IGroupMemberInfo Operator { get; set; } = null!;
 
@@ -44,11 +46,11 @@ namespace Mirai.CSharp.HttpApi.Models.EventArgs
 
 #if NETSTANDARD2_0
         /// <inheritdoc/>
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupInfo, ISharedGroupInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<ISharedGroupInfo, GroupInfo>))]
         [JsonPropertyName("group")]
         ISharedGroupInfo ISharedGroupEventArgs.Group => Group;
         /// <inheritdoc/>
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupMemberInfo, ISharedGroupMemberInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<ISharedGroupMemberInfo, GroupMemberInfo>))]
         [JsonPropertyName("member")]
         ISharedGroupMemberInfo ISharedOperatorEventArgs.Operator => Operator;
 #endif

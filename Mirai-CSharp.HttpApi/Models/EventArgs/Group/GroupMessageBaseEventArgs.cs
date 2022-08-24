@@ -14,12 +14,12 @@ namespace Mirai.CSharp.HttpApi.Models.EventArgs
     public interface IGroupMessageBaseEventArgs : ISharedJsonElementGroupMessageBaseEventArgs, ICommonMessageEventArgs
     {
         /// <inheritdoc cref="ISharedGroupMessageBaseEventArgs.Sender"/>
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupMemberInfo, IGroupMemberInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<IGroupMemberInfo, GroupMemberInfo>))]
         [JsonPropertyName("sender")]
         new IGroupMemberInfo Sender { get; }
 
 #if !NETSTANDARD2_0
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupMemberInfo, ISharedGroupMemberInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<ISharedGroupMemberInfo, GroupMemberInfo>))]
         [JsonPropertyName("sender")]
         ISharedGroupMemberInfo ISharedGroupMessageBaseEventArgs.Sender => Sender;
 #endif
@@ -28,7 +28,7 @@ namespace Mirai.CSharp.HttpApi.Models.EventArgs
     public abstract class GroupMessageBaseEventArgs : CommonMessageEventArgs, IGroupMessageBaseEventArgs
     {
         /// <inheritdoc/>
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupMemberInfo, IGroupMemberInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<IGroupMemberInfo, GroupMemberInfo>))]
         [JsonPropertyName("sender")]
         public IGroupMemberInfo Sender { get; set; } = null!;
 
@@ -44,7 +44,7 @@ namespace Mirai.CSharp.HttpApi.Models.EventArgs
 
 #if NETSTANDARD2_0
         /// <inheritdoc/>
-        [JsonConverter(typeof(ChangeTypeJsonConverter<GroupMemberInfo, ISharedGroupMemberInfo>))]
+        [JsonConverter(typeof(ChangeTypeJsonConverter<ISharedGroupMemberInfo, GroupMemberInfo>))]
         [JsonPropertyName("sender")]
         ISharedGroupMemberInfo ISharedGroupMessageBaseEventArgs.Sender => Sender;
 #endif
