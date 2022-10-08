@@ -166,7 +166,6 @@ namespace Mirai.CSharp.HttpApi.Builder
         public static MiraiHttpFrameworkBuilder AddDefaultServices(this MiraiHttpFrameworkBuilder builder)
         {
             builder.Services.TryAddSingleton<ChatMessageJsonConverter>();
-            builder.Services.TryAddSingleton<ISilkLameCoder, SilkLameCoder>();
             builder.AddInvoker<MiraiHttpMessageHandlerInvoker>();
             builder.AddDefaultParsers();
             builder.AddDefaultChatParsers();

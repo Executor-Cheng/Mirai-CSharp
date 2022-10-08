@@ -79,7 +79,7 @@ namespace Mirai.CSharp.HttpApi.Extensions
 
         public static async Task AsApiRespAsync(this Task<HttpResponseMessage> responseTask, CancellationToken token = default)
         {
-            using var j = await responseTask.GetJsonAsync(token);
+            using var j = await responseTask.GetJsonAsync(token).ConfigureAwait(false);
             var root = j.RootElement;
             if (!root.CheckApiRespCode(out var code))
             {

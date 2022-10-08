@@ -1,4 +1,4 @@
-namespace Mirai.CSharp.HttpApi.Models
+namespace Mirai.CSharp.VoiceConverter
 {
     public struct Mp3Metadata
     {

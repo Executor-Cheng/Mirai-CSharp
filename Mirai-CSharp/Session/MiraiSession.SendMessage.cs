@@ -9,6 +9,8 @@ namespace Mirai.CSharp.Session
     {
         public abstract Task RevokeMessageAsync(int messageId, CancellationToken token = default);
 
+        public abstract Task RevokeMessageAsync(int messageId, long target, CancellationToken token = default);
+
         /// <inheritdoc/>
         public virtual Task<int> SendFriendMessageAsync(long qqNumber, params IChatMessage[] chain)
         {

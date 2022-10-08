@@ -16,8 +16,8 @@ namespace Mirai.CSharp.HttpApi.Session
     {
         private Task<IMiraiSessionConfig> GetConfigAsync(InternalSessionInfo session, CancellationToken token = default)
         {
-            return _client.GetAsync($"{_options.BaseUrl}/config?sessionKey={WebUtility.UrlEncode(session.SessionKey)}", session.Token)
-                .AsApiRespAsync<IMiraiSessionConfig, MiraiSessionConfig>(session.Token);
+            return _client.GetAsync($"{_options.BaseUrl}/config?sessionKey={WebUtility.UrlEncode(session.SessionKey)}", token)
+                .AsApiRespAsync<IMiraiSessionConfig, MiraiSessionConfig>(token);
         }
 
         private Task SetConfigAsync(InternalSessionInfo session, IMiraiSessionConfig config, CancellationToken token = default)
@@ -28,7 +28,7 @@ namespace Mirai.CSharp.HttpApi.Session
                 cacheSize = config.CacheSize,
                 enableWebsocket = config.EnableWebSocket
             };
-            return _client.PostAsJsonAsync($"{_options.BaseUrl}/config", payload, JsonSerializeOptionsFactory.IgnoreNulls, session.Token).AsApiRespAsync(session.Token);
+            return _client.PostAsJsonAsync($"{_options.BaseUrl}/config", payload, JsonSerializeOptionsFactory.IgnoreNulls, token).AsApiRespAsync(token);
         }
 
         /// <inheritdoc/>

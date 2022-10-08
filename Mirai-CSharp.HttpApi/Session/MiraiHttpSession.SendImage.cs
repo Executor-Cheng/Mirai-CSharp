@@ -5,13 +5,14 @@ using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Mirai.CSharp.Extensions;
 using Mirai.CSharp.HttpApi.Extensions;
+using Mirai.CSharp.HttpApi.Models.ChatMessages;
 using Mirai.CSharp.HttpApi.Utility;
 using Mirai.CSharp.Models;
-using SkiaSharp;
+using Mirai.CSharp.Services;
 using ISharedImageMessage = Mirai.CSharp.Models.ChatMessages.IImageMessage;
-using Mirai.CSharp.HttpApi.Models.ChatMessages;
 #if NET5_0_OR_GREATER
 using System.Net.Http.Json;
 #endif
@@ -62,7 +63,23 @@ namespace Mirai.CSharp.HttpApi.Session
         /// </summary>
         private async Task<ISharedImageMessage> InternalUploadPictureAsync(InternalSessionInfo session, UploadTarget type, Stream imgStream, bool disposeStream, CancellationToken token = default)
         {
-            // 使用 disposeStream 目的是不使上层 caller 创建多余的状态机
+            IImageConverter? imageConverter = _services.GetService<IImageConverter>();
+            string format;
+            if (imageConverter != null)
+            {
+                var (outputFormat, converted) = await imageConverter.ConvertAsync(imgStream, ImageFormat.Png | ImageFormat.Jpeg | ImageFormat.Gif, token).ConfigureAwait(false);
+                imgStream = new MemoryStream(converted);
+                format = outputFormat switch
+                {
+                    ImageFormat.Png => "png",
+                    ImageFormat.Jpeg => "jpeg",
+                    _ => "gif",
+                };
+            }
+            else
+            {
+                format = "jpeg";
+            }
             if (session.ApiVersion <= new Version(1, 7, 0))
             {
                 Guid guid = Guid.NewGuid();
@@ -70,22 +87,6 @@ namespace Mirai.CSharp.HttpApi.Session
                 await imgStream.CopyToAsync(ms, 81920, token).ConfigureAwait(false);
                 ImageHttpListener.RegisterImage(guid, ms);
                 return new ImageMessage(null, $"http://127.0.0.1:{ImageHttpListener.Port}/fetch?guid={guid:n}", null);
-            }
-            Stream? internalStream = null;
-            bool internalCreated = false;
-            long pervious = 0;
-            if (!imgStream.CanSeek || imgStream.CanTimeout) // 对于 CanTimeOut 的 imgStream, 或者无法Seek的, 一律假定其读取行为是阻塞的
-                                                            // 为其创建一个内部缓存先行异步读取
-            {
-                internalStream = new MemoryStream(8192);
-                internalCreated = true;
-                await imgStream.CopyToAsync(internalStream, 81920, token);
-                internalStream.Seek(0, SeekOrigin.Begin);
-            }
-            else // 否则不创建副本, 避免多余的堆分配
-            {
-                internalStream = imgStream;
-                pervious = imgStream.Position;
             }
             HttpContent sessionKeyContent = new StringContent(session.SessionKey);
             sessionKeyContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
@@ -97,48 +98,7 @@ namespace Mirai.CSharp.HttpApi.Session
             {
                 Name = "type"
             };
-            string format;
-            using SKManagedStream skstream = new SKManagedStream(internalStream, false);
-            using (SKCodec codec = SKCodec.Create(skstream)) // 已经把数据读到非托管内存里边了, 就不用管input的死活了
-            {
-                var skformat = codec.EncodedFormat;
-                format = skformat.ToString().ToLower();
-                switch (skformat)
-                {
-                    case SKEncodedImageFormat.Gif:
-                    case SKEncodedImageFormat.Jpeg:
-                    case SKEncodedImageFormat.Png:
-                        break;
-                    default:
-                        {
-                            skstream.Seek(0);
-                            using (SKBitmap bitmap = SKBitmap.Decode(skstream))
-                            {
-                                if (!internalCreated)
-                                {
-                                    internalStream = new MemoryStream(8192);
-                                    internalCreated = true;
-                                }
-                                else
-                                {
-                                    internalStream.Seek(0, SeekOrigin.Begin);
-                                }
-                                bitmap.Encode(internalStream, SKEncodedImageFormat.Png, 100);
-                            }
-                            format = "png";
-                            break;
-                        }
-                }
-            }
-            if (internalCreated)
-            {
-                internalStream.Seek(0, SeekOrigin.Begin);
-            }
-            else // internalStream == imgStream
-            {
-                internalStream.Seek(pervious - internalStream.Position, SeekOrigin.Current);
-            }
-            HttpContent imageContent = new StreamContent(internalStream);
+            HttpContent imageContent = new StreamContent(imgStream);
             imageContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
             {
                 Name = "img",

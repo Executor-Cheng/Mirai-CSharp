@@ -35,7 +35,7 @@ namespace Mirai.CSharp.Session
         /// <returns>表示此异步操作的 <see cref="Task"/></returns>
         Task DeleteGroupAnnouncementAsync(long groupNumber, string id, CancellationToken token = default);
 
-        /// <inheritdoc cref="DeleteGroupAnnouncementAsync(long, long, CancellationToken)"/>
+        /// <inheritdoc cref="DeleteGroupAnnouncementAsync(long, string, CancellationToken)"/>
         /// <param name="announcement">群公告实例</param>
         Task DeleteGroupAnnouncementAsync(long groupNumber, IGroupAnnouncement announcement, CancellationToken token = default);
     }

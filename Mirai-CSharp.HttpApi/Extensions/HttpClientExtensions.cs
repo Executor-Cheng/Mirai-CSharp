@@ -39,7 +39,7 @@ namespace Mirai.CSharp.HttpApi.Extensions
             using HttpRequestMessage request = new HttpRequestMessage(method, uri);
             request.Content = content;
             request.Version = DefaultHttpVersion;
-            return await client.SendAsync(request, token);
+            return await client.SendAsync(request, token).ConfigureAwait(false);
         }
 
 #if NET5_0_OR_GREATER
@@ -52,7 +52,7 @@ namespace Mirai.CSharp.HttpApi.Extensions
         public static async Task<byte[]> GetBytesAsync(this Task<HttpResponseMessage> responseTask, CancellationToken token = default)
         {
             using HttpResponseMessage response = await responseTask.ConfigureAwait(false);
-            return await response.Content.ReadAsByteArrayAsync(token);
+            return await response.Content.ReadAsByteArrayAsync(token).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace Mirai.CSharp.HttpApi.Extensions
         public static async Task<string> GetStringAsync(this Task<HttpResponseMessage> responseTask, CancellationToken token = default)
         {
             using HttpResponseMessage response = await responseTask.ConfigureAwait(false);
-            return await response.Content.ReadAsStringAsync(token);
+            return await response.Content.ReadAsStringAsync(token).ConfigureAwait(false);
         }
 #else
 #pragma warning disable IDE0079 // Remove unnecessary suppression
@@ -78,7 +78,7 @@ namespace Mirai.CSharp.HttpApi.Extensions
         public static async Task<byte[]> GetBytesAsync(this Task<HttpResponseMessage> responseTask, CancellationToken token = default)
         {
             using HttpResponseMessage response = await responseTask.ConfigureAwait(false);
-            return await response.Content.ReadAsByteArrayAsync();
+            return await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace Mirai.CSharp.HttpApi.Extensions
         public static async Task<string> GetStringAsync(this Task<HttpResponseMessage> responseTask, CancellationToken token = default)
         {
             using HttpResponseMessage response = await responseTask.ConfigureAwait(false);
-            return await response.Content.ReadAsStringAsync();
+            return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
         }
 #pragma warning restore IDE0060
 #pragma warning restore IDE0079
@@ -136,7 +136,7 @@ namespace Mirai.CSharp.HttpApi.Extensions
         public static async Task<T?> GetObjectAsync<T>(this Task<HttpResponseMessage> responseTask, JsonSerializerOptions? options, CancellationToken token = default)
         {
             using HttpResponseMessage response = await responseTask.ConfigureAwait(false);
-            return await response.Content.ReadFromJsonAsync<T?>(options, token);
+            return await response.Content.ReadFromJsonAsync<T?>(options, token).ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="GetObjectAsync(Task{HttpResponseMessage}, Type, JsonSerializerOptions?, CancellationToken)"/>
@@ -151,7 +151,7 @@ namespace Mirai.CSharp.HttpApi.Extensions
         public static async Task<object?> GetObjectAsync(this Task<HttpResponseMessage> responseTask, Type returnType, JsonSerializerOptions? options, CancellationToken token = default)
         {
             using HttpResponseMessage response = await responseTask.ConfigureAwait(false);
-            return await response.Content.ReadFromJsonAsync(returnType, options, token);
+            return await response.Content.ReadFromJsonAsync(returnType, options, token).ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="GetJsonAsync(Task{HttpResponseMessage}, JsonDocumentOptions, CancellationToken)"/>
@@ -178,7 +178,7 @@ namespace Mirai.CSharp.HttpApi.Extensions
             }
             using (stream)
             {
-                return await JsonDocument.ParseAsync(stream, options, token);
+                return await JsonDocument.ParseAsync(stream, options, token).ConfigureAwait(false);
             }
         }
 #else
@@ -200,7 +200,7 @@ namespace Mirai.CSharp.HttpApi.Extensions
         {
             using HttpResponseMessage response = await responseTask.ConfigureAwait(false);
             using Stream stream = await response.Content.ReadAsStreamAsync();
-            return await JsonSerializer.DeserializeAsync<T?>(stream, options, token);
+            return await JsonSerializer.DeserializeAsync<T?>(stream, options, token).ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="GetObjectAsync(Task{HttpResponseMessage}, Type, JsonSerializerOptions?, CancellationToken)"/>
@@ -214,8 +214,8 @@ namespace Mirai.CSharp.HttpApi.Extensions
         public static async Task<object?> GetObjectAsync(this Task<HttpResponseMessage> responseTask, Type returnType, JsonSerializerOptions? options, CancellationToken token = default)
         {
             using HttpResponseMessage response = await responseTask.ConfigureAwait(false);
-            using var stream = await response.Content.ReadAsStreamAsync();
-            return await JsonSerializer.DeserializeAsync(stream, returnType, options, token);
+            using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            return await JsonSerializer.DeserializeAsync(stream, returnType, options, token).ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="GetJsonAsync(Task{HttpResponseMessage}, JsonDocumentOptions, CancellationToken)"/>
@@ -237,8 +237,8 @@ namespace Mirai.CSharp.HttpApi.Extensions
         public static async Task<JsonDocument> GetJsonAsync(this Task<HttpResponseMessage> responseTask, JsonDocumentOptions options, CancellationToken token = default)
         {
             using HttpResponseMessage response = await responseTask.ConfigureAwait(false);
-            using Stream stream = await response.Content.ReadAsStreamAsync();
-            return await JsonDocument.ParseAsync(stream, options, token);
+            using Stream stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            return await JsonDocument.ParseAsync(stream, options, token).ConfigureAwait(false);
         }
 #endif
         /// <summary>

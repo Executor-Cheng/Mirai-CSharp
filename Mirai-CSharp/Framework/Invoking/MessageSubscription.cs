@@ -122,7 +122,7 @@ namespace Mirai.CSharp.Framework.Invoking
         {
             foreach (IMessageHandler<TClient, TMessage> handler in this)
             {
-                await handler.HandleMessageAsync(client, message);
+                await handler.HandleMessageAsync(client, message).ConfigureAwait(false);
                 if (message.BlockRemainingHandlers)
                 {
                     break;

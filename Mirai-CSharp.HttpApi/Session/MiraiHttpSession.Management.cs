@@ -15,6 +15,7 @@ using ISharedGroupMemberInfo = Mirai.CSharp.Models.IGroupMemberInfo;
 using System.Net.Http.Json;
 #endif
 
+#pragma warning disable CS0809 // Obsolete member overrides non-obsolete member
 namespace Mirai.CSharp.HttpApi.Session
 {
     public partial class MiraiHttpSession
@@ -163,15 +164,51 @@ namespace Mirai.CSharp.HttpApi.Session
         }
 
         /// <inheritdoc/>
+        /// <exception cref="NotSupportedException"/>
+        [Obsolete("自mirai-api-http 2.6.0起, 要求传入消息所在的群号或好友QQ号, 请考虑调用SetEssenceMessageAsync(int, long, CancellationToken)方法")]
         public override Task SetEssenceMessageAsync(int id, CancellationToken token = default)
         {
             InternalSessionInfo session = SafeGetSession();
-            CreateLinkedUserSessionToken(session.Token, token, out CancellationTokenSource? cts, out token);
+            if (session.ApiVersion >= new Version(2, 6, 0))
+            {
+                throw new NotSupportedException("自mirai-api-http 2.6.0起, 要求传入消息所在的群号或好友QQ号, 请调用SetEssenceMessageAsync(int, long, CancellationToken)方法");
+            }
             var payload = new
             {
                 sessionKey = session.SessionKey,
                 target = id,
             };
+            return SetEssenceMessageAsync(session, payload, token);
+        }
+
+        /// <inheritdoc/>
+        public override Task SetEssenceMessageAsync(int id, long target, CancellationToken token = default)
+        {
+            InternalSessionInfo session = SafeGetSession();
+            object payload;
+            if (session.ApiVersion >= new Version(2, 6, 0))
+            {
+                payload = new
+                {
+                    sessionKey = session.SessionKey,
+                    messageId = id,
+                    target
+                };
+            }
+            else
+            {
+                payload = new
+                {
+                    sessionKey = session.SessionKey,
+                    target = id,
+                };
+            }
+            return SetEssenceMessageAsync(session, payload, token);
+        }
+
+        private Task SetEssenceMessageAsync(InternalSessionInfo session, object payload, CancellationToken token = default)
+        {
+            CreateLinkedUserSessionToken(session.Token, token, out CancellationTokenSource? cts, out token);
             return _client.PostAsJsonAsync($"{_options.BaseUrl}/setEssence", payload, token)
                 .AsApiRespAsync(token)
                 .DisposeWhenCompleted(cts);

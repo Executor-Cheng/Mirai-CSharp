@@ -113,7 +113,7 @@ namespace Mirai.CSharp.HttpApi.Session
         [Obsolete("新版本的 mirai-console 中已经没有管理员概念了, 参考: https://github.com/project-mirai/mirai-api-http/pull/265#discussion_r598428011")]
         public static async Task<long[]> GetManagersAsync(HttpClient client, MiraiHttpSessionOptions options, long qqNumber, CancellationToken token = default)
         {
-            string json = await client.GetAsync($"{options.BaseUrl}/managers?qq={qqNumber}", token).GetStringAsync(token);
+            string json = await client.GetAsync($"{options.BaseUrl}/managers?qq={qqNumber}", token).GetStringAsync(token).ConfigureAwait(false);
             if (!string.IsNullOrEmpty(json))
             {
                 return JsonSerializer.Deserialize<long[]>(json)!;

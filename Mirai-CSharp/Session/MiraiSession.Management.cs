@@ -41,6 +41,9 @@ namespace Mirai.CSharp.Session
         public abstract Task SetEssenceMessageAsync(int id, CancellationToken token = default);
 
         /// <inheritdoc/>
+        public abstract Task SetEssenceMessageAsync(int id, long target, CancellationToken token = default);
+
+        /// <inheritdoc/>
         public abstract Task ChangeGroupConfigAsync(long groupNumber, IGroupConfig config, CancellationToken token = default);
 
         /// <inheritdoc/>
