@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using Mirai.CSharp.HttpApi.Models.ChatMessages;
 using Mirai.CSharp.HttpApi.Parsers.Attributes;
+using Mirai.CSharp.HttpApi.Utility.JsonConverters;
 using ISharedJsonElementOtherClientMessageEventArgs = Mirai.CSharp.Models.EventArgs.IOtherClientMessageEventArgs<System.Text.Json.JsonElement>;
 using ISharedOtherClientInfo = Mirai.CSharp.Models.IOtherClientInfo;
 using ISharedOtherClientMessageEventArgs = Mirai.CSharp.Models.EventArgs.IOtherClientMessageEventArgs;
@@ -24,6 +25,7 @@ namespace Mirai.CSharp.HttpApi.Models.EventArgs.OtherClient
 
     public class OtherClientMessageEventArgs : CommonMessageEventArgs, IOtherClientMessageEventArgs
     {
+        [JsonConverter(typeof(ChangeTypeJsonConverter<IOtherClientInfo, OtherClientInfo>))]
         [JsonPropertyName("sender")]
         public IOtherClientInfo Sender { get; set; } = null!;
 

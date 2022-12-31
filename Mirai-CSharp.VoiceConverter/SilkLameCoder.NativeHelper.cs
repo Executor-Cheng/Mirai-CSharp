@@ -1,8 +1,7 @@
 using System.Runtime.InteropServices;
-using Mirai.CSharp.HttpApi.Models;
 
 #pragma warning disable CA1401 // P/Invokes should not be visible
-namespace Mirai.CSharp.HttpApi.Utility
+namespace Mirai.CSharp.VoiceConverter
 {
     public unsafe partial class SilkLameCoder
     {

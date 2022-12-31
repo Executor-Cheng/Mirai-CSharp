@@ -13,7 +13,6 @@ using ISharedGroupFileInfo = Mirai.CSharp.Models.IGroupFileInfo;
 using System.Net.Http.Json;
 #endif
 
-#pragma warning disable CA2016 // Forward the 'CancellationToken' parameter to methods
 namespace Mirai.CSharp.HttpApi.Session
 {
     public partial class MiraiHttpSession

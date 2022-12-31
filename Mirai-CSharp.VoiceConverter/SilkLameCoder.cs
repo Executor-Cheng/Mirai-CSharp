@@ -1,20 +1,14 @@
 using System;
 using System.IO;
 using System.Runtime.CompilerServices;
-using Mirai.CSharp.HttpApi.Models;
 #if NET5_0_OR_GREATER
 using System.Runtime.InteropServices;
 #endif
 
-namespace Mirai.CSharp.HttpApi.Utility
+namespace Mirai.CSharp.VoiceConverter
 {
     public unsafe interface ISilkLameCoder : IDisposable
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="buffer"></param>
-        /// <returns></returns>
         byte[] EncodeMp3ToSilk(ReadOnlySpan<byte> buffer);
 
         byte[] DecodeSilkToMp3(ReadOnlySpan<byte> buffer, int samplerate);
@@ -41,7 +35,6 @@ namespace Mirai.CSharp.HttpApi.Utility
 #if NETSTANDARD2_0
             _loadedSilkLame = LoadSilklame();
 #endif
-            NativeHelper.InitializeLameDecoder();
             void* glf = NativeHelper.CreateDefaultLameFlag();
             if (glf == null)
             {

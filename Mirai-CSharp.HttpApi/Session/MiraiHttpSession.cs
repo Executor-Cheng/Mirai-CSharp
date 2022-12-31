@@ -76,8 +76,6 @@ namespace Mirai.CSharp.HttpApi.Session
 
         protected readonly JsonSerializerOptions _chatMessageSerializingOptions; // 缓存一份
 
-        protected readonly ISilkLameCoder? _coder;
-
         protected CancellationTokenSource? _instanceCts;
 
         protected InternalSessionInfo? _currentSession;
@@ -85,8 +83,8 @@ namespace Mirai.CSharp.HttpApi.Session
         /// <summary>
         /// 初始化 <see cref="MiraiHttpSession"/> 类的新实例
         /// </summary>
-        public MiraiHttpSession(IServiceProvider services, IOptions<MiraiHttpSessionOptions> options, IMiraiHttpMessageHandlerInvoker invoker, ChatMessageJsonConverter jsonConverter, HttpClient? client = null, ISilkLameCoder? coder = null)
-            : this(services, options.Value, invoker, jsonConverter, client ?? new HttpClient(), coder)
+        public MiraiHttpSession(IServiceProvider services, IOptions<MiraiHttpSessionOptions> options, IMiraiHttpMessageHandlerInvoker invoker, ChatMessageJsonConverter jsonConverter, HttpClient? client = null)
+            : this(services, options.Value, invoker, jsonConverter, client ?? new HttpClient())
         {
            
         }
@@ -94,13 +92,12 @@ namespace Mirai.CSharp.HttpApi.Session
         /// <summary>
         /// 初始化 <see cref="MiraiHttpSession"/> 类的新实例
         /// </summary>
-        protected MiraiHttpSession(IServiceProvider services, MiraiHttpSessionOptions options, IMiraiHttpMessageHandlerInvoker invoker, ChatMessageJsonConverter jsonConverter, HttpClient client, ISilkLameCoder? coder = null)
+        protected MiraiHttpSession(IServiceProvider services, MiraiHttpSessionOptions options, IMiraiHttpMessageHandlerInvoker invoker, ChatMessageJsonConverter jsonConverter, HttpClient client)
         {
             _services = services;
             _options = options;
             _client = client;
             _invoker = invoker;
-            _coder = coder;
             JsonSerializerOptions chatMessageSerializingOptions = JsonSerializeOptionsFactory.IgnoreNulls;
             chatMessageSerializingOptions.Converters.Add(jsonConverter);
             _chatMessageSerializingOptions = chatMessageSerializingOptions;

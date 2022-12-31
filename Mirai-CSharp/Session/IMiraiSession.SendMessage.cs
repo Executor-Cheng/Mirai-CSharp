@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Mirai.CSharp.Builders;
 using Mirai.CSharp.Exceptions;
-using Mirai.CSharp.Models;
 using Mirai.CSharp.Models.ChatMessages;
 
 #pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
@@ -23,9 +22,28 @@ namespace Mirai.CSharp.Session
         /// <item><see cref="SendGroupMessageAsync(long, IMessageChainBuilder, int?, CancellationToken)"/> 的返回值</item>
         /// </list>
         /// </param>
+        /// <param name="token">用于取消此异步操作的 <see cref="CancellationToken"/></param>
         /// <exception cref="InvalidOperationException"/>
         /// <exception cref="TargetNotFoundException"/>
         Task RevokeMessageAsync(int messageId, CancellationToken token = default);
+
+        /// <summary>
+        /// 异步撤回消息
+        /// </summary>
+        /// <param name="messageId">
+        /// 请提供以下之一
+        /// <list type="bullet">
+        /// <item><see cref="ISourceMessage.Id"/></item>
+        /// <item><see cref="SendFriendMessageAsync(long, IMessageChainBuilder, int?, CancellationToken)"/> 的返回值</item>
+        /// <item><see cref="SendTempMessageAsync(long, long, IMessageChainBuilder, int?, CancellationToken)"/> 的返回值</item>
+        /// <item><see cref="SendGroupMessageAsync(long, IMessageChainBuilder, int?, CancellationToken)"/> 的返回值</item>
+        /// </list>
+        /// </param>
+        /// <param name="target">消息来源群号/好友QQ号</param>
+        /// <param name="token">用于取消此异步操作的 <see cref="CancellationToken"/></param>
+        /// <exception cref="InvalidOperationException"/>
+        /// <exception cref="TargetNotFoundException"/>
+        Task RevokeMessageAsync(int messageId, long target, CancellationToken token = default);
 
         /// <inheritdoc cref="SendFriendMessageAsync(long, IChatMessage[], CancellationToken)"/>
         Task<int> SendFriendMessageAsync(long qqNumber, params IChatMessage[] chain);

@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Mirai_CSharp.ImageConverter</RootNamespace>
+    <Description>Provides default IImageConverter implementation.</Description>
+    <PackageTags>mirai</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mirai-CSharp\Mirai-CSharp.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="SkiaSharp" Version="2.80.3" />
+  </ItemGroup>
+</Project>

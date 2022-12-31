@@ -5,7 +5,10 @@ namespace Mirai.CSharp.Models.EventArgs
     /// </summary>
     public interface IGroupApplyEventArgs : ICommonGroupApplyEventArgs
     {
-
+        /// <summary>
+        /// 邀请人QQ号
+        /// </summary>
+        long? InvitorId { get; }
     }
 
     /// <summary>

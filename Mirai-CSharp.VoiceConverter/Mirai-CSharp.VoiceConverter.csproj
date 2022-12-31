@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Mirai_CSharp.VoiceConverter</RootNamespace>
+    <Description>Provides default IVoiceConverter implementation.</Description>
+    <PackageTags>mirai</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mirai-CSharp\Mirai-CSharp.csproj" />
+  </ItemGroup>
+
+</Project>

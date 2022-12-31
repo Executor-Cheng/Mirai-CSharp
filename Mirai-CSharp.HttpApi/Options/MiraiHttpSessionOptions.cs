@@ -24,11 +24,18 @@ namespace Mirai.CSharp.HttpApi.Options
         /// </remarks>
         public bool SuppressAwaitMessageInvoker { get; set; }
         /// <summary>
+        /// 请求形式
+        /// </summary>
+        /// <remarks>
+        /// 如果本属性为 <see langword="null"/>, 将使用http
+        /// </remarks>
+        public string? Scheme { get; set; }
+        /// <summary>
         /// 内部使用。
         /// </summary>
         internal string BaseUrl
         {
-            get => _baseUrl ??= $"http://{Host}:{Port}";
+            get => _baseUrl ??= $"{Scheme ?? "http"}://{Host}:{Port}";
             set => _baseUrl = value;
         }
 

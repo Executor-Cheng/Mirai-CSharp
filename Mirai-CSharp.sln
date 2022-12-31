@@ -27,7 +27,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mirai-CSharp.NativeAssets.L
 		Mirai-CSharp.NativeAssets.Linux\Mirai-CSharp.NativeAssets.Linux.props = Mirai-CSharp.NativeAssets.Linux\Mirai-CSharp.NativeAssets.Linux.props
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mirai-CSharp.Example.Hosting", "Mirai-CSharp.Example.Hosting\Mirai-CSharp.Example.Hosting.csproj", "{5679DB58-8369-408C-A607-8C7BC1A76D69}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mirai-CSharp.Example.Hosting", "Mirai-CSharp.Example.Hosting\Mirai-CSharp.Example.Hosting.csproj", "{5679DB58-8369-408C-A607-8C7BC1A76D69}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mirai-CSharp.ImageConverter", "Mirai-CSharp.ImageConverter\Mirai-CSharp.ImageConverter.csproj", "{7079EFD7-355A-4F77-BAC1-21B6AC135B93}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mirai-CSharp.VoiceConverter", "Mirai-CSharp.VoiceConverter\Mirai-CSharp.VoiceConverter.csproj", "{869CD8E1-4D45-4742-B40B-8930C5F7ECA4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +55,14 @@ Global
 		{5679DB58-8369-408C-A607-8C7BC1A76D69}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5679DB58-8369-408C-A607-8C7BC1A76D69}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5679DB58-8369-408C-A607-8C7BC1A76D69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7079EFD7-355A-4F77-BAC1-21B6AC135B93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7079EFD7-355A-4F77-BAC1-21B6AC135B93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7079EFD7-355A-4F77-BAC1-21B6AC135B93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7079EFD7-355A-4F77-BAC1-21B6AC135B93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{869CD8E1-4D45-4742-B40B-8930C5F7ECA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{869CD8E1-4D45-4742-B40B-8930C5F7ECA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{869CD8E1-4D45-4742-B40B-8930C5F7ECA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{869CD8E1-4D45-4742-B40B-8930C5F7ECA4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

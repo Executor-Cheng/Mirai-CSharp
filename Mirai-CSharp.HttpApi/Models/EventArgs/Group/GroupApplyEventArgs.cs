@@ -15,6 +15,9 @@ namespace Mirai.CSharp.HttpApi.Models.EventArgs
 
     public class GroupApplyEventArgs : CommonGroupApplyEventArgs, IGroupApplyEventArgs
     {
+        /// <inheritdoc/>
+        public long? InvitorId { get; }
+
         [Obsolete("此类不应由用户主动创建实例。")]
         public GroupApplyEventArgs()
         {
@@ -22,9 +25,9 @@ namespace Mirai.CSharp.HttpApi.Models.EventArgs
         }
 
         [Obsolete("此类不应由用户主动创建实例。")]
-        public GroupApplyEventArgs(string fromGroupName, long eventId, long fromGroup, long fromQQ, string nickName, string message) : base(fromGroupName, eventId, fromGroup, fromQQ, nickName, message)
+        public GroupApplyEventArgs(string fromGroupName, long eventId, long fromGroup, long fromQQ, string nickName, string message, long? invitorId) : base(fromGroupName, eventId, fromGroup, fromQQ, nickName, message)
         {
-
+            InvitorId = invitorId;
         }
     }
 }

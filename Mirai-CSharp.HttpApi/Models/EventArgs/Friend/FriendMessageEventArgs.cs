@@ -22,6 +22,8 @@ namespace Mirai.CSharp.HttpApi.Models.EventArgs
         new IFriendInfo Sender { get; }
 
 #if !NETSTANDARD2_0
+        [JsonConverter(typeof(ChangeTypeJsonConverter<ISharedFriendInfo, FriendInfo>))]
+        [JsonPropertyName("sender")]
         ISharedFriendInfo ISharedFriendMessageEventArgs.Sender => Sender;
 #endif
     }
@@ -46,6 +48,8 @@ namespace Mirai.CSharp.HttpApi.Models.EventArgs
             => $"{Sender.Name}({Sender.Id}) -> {string.Join("", (IEnumerable<ChatMessage>)Chain)}";
 
 #if NETSTANDARD2_0
+        [JsonConverter(typeof(ChangeTypeJsonConverter<ISharedFriendInfo, FriendInfo>))]
+        [JsonPropertyName("sender")]
         ISharedFriendInfo ISharedFriendMessageEventArgs.Sender => Sender;
 #endif
     }
