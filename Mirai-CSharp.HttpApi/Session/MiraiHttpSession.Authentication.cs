@@ -8,6 +8,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Text.Json.Serialization;
+using Mirai.CSharp.HttpApi.Models.ChatMessages;
 #if NET5_0_OR_GREATER
 using System.Net.Http.Json;
 #endif

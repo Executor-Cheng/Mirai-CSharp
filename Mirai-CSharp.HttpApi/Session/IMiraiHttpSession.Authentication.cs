@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Mirai.CSharp.Exceptions;
 using Mirai.CSharp.HttpApi.Exceptions;
-using Mirai.CSharp.Session;
 
 namespace Mirai.CSharp.HttpApi.Session
 {

@@ -89,28 +89,46 @@ namespace Mirai.CSharp.HttpApi.Extensions
 
         public static Task<TResult> AsApiRespAsync<TResult>(this Task<HttpResponseMessage> responseTask, CancellationToken token = default)
         {
-            return responseTask.AsApiRespAsync<TResult, TResult>(token);
+            return responseTask.AsApiRespAsync<TResult>(null, token);
         }
 
-        public static async Task<TResult> AsApiRespAsync<TResult, TImpl>(this Task<HttpResponseMessage> responseTask, CancellationToken token = default) where TImpl : TResult
+        public static Task<TResult> AsApiRespAsync<TResult>(this Task<HttpResponseMessage> responseTask, JsonSerializerOptions? options, CancellationToken token = default)
         {
-            //using var j = await responseTask.GetJsonAsync(token);
-            string json = await responseTask.GetStringAsync(token);
-            using var j = JsonDocument.Parse(json);
+            return responseTask.AsApiRespAsync<TResult, TResult>(options, token);
+        }
+
+        public static Task<TResult> AsApiRespAsync<TResult, TImpl>(this Task<HttpResponseMessage> responseTask, CancellationToken token = default) where TImpl : TResult
+        {
+            return responseTask.AsApiRespAsync<TResult, TImpl>(null, token);
+        }
+
+        public static async Task<TResult> AsApiRespAsync<TResult, TImpl>(this Task<HttpResponseMessage> responseTask, JsonSerializerOptions? options, CancellationToken token = default) where TImpl : TResult
+        {
+            using var j = await responseTask.GetJsonAsync(token);
             var root = j.RootElement;
             if (root.CheckApiRespCode(out var code))
             {
-                return root.Deserialize<TImpl>()!;
+                return root.Deserialize<TImpl>(options)!;
             }
             throw GetCommonException(code!.Value, in root);
         }
 
         public static Task<TResult> AsApiRespV2Async<TResult>(this Task<HttpResponseMessage> responseTask, CancellationToken token = default)
         {
-            return responseTask.AsApiRespV2Async<TResult, TResult>(token);
+            return responseTask.AsApiRespV2Async<TResult>(null, token);
         }
 
-        public static async Task<TResult> AsApiRespV2Async<TResult, TImpl>(this Task<HttpResponseMessage> responseTask, CancellationToken token = default) where TImpl : TResult
+        public static Task<TResult> AsApiRespV2Async<TResult>(this Task<HttpResponseMessage> responseTask, JsonSerializerOptions? options = null, CancellationToken token = default)
+        {
+            return responseTask.AsApiRespV2Async<TResult, TResult>(options, token);
+        }
+
+        public static Task<TResult> AsApiRespV2Async<TResult, TImpl>(this Task<HttpResponseMessage> responseTask, CancellationToken token = default) where TImpl : TResult
+        {
+            return responseTask.AsApiRespV2Async<TResult, TImpl>(null, token);
+        }
+
+        public static async Task<TResult> AsApiRespV2Async<TResult, TImpl>(this Task<HttpResponseMessage> responseTask, JsonSerializerOptions? options, CancellationToken token = default) where TImpl : TResult
         {
             using var j = await responseTask.GetJsonAsync(token);
             var root = j.RootElement;
@@ -118,9 +136,9 @@ namespace Mirai.CSharp.HttpApi.Extensions
             {
                 if (root.ValueKind == JsonValueKind.Object && root.TryGetProperty("data", out JsonElement data))
                 {
-                    return data.Deserialize<TImpl>()!;
+                    return data.Deserialize<TImpl>(options)!;
                 }
-                return root.Deserialize<TImpl>()!; // 向前兼容, 不确定 mirai-api-http v1.x 的行为如何
+                return root.Deserialize<TImpl>(options)!; // 向前兼容, 不确定 mirai-api-http v1.x 的行为如何
             }
             throw GetCommonException(code!.Value, in root);
         }

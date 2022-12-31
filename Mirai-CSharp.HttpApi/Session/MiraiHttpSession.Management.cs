@@ -283,5 +283,15 @@ namespace Mirai.CSharp.HttpApi.Session
                 .AsApiRespAsync(token)
                 .DisposeWhenCompleted(cts);
         }
+
+        /// <inheritdoc/>
+        public virtual Task<long[]> GetBotListAsync(CancellationToken token = default)
+        {
+            InternalSessionInfo session = SafeGetSession();
+            CreateLinkedUserSessionToken(session.Token, token, out CancellationTokenSource? cts, out token);
+            return _client.GetAsync($"{_options.BaseUrl}/botList", token)
+                .AsApiRespAsync<long[]>(token)
+                .DisposeWhenCompleted(cts);
+        }
     }
 }

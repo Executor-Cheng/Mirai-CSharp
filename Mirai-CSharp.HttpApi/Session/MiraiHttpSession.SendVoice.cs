@@ -63,7 +63,6 @@ namespace Mirai.CSharp.HttpApi.Session
             MultipartFormDataContent payload = new MultipartFormDataContent(HttpClientExtensions.DefaultBoundary);
             payload.Add(new StringContent(session.SessionKey), "sessionKey");
             payload.Add(new StringContent(type.ToString().ToLower()), "type");
-            payload.Add(new StringContent(type.ToString().ToLower()), "type");
             payload.Add(new ByteArrayContent(voice), "voice", $"{Guid.NewGuid():n}.silk");
             CreateLinkedUserSessionToken(session.Token, token, out CancellationTokenSource? cts, out token);
             return _client.PostAsync($"{_options.BaseUrl}/uploadVoice", payload, token)

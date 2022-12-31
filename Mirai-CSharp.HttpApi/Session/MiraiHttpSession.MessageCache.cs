@@ -6,7 +6,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Mirai.CSharp.Extensions;
 using Mirai.CSharp.HttpApi.Extensions;
 using Mirai.CSharp.HttpApi.Models;
+using Mirai.CSharp.HttpApi.Models.ChatMessages;
 using Mirai.CSharp.HttpApi.Parsers;
+using Mirai.CSharp.HttpApi.Utility;
+#if NET5_0_OR_GREATER
+using System.Net.Http.Json;
+#endif
 
 namespace Mirai.CSharp.HttpApi.Session
 {
@@ -53,6 +58,23 @@ namespace Mirai.CSharp.HttpApi.Session
                 return (IMiraiHttpMessage)parser.Parse(in data);
             }
             return null;
+        }
+
+        /// <inheritdoc/>
+        public virtual Task<IChatMessage[][]> GetChatHistoryAsync(long target, DateTime? from, DateTime? to, CancellationToken token = default)
+        {
+            InternalSessionInfo session = SafeGetSession();
+            CreateLinkedUserSessionToken(session.Token, token, out CancellationTokenSource? cts, out token);
+            var payload = new
+            {
+                sessionKey = session.SessionKey,
+                timeStart = from.HasValue ? Utils.DateTime2UnixTimeSeconds(from.Value) : 0,
+                timeEnd = to.HasValue ? Utils.DateTime2UnixTimeSeconds(to.Value) : 0,
+                target
+            };
+            return _client.PostAsJsonAsync($"{_options.BaseUrl}/roamingMessages", payload, token)
+                .AsApiRespAsync<IChatMessage[][]>(_chatMessageSerializingOptions)
+                .DisposeWhenCompleted(cts);
         }
     }
 }

@@ -35,7 +35,6 @@ namespace Mirai.CSharp.VoiceConverter
 #if NETSTANDARD2_0
             _loadedSilkLame = LoadSilklame();
 #endif
-            NativeHelper.InitializeLameDecoder();
             void* glf = NativeHelper.CreateDefaultLameFlag();
             if (glf == null)
             {

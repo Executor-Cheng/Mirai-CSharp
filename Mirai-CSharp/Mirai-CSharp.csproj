@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>F:\Projects\Mirai-CSharp\Mirai-CSharp\Mirai-CSharp.xml</DocumentationFile>
+    <DocumentationFile>Mirai-CSharp.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
