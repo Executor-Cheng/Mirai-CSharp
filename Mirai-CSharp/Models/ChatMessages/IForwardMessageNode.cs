@@ -4,14 +4,16 @@ namespace Mirai.CSharp.Models.ChatMessages
 {
     public interface IForwardMessageNode
     {
-        int Id { get; }
+        int? Id { get; }
 
-        string Name { get; }
+        string? Name { get; }
 
-        long QQNumber { get; }
+        long? QQNumber { get; }
 
-        DateTime Time { get; }
+        DateTime? Time { get; }
 
-        IChatMessage[] Chain { get; }
+        IChatMessage[]? Chain { get; }
+
+        IForwardMessageNodeReference? Reference { get; }
     }
 }

@@ -78,6 +78,12 @@ namespace Mirai.CSharp.HttpApi.Builders
             _nodes.Add(new ForwardMessageNode(name, qqNumber, time, converted));
             return this;
         }
+
+        public override ISharedForwardMessageBuilder AddNode(int messageId, long target)
+        {
+            _nodes.Add(new ForwardMessageNode(new ForwardMessageNodeReference(messageId, target)));
+            return this;
+        }
     }
 
     public class ImmutableForwardMessageBuilder : ForwardMessageBuilder
