@@ -61,6 +61,14 @@ namespace Mirai.CSharp.Builders
         /// <param name="messages">一系列的具体消息</param>
         /// <returns>传入的 <see cref="IForwardMessageBuilder"/> 实例, 可继续用于链式调用</returns>
         IForwardMessageBuilder AddNode(string name, long qqNumber, DateTime time, params IChatMessage[] messages);
+
+        /// <summary>
+        /// 为当前的 <see cref="IForwardMessageBuilder"/> 添加一条消息
+        /// </summary>
+        /// <param name="messageId">将引用的消息唯一标识符</param>
+        /// <param name="target">将引用的消息上下文目标, 好友QQ号/群号</param>
+        /// <returns>传入的 <see cref="IForwardMessageBuilder"/> 实例, 可继续用于链式调用</returns>
+        public abstract IForwardMessageBuilder AddNode(int messageId, long target);
     }
 
     /// <summary>
@@ -104,6 +112,9 @@ namespace Mirai.CSharp.Builders
 
         /// <inheritdoc/>
         public abstract IForwardMessageBuilder AddNode(string name, long qqNumber, DateTime time, params IChatMessage[] messages);
+
+        /// <inheritdoc/>
+        public abstract IForwardMessageBuilder AddNode(int messageId, long target);
 
         /// <inheritdoc/>
         IEnumerator IEnumerable.GetEnumerator()
